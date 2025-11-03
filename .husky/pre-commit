@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -e
+
+# Run lint-staged to lint only staged files
+npx lint-staged

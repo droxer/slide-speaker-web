@@ -23,6 +23,10 @@ pnpm dev              # Run the app on http://localhost:3000
 - `pnpm test` – Jest + React Testing Library
 - `pnpm build` – Production build
 
+## Code Quality
+
+This project uses a pre-commit hook that automatically runs ESLint, TypeScript type checking, and Prettier on staged files before each commit.
+
 ## Relationship to API
 
 The FastAPI backend remains in the root project (`api/`). Update `.env` values in this web app to point at the deployed API once the repositories are separated.
