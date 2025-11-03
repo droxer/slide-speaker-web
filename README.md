@@ -1,0 +1,28 @@
+# SlideSpeaker Web
+
+This directory contains the standalone Next.js + React frontend for SlideSpeaker. Move it to its own git repository (`slide-speaker-web`) to continue development alongside the API service.
+
+## Quick Start
+
+```bash
+pnpm install          # Install dependencies (pnpm preferred)
+cp .env.example .env  # Provide API base URL and NextAuth secrets
+pnpm dev              # Run the app on http://localhost:3000
+```
+
+### Environment Variables
+
+- `NEXT_PUBLIC_API_BASE_URL` – URL of the SlideSpeaker API (defaults to `http://localhost:8000`)
+- `NEXTAUTH_URL` – Public URL for the web app
+- `NEXTAUTH_SECRET` – Session signing secret
+- Optional provider keys (Google, etc.) as required by NextAuth
+
+## Testing & Tooling
+
+- `pnpm lint` – ESLint
+- `pnpm test` – Jest + React Testing Library
+- `pnpm build` – Production build
+
+## Relationship to API
+
+The FastAPI backend remains in the root project (`api/`). Update `.env` values in this web app to point at the deployed API once the repositories are separated.
