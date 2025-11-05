@@ -1,38 +1,43 @@
 'use client';
 
 import React from 'react';
-import {useMutation} from '@tanstack/react-query';
-import {useSession} from 'next-auth/react';
-import {useLocale} from 'next-intl';
+import { useMutation } from '@tanstack/react-query';
+import { useSession } from 'next-auth/react';
+import { useLocale } from 'next-intl';
 import AppShell from '@/components/AppShell';
-import {useI18n} from '@/i18n/hooks';
-import {useRouter} from '@/navigation';
-import {getLanguageDisplayName} from '@/utils/language';
-import {updateCurrentUserProfile} from '@/services/client';
-import type {UserProfile} from '@/types/user';
-import type {Locale} from '@/i18n/config';
-import type {HealthStatus} from '@/types/health';
+import { useI18n } from '@/i18n/hooks';
+import { useRouter } from '@/navigation';
+import { getLanguageDisplayName } from '@/utils/language';
+import { updateCurrentUserProfile } from '@/services/client';
+import type { UserProfile } from '@/types/user';
+import type { Locale } from '@/i18n/config';
+import type { HealthStatus } from '@/types/health';
 import {
   LANGUAGE_TO_LOCALE,
   SUPPORTED_LANGUAGES,
   normalizeSupportedLanguage,
   type SupportedLanguage,
 } from '@/utils/localePreferences';
-import {useTheme} from '@/theme/ThemeProvider';
+import { useTheme } from '@/theme/ThemeProvider';
 
 type ProfilePageClientProps = {
   profile: UserProfile;
   initialHealth?: HealthStatus | null;
 };
 
-export default function ProfilePageClient({profile, initialHealth = null}: ProfilePageClientProps) {
-  const {t} = useI18n();
+export default function ProfilePageClient({
+  profile,
+  initialHealth = null,
+}: ProfilePageClientProps) {
+  const { t } = useI18n();
   const router = useRouter();
   const locale = useLocale() as Locale;
-  const {data: session, update: updateSession} = useSession();
-  const {mode: currentTheme, setTheme: setGlobalTheme} = useTheme();
+  const { data: session, update: updateSession } = useSession();
+  const { mode: currentTheme, setTheme: setGlobalTheme } = useTheme();
   const initialName = profile.name ?? '';
-  const initialLanguage = normalizeSupportedLanguage(profile.preferred_language);
+  const initialLanguage = normalizeSupportedLanguage(
+    profile.preferred_language
+  );
   const initialTheme = profile.preferred_theme ?? 'auto';
 
   const [baseline, setBaseline] = React.useState({
@@ -41,7 +46,8 @@ export default function ProfilePageClient({profile, initialHealth = null}: Profi
     theme: initialTheme,
   });
   const [name, setName] = React.useState(initialName);
-  const [language, setLanguage] = React.useState<SupportedLanguage>(initialLanguage);
+  const [language, setLanguage] =
+    React.useState<SupportedLanguage>(initialLanguage);
   const [theme, setTheme] = React.useState<string>(initialTheme);
   const [message, setMessage] = React.useState<string | null>(null);
   const [error, setError] = React.useState<string | null>(null);
@@ -53,21 +59,35 @@ export default function ProfilePageClient({profile, initialHealth = null}: Profi
     setName(nextName);
     setLanguage(nextLanguage);
     setTheme(nextTheme);
-    setBaseline({name: nextName, language: nextLanguage, theme: nextTheme});
-  }, [profile.id, profile.name, profile.preferred_language, profile.preferred_theme]);
+    setBaseline({ name: nextName, language: nextLanguage, theme: nextTheme });
+  }, [
+    profile.id,
+    profile.name,
+    profile.preferred_language,
+    profile.preferred_theme,
+  ]);
 
   const mutation = useMutation({
-    mutationFn: (payload: {name?: string | null; preferred_language?: string | null; preferred_theme?: string | null}) =>
-      updateCurrentUserProfile(payload),
+    mutationFn: (payload: {
+      name?: string | null;
+      preferred_language?: string | null;
+      preferred_theme?: string | null;
+    }) => updateCurrentUserProfile(payload),
     onSuccess: (data) => {
       const updated = data.user;
       const updatedName = updated.name ?? '';
-      const updatedLanguage = normalizeSupportedLanguage(updated.preferred_language);
+      const updatedLanguage = normalizeSupportedLanguage(
+        updated.preferred_language
+      );
       const updatedTheme = updated.preferred_theme ?? 'auto';
       setName(updatedName);
       setLanguage(updatedLanguage);
       setTheme(updatedTheme);
-      setBaseline({name: updatedName, language: updatedLanguage, theme: updatedTheme});
+      setBaseline({
+        name: updatedName,
+        language: updatedLanguage,
+        theme: updatedTheme,
+      });
       setMessage(t('profile.saveSuccess', undefined, 'Profile updated'));
       setError(null);
       if (typeof updateSession === 'function') {
@@ -75,7 +95,10 @@ export default function ProfilePageClient({profile, initialHealth = null}: Profi
           ...(session ?? {}),
           user: {
             ...(session?.user ?? {}),
-            name: updatedName.length > 0 ? updatedName : session?.user?.name ?? '',
+            name:
+              updatedName.length > 0
+                ? updatedName
+                : (session?.user?.name ?? ''),
             preferred_language: updatedLanguage,
             preferred_theme: updatedTheme,
           },
@@ -87,13 +110,19 @@ export default function ProfilePageClient({profile, initialHealth = null}: Profi
       }
       const targetLocale = LANGUAGE_TO_LOCALE[updatedLanguage];
       if (targetLocale !== locale) {
-        router.replace('/profile', {locale: targetLocale});
+        router.replace('/profile', { locale: targetLocale });
       } else {
         router.refresh();
       }
     },
     onError: () => {
-      setError(t('profile.saveError', undefined, 'Failed to update profile. Please try again.'));
+      setError(
+        t(
+          'profile.saveError',
+          undefined,
+          'Failed to update profile. Please try again.'
+        )
+      );
       setMessage(null);
     },
   });
@@ -128,10 +157,10 @@ export default function ProfilePageClient({profile, initialHealth = null}: Profi
       initialHealth={initialHealth}
       onNavigate={(view) => {
         if (view === 'studio') {
-          router.push('/', {locale});
+          router.push('/', { locale });
         }
         if (view === 'creations') {
-          router.push('/creations', {locale});
+          router.push('/creations', { locale });
         }
       }}
     >
@@ -139,24 +168,40 @@ export default function ProfilePageClient({profile, initialHealth = null}: Profi
         <section className="profile-card">
           <header>
             <h1>{t('profile.title', undefined, 'Profile')}</h1>
-            <p>{t('profile.subtitle', undefined, 'Manage your display name and language preferences.')}</p>
+            <p>
+              {t(
+                'profile.subtitle',
+                undefined,
+                'Manage your display name and language preferences.'
+              )}
+            </p>
           </header>
           <form className="profile-form" onSubmit={handleSubmit}>
-            <label htmlFor="profile-name">{t('profile.nameLabel', undefined, 'Display name')}</label>
+            <label htmlFor="profile-name">
+              {t('profile.nameLabel', undefined, 'Display name')}
+            </label>
             <input
               id="profile-name"
               type="text"
               value={name}
               onChange={(event) => setName(event.target.value)}
               maxLength={255}
-              placeholder={t('profile.namePlaceholder', undefined, 'How should we address you?')}
+              placeholder={t(
+                'profile.namePlaceholder',
+                undefined,
+                'How should we address you?'
+              )}
             />
 
-            <label htmlFor="profile-language">{t('profile.languageLabel', undefined, 'Preferred language')}</label>
+            <label htmlFor="profile-language">
+              {t('profile.languageLabel', undefined, 'Preferred language')}
+            </label>
             <select
               id="profile-language"
               value={language}
-              onChange={(event) => setLanguage(normalizeSupportedLanguage(event.target.value))}
+              onChange={(event) =>
+                setLanguage(normalizeSupportedLanguage(event.target.value))
+              }
             >
               {languageOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -165,17 +210,23 @@ export default function ProfilePageClient({profile, initialHealth = null}: Profi
               ))}
             </select>
 
-            <label htmlFor="profile-theme">{t('profile.themeLabel', undefined, 'Preferred theme')}</label>
+            <label htmlFor="profile-theme">
+              {t('profile.themeLabel', undefined, 'Preferred theme')}
+            </label>
             <select
               id="profile-theme"
               value={theme}
               onChange={(event) => setTheme(event.target.value)}
             >
-              <option value="auto">{t('footer.theme.auto', undefined, 'Auto')}</option>
-              <option value="light">{t('footer.theme.light', undefined, 'Light')}</option>
-              <option value="dark">{t('footer.theme.dark', undefined, 'Dark')}</option>
-              <option value="light-hc">{t('footer.theme.highContrastLight', undefined, 'High Contrast Light')}</option>
-              <option value="dark-hc">{t('footer.theme.highContrastDark', undefined, 'High Contrast Dark')}</option>
+              <option value="auto">
+                {t('footer.theme.auto', undefined, 'Auto')}
+              </option>
+              <option value="light">
+                {t('footer.theme.light', undefined, 'Light')}
+              </option>
+              <option value="dark">
+                {t('footer.theme.dark', undefined, 'Dark')}
+              </option>
             </select>
 
             <div className="profile-actions">
@@ -191,7 +242,10 @@ export default function ProfilePageClient({profile, initialHealth = null}: Profi
             </div>
 
             {(message || error) && (
-              <p className={`profile-feedback ${error ? 'error' : 'success'}`} role="status">
+              <p
+                className={`profile-feedback ${error ? 'error' : 'success'}`}
+                role="status"
+              >
                 {error ?? message}
               </p>
             )}

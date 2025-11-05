@@ -328,13 +328,17 @@ export function StudioWorkspace() {
         formData.append('file', file, file.name);
         formData.append('filename', file.name);
         formData.append('voice_language', voiceLanguage);
-        formData.append('video_resolution', videoResolution);
         formData.append('generate_avatar', String(generateAvatar));
         formData.append('generate_subtitles', String(generateSubtitles));
         formData.append('generate_podcast', String(taskType !== 'video'));
         formData.append('generate_video', String(taskType !== 'podcast'));
         formData.append('task_type', taskType);
         formData.append('source_type', sourceType);
+
+        // Only include video_resolution for video tasks
+        if (taskType === 'video') {
+          formData.append('video_resolution', videoResolution);
+        }
 
         if (subtitleLanguage) {
           formData.append('subtitle_language', subtitleLanguage);
@@ -362,7 +366,6 @@ export function StudioWorkspace() {
           filename: file.name,
           file_data: base64File,
           voice_language: voiceLanguage,
-          video_resolution: videoResolution,
           generate_avatar: generateAvatar,
           generate_subtitles: generateSubtitles,
           task_type: taskType,
@@ -370,6 +373,11 @@ export function StudioWorkspace() {
           generate_video: taskType !== 'podcast',
           generate_podcast: taskType !== 'video',
         };
+
+        // Only include video_resolution for video tasks
+        if (taskType === 'video') {
+          jsonPayload.video_resolution = videoResolution;
+        }
 
         if (subtitleLanguage) {
           jsonPayload.subtitle_language = subtitleLanguage;

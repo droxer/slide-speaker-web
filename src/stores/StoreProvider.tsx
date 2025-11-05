@@ -23,17 +23,10 @@ export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
     if (mode !== 'auto') return;
 
     const darkMedia = window.matchMedia('(prefers-color-scheme: dark)');
-    const contrastMedia = window.matchMedia('(prefers-contrast: more)');
 
     const updateTheme = () => {
       const prefersDark = darkMedia.matches;
-      const prefersHighContrast = contrastMedia.matches;
-
-      if (prefersHighContrast) {
-        applyThemeClasses(prefersDark ? 'dark-hc' : 'light-hc');
-      } else {
-        applyThemeClasses(prefersDark ? 'dark' : 'light');
-      }
+      applyThemeClasses(prefersDark ? 'dark' : 'light');
     };
 
     // Update theme immediately
@@ -41,24 +34,19 @@ export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Set up listeners for changes
     const darkListener = (event: MediaQueryListEvent) => updateTheme();
-    const contrastListener = (event: MediaQueryListEvent) => updateTheme();
 
     // Use modern event listener API if available
     if (darkMedia.addEventListener) {
       darkMedia.addEventListener('change', darkListener);
-      contrastMedia.addEventListener('change', contrastListener);
       return () => {
         darkMedia.removeEventListener('change', darkListener);
-        contrastMedia.removeEventListener('change', contrastListener);
       };
     }
 
     // Fallback to older API
     darkMedia.addListener(darkListener);
-    contrastMedia.addListener(contrastListener);
     return () => {
       darkMedia.removeListener(darkListener);
-      contrastMedia.removeListener(contrastListener);
     };
   }, [mode]);
 

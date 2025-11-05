@@ -18,16 +18,11 @@ const themeInitScript = `(() => {
     const storageKey = 'slidespeaker_ui_theme';
     const stored = window.localStorage.getItem(storageKey);
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const prefersHighContrast = window.matchMedia && window.matchMedia('(prefers-contrast: more)').matches;
 
     let themeClass = 'theme-light';
-    if (stored === 'dark' || stored === 'light' || stored === 'light-hc' || stored === 'dark-hc') {
+    if (stored === 'dark' || stored === 'light') {
       if (stored === 'dark') themeClass = 'theme-dark';
-      else if (stored === 'light-hc') themeClass = 'theme-light-hc';
-      else if (stored === 'dark-hc') themeClass = 'theme-dark-hc';
       else themeClass = 'theme-light'; // light
-    } else if (prefersHighContrast) {
-      themeClass = prefersDark ? 'theme-dark-hc' : 'theme-light-hc';
     } else {
       themeClass = prefersDark ? 'theme-dark' : 'theme-light';
     }
@@ -37,14 +32,9 @@ const themeInitScript = `(() => {
     document.body.classList.add(legacyClass);
   } catch (error) {
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const prefersHighContrast = window.matchMedia && window.matchMedia('(prefers-contrast: more)').matches;
 
     let themeClass = 'theme-light';
-    if (prefersHighContrast) {
-      themeClass = prefersDark ? 'theme-dark-hc' : 'theme-light-hc';
-    } else {
-      themeClass = prefersDark ? 'theme-dark' : 'theme-light';
-    }
+    themeClass = prefersDark ? 'theme-dark' : 'theme-light';
 
     const legacyClass = themeClass.includes('dark') ? 'dark-theme' : 'light-theme';
     document.body.classList.add(themeClass);

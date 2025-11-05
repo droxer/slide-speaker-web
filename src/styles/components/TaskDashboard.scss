@@ -2928,22 +2928,23 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.2) !important; /* lighter overlay, not too dark */
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  padding: 10px;
+  padding: 0;
 }
 .run-task-content {
   background: #ffffff;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
   width: min(560px, 96vw);
-  max-height: 88vh;
+  max-height: 90vh;
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.2);
   padding: 12px 14px;
   display: flex;
   flex-direction: column;
+  margin: auto;
 }
 .run-task-content .run-config {
   display: grid;
