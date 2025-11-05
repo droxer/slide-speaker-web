@@ -1,11 +1,25 @@
 /* Header */
 .app-header {
-  padding: 2rem 1rem;
-  color: white;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  padding: 3rem 1.5rem;
+  background: var(--color-accent);
+  color: #ffffff;
+  border-bottom: 6px solid var(--color-accent-secondary);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.app-header::after {
+  content: '';
+  position: absolute;
+  inset: auto -18% -40% auto;
+  width: 42vw;
+  height: 42vw;
+  max-width: 460px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  filter: blur(0);
+  pointer-events: none;
 }
 
 .header-content {
@@ -15,14 +29,17 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+  gap: 3rem;
   position: relative;
+  z-index: 1;
 }
 
 @media (max-width: 768px) {
   .header-content {
     flex-direction: column;
-    gap: 12px;
+    gap: 1.5rem;
     align-items: stretch;
+    text-align: center;
   }
 }
 
@@ -43,49 +60,102 @@
 
 .header-center {
   flex: 2;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .header-center {
+    align-items: center;
+  }
+}
+
+.header-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.header-title {
+  margin: 0;
+  font-size: var(--font-size-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background-image: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.96),
+    rgba(255, 255, 255, 0.74)
+  );
+  color: #ffffff;
+  text-rendering: optimizeLegibility;
+}
+
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .header-title {
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
 
 .app-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.75rem;
+  font-size: var(--font-size-display);
+  line-height: 1.08;
+  margin-bottom: 0;
   font-weight: 800;
-  letter-spacing: -0.8px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.04em;
 }
 
 .app-header p {
-  font-size: 1.15rem;
-  opacity: 0.95;
-  font-weight: 300;
-  letter-spacing: 0.3px;
+  font-size: var(--font-size-lead);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.86);
+  max-width: 560px;
+}
+
+.header-subtitle {
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 560px;
+}
+
+@media (max-width: 768px) {
+  .app-header h1 {
+    font-size: clamp(2.6rem, 7vw, 3.6rem);
+  }
+
+  .app-header p {
+    max-width: none;
+  }
 }
 
 /* Language switcher */
 .language-switcher {
-  margin-right: 1rem;
   display: inline-flex;
   align-items: center;
 }
 
 .language-switcher__select {
   appearance: none;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #f8fafc;
-  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  color: #ffffff;
+  font-size: 0.95rem;
   border-radius: 999px;
-  padding: 0.35rem 1.5rem 0.35rem 0.75rem;
+  padding: 0.45rem 1.75rem 0.45rem 0.95rem;
   cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
 
   &:hover {
-    border-color: rgba(255, 255, 255, 0.45);
-    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.65);
+    background: rgba(255, 255, 255, 0.22);
   }
 
   &:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, 0.6);
+    outline: 3px solid rgba(255, 255, 255, 0.45);
     outline-offset: 2px;
   }
 }
@@ -117,31 +187,37 @@
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #f8fafc;
-  padding: 0.55rem 0.9rem;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  padding: 0.6rem 1rem;
   border-radius: 999px;
   cursor: pointer;
   font-size: 0.95rem;
-  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  font-weight: 600;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease;
 }
 
 .user-menu-trigger:hover,
 .user-menu-trigger:focus-visible {
-  background: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.45);
-  box-shadow: 0 10px 18px -12px rgba(15, 23, 42, 0.45);
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.65);
+  color: #ffffff;
+  box-shadow: 0 10px 24px -12px rgba(18, 11, 45, 0.45);
 }
 
 .user-menu-trigger:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline: 3px solid rgba(255, 255, 255, 0.5);
   outline-offset: 2px;
 }
 
 .user-chip__avatar {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.28);
   display: inline-flex;
@@ -149,14 +225,14 @@
   justify-content: center;
   font-size: 0.95rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-accent);
 }
 
 .user-chip__text {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.1rem;
+  gap: 0.12rem;
 }
 
 .user-chip__name {
@@ -169,6 +245,76 @@
   opacity: 0.75;
 }
 
+.auth-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.6rem;
+}
+
+.login-button.header-login-button {
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  color: #ffffff;
+  padding: 0.55rem 1.4rem;
+  border-radius: 999px;
+  font-weight: 600;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.login-button.header-login-button:hover:not(:disabled),
+.login-button.header-login-button:focus-visible {
+  background: rgba(255, 255, 255, 0.26);
+  border-color: rgba(255, 255, 255, 0.55);
+  transform: translateY(-2px);
+}
+
+.login-button.header-login-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.45);
+  outline-offset: 2px;
+}
+
+.login-button-loading {
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px dashed rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.credentials-login-button {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.credentials-login-button:hover,
+.credentials-login-button:focus-visible {
+  background: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.55);
+  transform: translateY(-2px);
+}
+
+.credentials-login-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.35);
+  outline-offset: 2px;
+}
+
 .user-menu-icon {
   font-size: 0.75rem;
   opacity: 0.75;
@@ -177,27 +323,37 @@
 
 .user-menu {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 12px);
   right: 0;
-  min-width: 180px;
-  background: rgba(15, 23, 42, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 16px;
-  box-shadow: 0 18px 45px -20px rgba(15, 23, 42, 0.85);
+  min-width: 200px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
   padding: 0.35rem 0;
   z-index: 20;
+  color: var(--color-text-primary);
 }
 
 .user-menu button {
   width: 100%;
   background: transparent;
   border: none;
-  color: #e2e8f0;
+  color: inherit;
   text-align: left;
-  font-size: 0.9rem;
-  padding: 0.55rem 1rem;
+  font-size: 0.95rem;
+  padding: 0.65rem 1.1rem;
   cursor: pointer;
-  transition: background 0.2s ease;
+  font-weight: 600;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.user-menu button:hover,
+.user-menu button:focus-visible {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
 }
 
 .user-menu button:hover,

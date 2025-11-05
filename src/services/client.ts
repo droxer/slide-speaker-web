@@ -1,8 +1,8 @@
 import axios from 'axios';
-import {resolveApiBaseUrl} from '@/utils/apiBaseUrl';
-import type {HealthStatus} from '@/types/health';
-import type {Task, DownloadsResponse, PodcastScriptResponse} from '@/types';
-import type {ProfileResponse} from '@/types/user';
+import { resolveApiBaseUrl } from '@/utils/apiBaseUrl';
+import type { HealthStatus } from '@/types/health';
+import type { Task, DownloadsResponse, PodcastScriptResponse } from '@/types';
+import type { ProfileResponse } from '@/types/user';
 
 const API_BASE_URL = resolveApiBaseUrl();
 
@@ -21,21 +21,29 @@ export interface TaskListResponse {
   has_more: boolean;
 }
 
-export const getTasks = async (params?: Record<string, string | number>): Promise<TaskListResponse> => {
+export const getTasks = async (
+  params?: Record<string, string | number>
+): Promise<TaskListResponse> => {
   // Default parameters for better pagination
   const defaultParams = {
     limit: '20',
     offset: '0',
-    ...params
+    ...params,
   };
 
-  const qs = '?' + new URLSearchParams(Object.entries(defaultParams).map(([k, v]) => [k, String(v)])).toString();
+  const qs =
+    '?' +
+    new URLSearchParams(
+      Object.entries(defaultParams).map(([k, v]) => [k, String(v)])
+    ).toString();
   const res = await api.get(`/api/tasks${qs}`);
   return res.data as TaskListResponse;
 };
 
 export const searchTasks = async (query: string, limit = 20) => {
-  const res = await api.get(`/api/tasks/search?query=${encodeURIComponent(query)}&limit=${limit}`);
+  const res = await api.get(
+    `/api/tasks/search?query=${encodeURIComponent(query)}&limit=${limit}`
+  );
   return res.data as { tasks: TaskRow[] };
 };
 
@@ -45,11 +53,11 @@ export const getDownloads = async (taskId: string) => {
 };
 
 export const getTranscriptMarkdown = async (taskId: string) => {
-  const res = await api.get(`/api/tasks/${taskId}/transcripts/markdown`, { headers: { Accept: 'text/markdown' } });
+  const res = await api.get(`/api/tasks/${taskId}/transcripts/markdown`, {
+    headers: { Accept: 'text/markdown' },
+  });
   return String(res.data || '');
 };
-
-
 
 export const getTaskById = async (taskId: string): Promise<Task> => {
   const res = await api.get(`/api/tasks/${encodeURIComponent(taskId)}`);
@@ -65,7 +73,19 @@ export const purgeTask = async (taskId: string) => {
 };
 
 export const cancelRun = async (taskId: string) => {
-  const res = await api.post<{ message: string }>(`/api/tasks/${taskId}/cancel`);
+  const res = await api.post<{ message: string }>(
+    `/api/tasks/${taskId}/cancel`
+  );
+  return res.data;
+};
+
+export const retryTask = async (taskId: string, step?: string) => {
+  const payload = step ? { step } : {};
+  const res = await api.post<{ message: string; step: string; status: string }>(
+    `/api/tasks/${taskId}/retry`,
+    payload,
+    { headers: { 'Content-Type': 'application/json' } }
+  );
   return res.data;
 };
 
@@ -105,7 +125,9 @@ export interface UploadSummary {
   updated_at?: string | null;
 }
 
-export const upload = async (payload: FormData | UploadPayload): Promise<UploadResponse> => {
+export const upload = async (
+  payload: FormData | UploadPayload
+): Promise<UploadResponse> => {
   if (typeof FormData !== 'undefined' && payload instanceof FormData) {
     const res = await api.post<UploadResponse>(`/api/upload`, payload);
     return res.data;
@@ -117,15 +139,19 @@ export const upload = async (payload: FormData | UploadPayload): Promise<UploadR
   return res.data;
 };
 
-
-
 export const runFile = async (fileId: string, payload: any) => {
-  const res = await api.post(`/api/files/${encodeURIComponent(fileId)}/run`, payload, { headers: { 'Content-Type': 'application/json' } });
+  const res = await api.post(
+    `/api/files/${encodeURIComponent(fileId)}/run`,
+    payload,
+    { headers: { 'Content-Type': 'application/json' } }
+  );
   return res.data as { upload_id: string; task_id: string };
 };
 
 export const getHealth = async (): Promise<HealthStatus> => {
-  const res = await api.get<HealthStatus>(`/api/health`, { headers: { Accept: 'application/json' } });
+  const res = await api.get<HealthStatus>(`/api/health`, {
+    headers: { Accept: 'application/json' },
+  });
   return res.data;
 };
 
@@ -148,11 +174,12 @@ export interface TaskProgressResponse {
   message?: string;
 }
 
-export const getTaskProgress = async <T = TaskProgressResponse>(taskId: string): Promise<T> => {
+export const getTaskProgress = async <T = TaskProgressResponse>(
+  taskId: string
+): Promise<T> => {
   const res = await api.get<T>(`/api/tasks/${taskId}/progress`);
   return res.data;
 };
-
 
 export const getVttText = async (taskId: string, language?: string) => {
   const path = language
@@ -162,7 +189,9 @@ export const getVttText = async (taskId: string, language?: string) => {
   return String(res.data || '');
 };
 
-export const getPodcastScript = async (taskId: string): Promise<PodcastScriptResponse> => {
+export const getPodcastScript = async (
+  taskId: string
+): Promise<PodcastScriptResponse> => {
   const res = await api.get(`/api/tasks/${taskId}/podcast/script`);
   return res.data as PodcastScriptResponse;
 };
@@ -181,9 +210,11 @@ export const getCurrentUserProfile = async (): Promise<ProfileResponse> => {
   return res.data;
 };
 
-export const updateCurrentUserProfile = async (
-  payload: {name?: string | null; preferred_language?: string | null; preferred_theme?: string | null},
-): Promise<ProfileResponse> => {
+export const updateCurrentUserProfile = async (payload: {
+  name?: string | null;
+  preferred_language?: string | null;
+  preferred_theme?: string | null;
+}): Promise<ProfileResponse> => {
   const res = await api.patch<ProfileResponse>('/api/users/me', payload);
   return res.data;
 };

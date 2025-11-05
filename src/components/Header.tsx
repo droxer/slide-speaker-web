@@ -1,7 +1,8 @@
-import React, {useEffect, useMemo, useRef, useState, lazy, Suspense} from 'react';
-import {useSession, signIn, signOut} from 'next-auth/react';
-import {useRouter} from 'next/navigation';
-import {useI18n} from '@/i18n/hooks';
+import { useEffect, useMemo, useRef, useState, lazy, Suspense } from 'react';
+import { useSession, signIn, signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useI18n } from '@/i18n/hooks';
+import { PRODUCT_NAME } from '@/constants/product';
 
 // Lazy load non-critical components
 const LoginButton = lazy(() => import('./LoginButton'));
@@ -28,6 +29,7 @@ const Header = ({ activeView, onNavigate }: HeaderProps) => {
   const user = session?.user;
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const headerTitle = PRODUCT_NAME;
 
   const primaryName = useMemo(() => {
     const name = typeof user?.name === 'string' ? user.name.trim() : '';
@@ -89,9 +91,13 @@ const Header = ({ activeView, onNavigate }: HeaderProps) => {
         <div className="header-left">
           {status === 'loading' ? (
             <div className="user-chip user-chip--loading" aria-live="polite">
-              <div className="user-chip__avatar" aria-hidden="true">🙂</div>
+              <div className="user-chip__avatar" aria-hidden="true">
+                🙂
+              </div>
               <div className="user-chip__text">
-                <span className="user-chip__name">{t('header.welcomeShort', {name: '…'}, 'Hi, …')}</span>
+                <span className="user-chip__name">
+                  {t('header.welcomeShort', { name: '…' }, 'Hi, …')}
+                </span>
               </div>
             </div>
           ) : user ? (
@@ -103,16 +109,26 @@ const Header = ({ activeView, onNavigate }: HeaderProps) => {
                 aria-haspopup="menu"
                 aria-expanded={menuOpen}
               >
-                <span className="user-chip__avatar" aria-hidden="true">{initials}</span>
+                <span className="user-chip__avatar" aria-hidden="true">
+                  {initials}
+                </span>
                 <span className="user-chip__text">
                   <span className="user-chip__name">{primaryName}</span>
-                  {user.email && <span className="user-chip__email">{user.email}</span>}
+                  {user.email && (
+                    <span className="user-chip__email">{user.email}</span>
+                  )}
                 </span>
-                <span className="user-menu-icon" aria-hidden="true">▾</span>
+                <span className="user-menu-icon" aria-hidden="true">
+                  ▾
+                </span>
               </button>
               {menuOpen && (
                 <div className="user-menu" role="menu">
-                  <button type="button" role="menuitem" onClick={navigateToProfile}>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={navigateToProfile}
+                  >
                     {t('header.profile', undefined, 'Profile')}
                   </button>
                   <button
@@ -120,7 +136,7 @@ const Header = ({ activeView, onNavigate }: HeaderProps) => {
                     role="menuitem"
                     onClick={() => {
                       setMenuOpen(false);
-                      void signOut({callbackUrl: `/${currentLocale}`});
+                      void signOut({ callbackUrl: `/${currentLocale}` });
                     }}
                   >
                     {t('header.menu.logout', undefined, 'Sign out')}
@@ -130,18 +146,32 @@ const Header = ({ activeView, onNavigate }: HeaderProps) => {
             </div>
           ) : (
             <div className="auth-buttons">
-              <Suspense fallback={<div className="login-button-loading">Loading...</div>}>
-                <LoginButton onClick={() => signIn('google')} label={t('header.login')} />
+              <Suspense
+                fallback={
+                  <div className="login-button-loading">Loading...</div>
+                }
+              >
+                <LoginButton
+                  onClick={() => signIn('google')}
+                  label={t('header.login')}
+                  className="header-login-button"
+                />
               </Suspense>
-              <button type="button" className="credentials-login-button" onClick={handleCredentialsLogin}>
+              <button
+                type="button"
+                className="credentials-login-button"
+                onClick={handleCredentialsLogin}
+              >
                 {t('auth.usePassword', undefined, 'Use email & password')}
               </button>
             </div>
           )}
         </div>
         <div className="header-center">
-          <h1>SlideSpeaker AI</h1>
-          <p>{t('header.subtitle')}</p>
+          <div className="header-title-group">
+            <h1 className="header-title">{headerTitle}</h1>
+            <p className="header-subtitle lead">{t('header.subtitle')}</p>
+          </div>
         </div>
         <div className="header-right">
           <div
@@ -152,7 +182,7 @@ const Header = ({ activeView, onNavigate }: HeaderProps) => {
             <button
               type="button"
               onClick={() => onNavigate('studio')}
-              className={`toggle-btn ${activeView === 'studio' ? "active" : ""}`}
+              className={`toggle-btn ${activeView === 'studio' ? 'active' : ''}`}
               title={t('header.view.studio')}
               role="tab"
               aria-selected={activeView === 'studio'}
@@ -167,7 +197,7 @@ const Header = ({ activeView, onNavigate }: HeaderProps) => {
             <button
               type="button"
               onClick={() => onNavigate('creations')}
-              className={`toggle-btn ${activeView === 'creations' ? "active" : ""}`}
+              className={`toggle-btn ${activeView === 'creations' ? 'active' : ''}`}
               title={t('header.view.creations')}
               role="tab"
               aria-selected={activeView === 'creations'}

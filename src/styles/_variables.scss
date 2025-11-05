@@ -1,19 +1,54 @@
-/* Brand color tokens (override in themes as needed) */
+/* Design tokens for the Flat 3.0 visual language */
 :root {
-  --brand-1: #6366f1; /* indigo-500 */
-  --brand-2: #06b6d4; /* cyan-500 */
-  --brand-3: #22c55e; /* green-500 */
-  --brand-aurora-a: rgba(99, 102, 241, 0.25); /* indigo */
-  --brand-aurora-b: rgba(56, 189, 248, 0.18); /* sky/cyan */
-}
+  /* Core palette */
+  --color-canvas: #f6f5f2;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f1efff;
+  --color-surface-muted: #ebe7f6;
+  --color-border: #d9d4eb;
+  --color-border-strong: #bcb2d9;
+  --color-heading: #1a1537;
+  --color-text-primary: #201b3a;
+  --color-text-secondary: #3f3a59;
+  --color-text-muted: #696387;
+  --color-accent: #5f2de1;
+  --color-accent-strong: #4b21c4;
+  --color-accent-soft: #ede8ff;
+  --color-accent-secondary: #f97316;
+  --color-accent-tertiary: #0ea5e9;
+  --color-success: #1a9c6d;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
 
-/* CSS custom properties for consistent theming */
-:root {
+  /* Shadows & shape */
+  --shadow-soft: 0 8px 20px rgba(31, 26, 56, 0.08);
+  --shadow-crisp: 0 12px 34px rgba(31, 26, 56, 0.12);
+  --radius-lg: 24px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+
+  /* Typography scale */
+  --font-size-base: clamp(1rem, 0.35vw + 0.95rem, 1.1rem);
+  --font-size-display: clamp(3.1rem, 3vw + 2.2rem, 4.5rem);
+  --font-size-h1: clamp(2.65rem, 2.6vw + 1.9rem, 3.4rem);
+  --font-size-h2: clamp(2.1rem, 2vw + 1.65rem, 2.8rem);
+  --font-size-h3: clamp(1.7rem, 1.5vw + 1.35rem, 2.1rem);
+  --font-size-lead: clamp(1.25rem, 0.85vw + 1.1rem, 1.6rem);
+  --line-height-tight: 1.2;
+  --line-height-snug: 1.35;
+  --line-height-relaxed: 1.7;
+
+  /* Brand aliases (override in themes as needed) */
+  --brand-1: #5f2de1;
+  --brand-2: #f97316;
+  --brand-3: #0ea5e9;
+  --brand-aurora-a: rgba(95, 45, 225, 0.18);
+  --brand-aurora-b: rgba(14, 165, 233, 0.15);
+
+  /* Layout metrics */
   --footer-height: 56px;
-}
 
-/* Media section styling */
-:root {
+  /* Media section styling */
   --media-controls-bg-video: rgba(0, 0, 0, 0.6);
   --media-controls-bg-audio: #f1f5f9;
 }

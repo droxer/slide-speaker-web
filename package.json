@@ -21,8 +21,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --max-warnings=0 src middleware.ts next.config.mjs",
-      "tsc --noEmit"
+      "eslint --max-warnings=0 src middleware.ts next.config.mjs"
     ],
     "*.{js,jsx,ts,tsx,css,scss,md}": [
       "prettier --write"

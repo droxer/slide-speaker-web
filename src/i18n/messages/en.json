@@ -150,6 +150,7 @@
         "podcast": "Podcast",
         "audio": "Audio",
         "both": "Video & Podcast",
+        "file_purge": "File purge",
         "unknown": "Task"
       }
     },
@@ -312,6 +313,14 @@
     "metadataAria": "Task metadata",
     "progressLabel": "Overall progress",
     "progressStatus": "We are bringing your presentation to life…",
+    "haltAfterStep": "Processing stopped after {step}.",
+    "haltGeneric": "Processing stopped after a failed step.",
+    "retryFromStep": "Retry from {step}",
+    "retryLatest": "Retry from latest step",
+    "retrying": "Retrying…",
+    "retryQueued": "Retry queued. We'll resume shortly.",
+    "retryFailed": "Couldn't retry the task. Please try again.",
+    "retry": "Retry",
     "steps": {
       "extract_slides": "Extracting Slides",
       "analyze_slide_images": "Analyzing Content",

@@ -1,8 +1,9 @@
-import type {Metadata} from 'next';
-import type {ReactNode} from 'react';
-import {cookies, headers} from 'next/headers';
-import {Open_Sans} from 'next/font/google';
-import {defaultLocale, locales, type Locale} from '@/i18n/config';
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
+import { cookies, headers } from 'next/headers';
+import { Open_Sans } from 'next/font/google';
+import { defaultLocale, locales, type Locale } from '@/i18n/config';
+import { PRODUCT_NAME } from '@/constants/product';
 import './globals.scss';
 
 const openSans = Open_Sans({
@@ -54,7 +55,10 @@ const themeInitScript = `(() => {
 const deriveLocale = async (): Promise<Locale> => {
   const cookieStore = await cookies();
   const cookieLocale = cookieStore.get('NEXT_LOCALE')?.value;
-  if (cookieLocale && (locales as ReadonlyArray<string>).includes(cookieLocale)) {
+  if (
+    cookieLocale &&
+    (locales as ReadonlyArray<string>).includes(cookieLocale)
+  ) {
     return cookieLocale as Locale;
   }
 
@@ -62,7 +66,10 @@ const deriveLocale = async (): Promise<Locale> => {
   const requestPath = headerStore.get('next-url');
   if (requestPath) {
     const [, maybeLocale] = requestPath.split('/');
-    if (maybeLocale && (locales as ReadonlyArray<string>).includes(maybeLocale)) {
+    if (
+      maybeLocale &&
+      (locales as ReadonlyArray<string>).includes(maybeLocale)
+    ) {
       return maybeLocale as Locale;
     }
   }
@@ -71,17 +78,19 @@ const deriveLocale = async (): Promise<Locale> => {
 };
 
 export const metadata: Metadata = {
-  title: 'SlideSpeaker',
-  description: 'Transform presentations into rich multimedia experiences with SlideSpeaker.',
+  title: PRODUCT_NAME,
+  description: `Transform presentations into rich multimedia experiences with ${PRODUCT_NAME}.`,
 };
 
-export default async function RootLayout({children}: Readonly<{children: ReactNode}>) {
+export default async function RootLayout({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   const locale = await deriveLocale();
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={openSans.className} suppressHydrationWarning>
-        <script dangerouslySetInnerHTML={{__html: themeInitScript}} />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {children}
       </body>
     </html>

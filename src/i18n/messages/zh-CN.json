@@ -4,7 +4,7 @@
     "skipToNavigation": "跳转到导航"
   },
   "header": {
-    "title": "幻灯演说 AI",
+    "title": "SlideSpeaker AI",
     "subtitle": "将幻灯片转化为 AI 驱动的视频",
     "login": "使用 Google 登录",
     "logout": "退出登录",
@@ -150,6 +150,7 @@
         "podcast": "播客",
         "audio": "音频",
         "both": "视频 + 播客",
+        "file_purge": "文件清理",
         "unknown": "任务"
       }
     },
@@ -315,6 +316,14 @@
     "metadataAria": "任务信息",
     "progressLabel": "整体进度",
     "progressStatus": "正在为您的演示生成精彩内容…",
+    "haltAfterStep": "在 {step} 步骤后停止处理。",
+    "haltGeneric": "发生错误后处理已停止。",
+    "retryFromStep": "从 {step} 重新开始",
+    "retryLatest": "从最近的失败步骤重试",
+    "retrying": "正在重试…",
+    "retryQueued": "已排队重试，即将继续处理。",
+    "retryFailed": "重试任务失败，请稍后再试。",
+    "retry": "重试",
     "steps": {
       "extract_slides": "提取幻灯片",
       "analyze_slide_images": "分析内容",

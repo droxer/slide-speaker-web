@@ -150,6 +150,7 @@
         "podcast": "ポッドキャスト",
         "audio": "音声",
         "both": "動画とポッドキャスト",
+        "file_purge": "ファイル削除",
         "unknown": "タスク"
       }
     },
@@ -312,6 +313,14 @@
     "metadataAria": "タスクのメタデータ",
     "progressLabel": "全体の進捗",
     "progressStatus": "プレゼンテーションを形にしています…",
+    "haltAfterStep": "{step} の後で処理が停止しました。",
+    "haltGeneric": "エラーが発生したため処理が停止しました。",
+    "retryFromStep": "{step} から再開する",
+    "retryLatest": "直近の失敗ステップから再試行",
+    "retrying": "再試行中…",
+    "retryQueued": "再試行をキューに登録しました。まもなく再開します。",
+    "retryFailed": "再試行に失敗しました。もう一度お試しください。",
+    "retry": "再試行",
     "steps": {
       "extract_slides": "スライドを抽出",
       "analyze_slide_images": "コンテンツを分析",

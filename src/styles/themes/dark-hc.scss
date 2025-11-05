@@ -13,7 +13,7 @@ body.theme-dark-hc {
   --dark-text-muted: #dbeafe;
   --dark-overlay: rgba(15, 23, 42, 0.65);
   --dark-glass: rgba(15, 23, 42, 0.75);
-  --brand-1: #6366f1;
+  --brand-1: #a855f7;
   --brand-2: #06b6d4;
   --brand-3: #22c55e;
   --media-controls-bg-audio: rgba(30, 41, 59, 0.95);
@@ -28,9 +28,14 @@ body.theme-dark-hc {
   --task-audio-transcript-border: rgba(71, 85, 105, 0.55);
   --task-audio-transcript-text: var(--dark-text);
   --task-audio-backdrop: blur(6px);
-  background: radial-gradient(circle at 20% -10%, rgba(99, 102, 241, 0.35), transparent 55%),
-              radial-gradient(circle at 80% 0%, rgba(8, 145, 178, 0.25), transparent 65%),
-              linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+  background:
+    radial-gradient(
+      circle at 20% -10%,
+      rgba(99, 102, 241, 0.35),
+      transparent 55%
+    ),
+    radial-gradient(circle at 80% 0%, rgba(8, 145, 178, 0.25), transparent 65%),
+    linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
   color: var(--dark-text);
   color-scheme: dark;
 
@@ -164,17 +169,29 @@ body.theme-dark-hc {
 
   /* Enhanced button styles */
   .primary-btn {
-    background: linear-gradient(135deg, #6366f1, #4338ca) !important;
+    background: linear-gradient(
+      135deg,
+      var(--color-accent),
+      var(--color-accent-strong)
+    ) !important;
     color: #f8fafc !important;
-    box-shadow: 0 12px 30px rgba(79, 70, 229, 0.45) !important;
+    box-shadow: 0 12px 30px rgba(168, 85, 247, 0.45) !important;
     border: 2px solid #fff !important;
 
     &:hover:not(:disabled) {
-      background: linear-gradient(135deg, #4338ca, #3730a3) !important;
+      background: linear-gradient(
+        135deg,
+        var(--color-accent-strong),
+        #6728c8
+      ) !important;
     }
 
     &:disabled {
-      background: linear-gradient(135deg, #c7d2fe, #bac5fd) !important;
+      background: linear-gradient(
+        135deg,
+        rgba(168, 85, 247, 0.45),
+        rgba(124, 58, 237, 0.35)
+      ) !important;
       cursor: not-allowed !important;
       border-color: #999 !important;
       color: #999 !important;
@@ -319,6 +336,8 @@ body.theme-dark-hc {
   .language-section,
   .options-section,
   .steps-container,
+  .processing-panel,
+  .processing-summary,
   .resource-item,
   .resource-links .url-copy-row,
   .task-detail-card,
@@ -335,7 +354,61 @@ body.theme-dark-hc {
     color: var(--dark-text) !important;
   }
 
+  .processing-badge {
+    background: #fff !important;
+    color: #111827 !important;
+  }
+
+  .processing-action {
+    border: 2px solid #fff !important;
+    background: transparent !important;
+    color: #e2e8f0 !important;
+  }
+
+  .processing-action:hover,
+  .processing-action:focus-visible {
+    background: #fff !important;
+    color: #111827 !important;
+  }
+
+  .processing-steps__pill--video,
+  .processing-steps__pill--podcast {
+    background: #fff !important;
+    border: 2px solid #fff !important;
+    color: #1f2937 !important;
+  }
+
+  .processing-steps__body .progress-step {
+    border: 2px solid #fff !important;
+    background: transparent !important;
+  }
+
+  .processing-steps__body .error-section {
+    border: 2px solid #fff !important;
+    background: rgba(185, 28, 28, 0.8) !important;
+    color: #fff !important;
+  }
+
+  .processing-steps__body .progress-step::after {
+    display: none !important;
+  }
+
+  .processing-summary__value {
+    color: #fff !important;
+  }
+
   /* Enhanced task detail page specific components */
+  .processing-summary__tag {
+    border: 2px solid #fff !important;
+    background: transparent !important;
+    color: #fff !important;
+  }
+
+  .processing-summary__tag-label,
+  .processing-summary__tag-value {
+    color: #fff !important;
+  }
+
   .task-detail-card__header {
     border-bottom: 2px solid #fff !important;
   }
@@ -414,10 +487,14 @@ body.theme-dark-hc {
     border: 1px solid #fff !important;
 
     &.active {
-      background: linear-gradient(135deg, #6366f1, #4338ca) !important;
+      background: linear-gradient(
+        135deg,
+        var(--color-accent),
+        var(--color-accent-strong)
+      ) !important;
       color: #f8fafc !important;
       border-color: #fff !important;
-      box-shadow: 0 8px 24px rgba(79, 70, 229, 0.35) !important;
+      box-shadow: 0 8px 24px rgba(168, 85, 247, 0.35) !important;
     }
 
     &:hover:not(.active) {
@@ -437,7 +514,9 @@ body.theme-dark-hc {
     background: rgba(15, 23, 42, 0.95) !important;
     color: var(--dark-text) !important;
     border: 3px solid #fff !important;
-    box-shadow: 0 0 0 3px #000, 0 0 0 6px #fff !important;
+    box-shadow:
+      0 0 0 3px #000,
+      0 0 0 6px #fff !important;
   }
 
   /* Enhanced task elements */

@@ -4,7 +4,7 @@
     "skipToNavigation": "跳至導覽"
   },
   "header": {
-    "title": "簡報演說 AI",
+    "title": "SlideSpeaker AI",
     "subtitle": "將簡報轉化為 AI 驅動的影片",
     "login": "使用 Google 登入",
     "logout": "登出",
@@ -150,6 +150,7 @@
         "podcast": "播客",
         "audio": "音訊",
         "both": "影片 + 播客",
+        "file_purge": "檔案清理",
         "unknown": "任務"
       }
     },
@@ -312,6 +313,14 @@
     "metadataAria": "任務資訊",
     "progressLabel": "整體進度",
     "progressStatus": "正在為您的簡報注入活力…",
+    "haltAfterStep": "在 {step} 步驟後停止處理。",
+    "haltGeneric": "發生錯誤後處理已停止。",
+    "retryFromStep": "從 {step} 重新開始",
+    "retryLatest": "從最近的失敗步驟重試",
+    "retrying": "正在重試…",
+    "retryQueued": "已排入重試佇列，稍後將繼續處理。",
+    "retryFailed": "重試失敗，請稍後再試。",
+    "retry": "重試",
     "steps": {
       "extract_slides": "擷取投影片",
       "analyze_slide_images": "分析內容",

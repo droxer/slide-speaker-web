@@ -150,6 +150,7 @@
         "podcast": "팟캐스트",
         "audio": "오디오",
         "both": "영상 및 팟캐스트",
+        "file_purge": "파일 삭제",
         "unknown": "작업"
       }
     },
@@ -312,6 +313,14 @@
     "metadataAria": "작업 메타데이터",
     "progressLabel": "전체 진행률",
     "progressStatus": "프레젠테이션을 생생하게 만드는 중입니다…",
+    "haltAfterStep": "{step} 단계 이후 처리가 중단되었습니다.",
+    "haltGeneric": "오류가 발생해 처리가 중단되었습니다.",
+    "retryFromStep": "{step} 단계부터 다시 시도",
+    "retryLatest": "최근 실패 단계부터 재시도",
+    "retrying": "재시도 중…",
+    "retryQueued": "재시도가 대기열에 추가되었습니다. 곧 다시 진행됩니다.",
+    "retryFailed": "재시도에 실패했습니다. 다시 시도해 주세요.",
+    "retry": "재시도",
     "steps": {
       "extract_slides": "슬라이드 추출 중",
       "analyze_slide_images": "콘텐츠 분석 중",

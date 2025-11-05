@@ -9,17 +9,17 @@
 
 /* Footer */
 .app-footer {
-  border-top: 1px solid #e5e7eb;
-  background: #ffffff;
-  /* not fixed; sits in normal flow */
-  color: #ffffff; /* default (Modern) on dark gradient bg */
+  border-top: 2px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  box-shadow: 0 -10px 30px rgba(31, 26, 56, 0.05);
 }
 
 /* Light theme footer glass effect */
 body.light-theme .app-footer {
-  background: rgba(255, 255, 255, 0.08);
-  border-top-color: rgba(255, 255, 255, 0.2);
-  backdrop-filter: saturate(160%) blur(12px);
+  background: var(--color-surface);
+  border-top-color: var(--color-border);
+  backdrop-filter: none;
 }
 
 .footer-content {
@@ -43,12 +43,12 @@ body.light-theme .app-footer {
   align-items: center;
   gap: 8px;
   padding: 4px 8px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: var(--color-accent-soft);
+  border: 1px solid rgba(95, 45, 225, 0.15);
   border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #334155;
+  font-size: 0.75rem;
+  font-weight: 650;
+  color: var(--color-accent-strong);
 }
 
 .health-indicator .dot {
@@ -58,16 +58,21 @@ body.light-theme .app-footer {
   display: inline-block;
 }
 
-.health-indicator .dot.ok { background: #16a34a; } /* green-600 */
-.health-indicator .dot.down { background: #dc2626; } /* red-600 */
-.health-indicator .label { line-height: 1; }
+.health-indicator .dot.ok {
+  background: #1a9c6d;
+}
+.health-indicator .dot.down {
+  background: #ef4444;
+}
+.health-indicator .label {
+  line-height: 1;
+}
 
 .footer-note {
   margin: 0;
-  font-size: 0.9rem;
-  opacity: 0.9;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
 }
-
 
 @media (max-width: 768px) {
   .footer-content {
