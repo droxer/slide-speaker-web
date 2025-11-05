@@ -26,6 +26,7 @@ export const STEP_ORDER = [
   'generate_audio',
   'generate_pdf_audio',
   'generate_podcast_audio',
+  'generate_podcast_subtitles',
   'generate_avatar_videos',
 
   // Subtitle assets
@@ -40,14 +41,16 @@ export const STEP_ORDER = [
   'unknown',
 ] as const;
 
-export type StepType = typeof STEP_ORDER[number];
+export type StepType = (typeof STEP_ORDER)[number];
 
 export const getStepPriority = (stepName: string): number => {
   const index = STEP_ORDER.indexOf(stepName as StepType);
   return index !== -1 ? index : STEP_ORDER.length; // Unknown steps go to the end
 };
 
-export const sortSteps = <T extends Record<string, any>>(steps: T | null | undefined) => {
+export const sortSteps = <T extends Record<string, any>>(
+  steps: T | null | undefined
+) => {
   if (!steps) return [];
 
   return Object.entries(steps).sort(([stepA], [stepB]) => {

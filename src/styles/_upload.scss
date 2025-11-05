@@ -292,7 +292,7 @@
   border-radius: var(--radius-sm);
   background: var(--color-surface-alt);
   color: var(--color-text-primary);
-  font-size: 1rem;
+  font-size: 0.875rem; /* Reduced from 1rem to 0.875rem */
   transition: all 0.2s ease;
 }
 
@@ -300,4 +300,17 @@
   outline: none;
   border-color: var(--color-accent);
   box-shadow: 0 0 0 4px rgba(95, 45, 225, 0.18);
+}
+
+/* Task Creation Modal field styles */
+.cfg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cfg-label {
+  font-size: 0.85rem; /* Reduced from default form label size */
+  font-weight: 600;
+  color: var(--color-text-secondary);
 }

@@ -3,6 +3,7 @@
 @use './components/TaskDashboard.scss' as *;
 @use './components/TaskProcessingSteps.scss' as *;
 @use './components/TaskProgressModal.scss' as *;
+@use './components/TaskCreationModal.scss' as *;
 
 // Import component-specific SCSS files
 @use './_variables.scss';

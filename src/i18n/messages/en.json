@@ -112,6 +112,8 @@
       "subtitles": "Subtitles",
       "subtitlesFormats": "VTT / SRT",
       "transcript": "Transcript",
+      "podcastHostVoice": "Host Voice",
+      "podcastGuestVoice": "Guest Voice",
       "metadataAria": "Task metadata"
     },
     "status": {
@@ -219,6 +221,9 @@
       "label": "Output"
     },
     "voiceLanguage": "Voice language",
+    "voiceSelection": "Voice",
+    "hostVoice": "Host voice",
+    "guestVoice": "Guest voice",
     "subtitleLanguage": "Subtitle language",
     "transcriptLanguage": "Transcript language",
     "videoResolution": "Video resolution",
@@ -271,7 +276,8 @@
       "taskCreated": "Task created: {id}",
       "createFailed": "Failed to create task",
       "cancelFailed": "Failed to cancel task",
-      "deleteFailed": "Failed to delete task"
+      "deleteFailed": "Failed to delete task",
+      "deleteSuccess": "Task deleted successfully"
     },
     "confirm": {
       "delete": "This will permanently remove the task and its state. Continue?"
@@ -342,6 +348,7 @@
       "generate_podcast_script": "Generating Podcast Script",
       "translate_podcast_script": "Translating Podcast Script",
       "generate_podcast_audio": "Generating Podcast Audio",
+      "generate_podcast_subtitles": "Creating Podcast Subtitles",
       "compose_podcast": "Composing Podcast",
       "unknown": "Initializing"
     },
@@ -394,6 +401,11 @@
       "pptDescription": "AI will convert your slides into a narrated video.",
       "supportedBadge": "Supported File",
       "supportedDescription": "Supports PDF, PPTX, and PPT files"
+    },
+    "voice": {
+      "loading": "Loading voices…",
+      "error": "Voices unavailable - defaults will be used.",
+      "none": "No voices available for this language"
     },
     "summary": {
       "file": "File",

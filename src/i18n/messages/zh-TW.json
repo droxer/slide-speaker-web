@@ -112,6 +112,8 @@
       "subtitles": "字幕語言",
       "subtitlesFormats": "VTT / SRT",
       "transcript": "逐字稿語言",
+      "podcastHostVoice": "主持人聲音",
+      "podcastGuestVoice": "嘉賓聲音",
       "metadataAria": "任務資訊"
     },
     "status": {
@@ -219,6 +221,9 @@
       "label": "輸出"
     },
     "voiceLanguage": "配音語言",
+    "voiceSelection": "配音人聲",
+    "hostVoice": "主持人聲音",
+    "guestVoice": "來賓聲音",
     "subtitleLanguage": "字幕語言",
     "transcriptLanguage": "逐字稿語言",
     "videoResolution": "影片解析度",
@@ -271,7 +276,8 @@
       "taskCreated": "任務已建立：{id}",
       "createFailed": "建立任務失敗",
       "cancelFailed": "取消任務失敗",
-      "deleteFailed": "刪除任務失敗"
+      "deleteFailed": "刪除任務失敗",
+      "deleteSuccess": "任務刪除成功"
     },
     "confirm": {
       "delete": "此動作會永久刪除任務與其狀態，確定要繼續嗎？"
@@ -342,6 +348,7 @@
       "generate_podcast_script": "產生播客腳本",
       "translate_podcast_script": "翻譯播客腳本",
       "generate_podcast_audio": "產生播客音訊",
+      "generate_podcast_subtitles": "產生播客字幕",
       "compose_podcast": "合成播客",
       "unknown": "初始化"
     },
@@ -394,6 +401,11 @@
       "pptDescription": "AI 會將投影片轉換為帶配音的影片。",
       "supportedBadge": "支援的檔案",
       "supportedDescription": "支援 PDF、PPTX 與 PPT 檔案"
+    },
+    "voice": {
+      "loading": "正在載入聲音…",
+      "error": "無法取得聲音，將使用預設設定。",
+      "none": "此語言暫無可用聲音"
     },
     "summary": {
       "file": "檔案",

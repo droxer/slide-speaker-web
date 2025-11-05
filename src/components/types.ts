@@ -21,6 +21,14 @@ export interface ProcessingDetails {
   file_ext?: string;
   voice_language?: string;
   subtitle_language?: string;
+  voice_id?: string | null;
+  podcast_host_voice?: string | null;
+  podcast_guest_voice?: string | null;
+  kwargs?: Record<string, unknown>;
+  task_kwargs?: Record<string, unknown>;
+  config?: Record<string, unknown>;
+  task_config?: Record<string, unknown>;
+  settings?: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }

@@ -414,6 +414,318 @@ const TaskProgressModal = ({
       stepsData = inferStepsFromTask(effectiveTask, state);
     }
 
+    const extractStringValue = (value: unknown): string | null => {
+      if (typeof value === 'string') {
+        const trimmed = value.trim();
+        return trimmed.length > 0 ? trimmed : null;
+      }
+      if (typeof value === 'number' && Number.isFinite(value)) {
+        return String(value);
+      }
+      if (Array.isArray(value)) {
+        for (const entry of value) {
+          const nested = extractStringValue(entry);
+          if (nested) return nested;
+        }
+        return null;
+      }
+      if (value && typeof value === 'object') {
+        const obj = value as Record<string, unknown>;
+        const direct = extractStringValue(
+          obj.id ??
+            obj.voice_id ??
+            obj.voiceId ??
+            obj.value ??
+            obj.text ??
+            obj.name ??
+            obj.display_name ??
+            obj.displayName
+        );
+        if (direct) return direct;
+      }
+      return null;
+    };
+
+    const getValueAtPath = (source: unknown, path: string[]): unknown => {
+      if (!source) return undefined;
+      let current: unknown = source;
+      for (const segment of path) {
+        if (current === null) return undefined;
+        if (Array.isArray(current)) {
+          const index = Number(segment);
+          if (Number.isInteger(index) && index >= 0 && index < current.length) {
+            current = current[index];
+          } else {
+            return undefined;
+          }
+        } else if (typeof current === 'object') {
+          current = (current as Record<string, unknown>)[segment];
+        } else {
+          return undefined;
+        }
+      }
+      return current;
+    };
+
+    const pickFirstFromPaths = (
+      sources: Array<object>,
+      paths: Array<string[]>
+    ): string | null => {
+      for (const source of sources) {
+        for (const path of paths) {
+          const value = getValueAtPath(source, path);
+          const extracted = extractStringValue(value);
+          if (extracted) return extracted;
+        }
+      }
+      return null;
+    };
+
+    const findStringByKeys = (
+      sources: Array<object>,
+      keyNames: string[],
+      maxDepth = 6
+    ): string | null => {
+      if (!keyNames.length) return null;
+      const normalizedNames = keyNames.map((name) => name.toLowerCase());
+      const seen = new Set<object>();
+      type QueueItem = { value: unknown; depth: number };
+      const queue: QueueItem[] = sources.map((value) => ({
+        value,
+        depth: 0,
+      }));
+
+      while (queue.length > 0) {
+        const { value, depth } = queue.shift()!;
+        if (!value || typeof value !== 'object') continue;
+        if (seen.has(value as object)) continue;
+        seen.add(value as object);
+
+        const entries: Array<[string, unknown]> = Array.isArray(value)
+          ? (value as Array<unknown>).map(
+              (item, index) => [String(index), item] as [string, unknown]
+            )
+          : Object.entries(value as Record<string, unknown>);
+
+        for (const [key, child] of entries) {
+          const normalizedKey = key.toLowerCase();
+          if (
+            normalizedNames.some(
+              (candidate) =>
+                normalizedKey === candidate ||
+                normalizedKey.endsWith(candidate) ||
+                normalizedKey.includes(candidate)
+            )
+          ) {
+            const extracted = extractStringValue(child);
+            if (extracted) return extracted;
+          }
+
+          if (
+            child &&
+            typeof child === 'object' &&
+            depth < maxDepth &&
+            !seen.has(child as object)
+          ) {
+            queue.push({ value: child, depth: depth + 1 });
+          }
+        }
+      }
+
+      return null;
+    };
+
+    const collectCandidateSources = (): Array<object> => {
+      const candidates: Array<object> = [];
+      const append = (value: unknown) => {
+        if (
+          value &&
+          typeof value === 'object' &&
+          !Array.isArray(value) &&
+          !candidates.includes(value as object)
+        ) {
+          candidates.push(value as object);
+        }
+      };
+
+      append(state);
+      append((state as any)?.kwargs);
+      append((state as any)?.task_kwargs);
+      append((state as any)?.config);
+      append((state as any)?.task_config);
+      append((state as any)?.settings);
+      append((state as any)?.data);
+      append((state as any)?.result);
+      append((state as any)?.output);
+      append((state as any)?.podcast);
+      append((state as any)?.podcast?.voices);
+
+      append(effectiveTask);
+      append(effectiveTask.kwargs);
+      append(effectiveTask.state);
+      append((effectiveTask as any)?.result);
+      append((effectiveTask as any)?.output);
+      append((effectiveTask.state as any)?.kwargs);
+      append((effectiveTask.state as any)?.task_kwargs);
+      append((effectiveTask.state as any)?.config);
+      append((effectiveTask.state as any)?.task_config);
+      append((effectiveTask.state as any)?.settings);
+      append((effectiveTask.state as any)?.podcast);
+      append((effectiveTask.state as any)?.podcast?.voices);
+      append((effectiveTask.state as any)?.result);
+      append((effectiveTask.state as any)?.output);
+
+      append(effectiveTask.detailed_state);
+      append((effectiveTask.detailed_state as any)?.kwargs);
+      append((effectiveTask.detailed_state as any)?.task_kwargs);
+      append((effectiveTask.detailed_state as any)?.config);
+      append((effectiveTask.detailed_state as any)?.task_config);
+      append((effectiveTask.detailed_state as any)?.settings);
+      append((effectiveTask.detailed_state as any)?.podcast);
+      append((effectiveTask.detailed_state as any)?.podcast?.voices);
+      append((effectiveTask.detailed_state as any)?.result);
+      append((effectiveTask.detailed_state as any)?.output);
+
+      if (stepsData && typeof stepsData === 'object') {
+        append(stepsData);
+        Object.values(stepsData).forEach((stepEntry) => {
+          append(stepEntry);
+          append((stepEntry as any)?.data);
+          append((stepEntry as any)?.result);
+        });
+      }
+
+      return candidates;
+    };
+
+    const candidateSources = collectCandidateSources();
+
+    const voiceIdPaths: string[][] = [
+      ['voice_id'],
+      ['voiceId'],
+      ['voice', 'voice_id'],
+      ['voice', 'voiceId'],
+      ['voice', 'id'],
+      ['voice', 'name'],
+      ['config', 'voice_id'],
+      ['config', 'voiceId'],
+      ['config', 'voice', 'id'],
+      ['settings', 'voice_id'],
+      ['settings', 'voiceId'],
+      ['task_config', 'voice_id'],
+      ['task_config', 'voiceId'],
+      ['task_config', 'voice', 'id'],
+      ['task_config', 'video', 'voice_id'],
+      ['task_config', 'video', 'voice', 'id'],
+      ['task_kwargs', 'voice_id'],
+      ['kwargs', 'voice_id'],
+      ['video', 'voice_id'],
+      ['video', 'voice', 'id'],
+      ['config', 'video', 'voice_id'],
+      ['config', 'video', 'voice', 'id'],
+      ['settings', 'video', 'voice_id'],
+      ['result', 'voice_id'],
+      ['result', 'voice', 'id'],
+      ['output', 'voice_id'],
+      ['generate_audio', 'result', 'voice_id'],
+      ['generate_podcast_audio', 'result', 'voice_id'],
+    ];
+
+    const podcastHostPaths: string[][] = [
+      ['podcast_host_voice'],
+      ['kwargs', 'podcast_host_voice'],
+      ['task_kwargs', 'podcast_host_voice'],
+      ['config', 'podcast_host_voice'],
+      ['task_config', 'podcast_host_voice'],
+      ['settings', 'podcast_host_voice'],
+      ['config', 'podcast', 'host_voice'],
+      ['task_config', 'podcast', 'host_voice'],
+      ['podcast', 'host_voice'],
+      ['podcast', 'hostVoice'],
+      ['podcast', 'host', 'voice_id'],
+      ['podcast', 'host', 'id'],
+      ['podcast', 'host', 'name'],
+      ['podcast', 'voices', 'host'],
+      ['podcast', 'voices', 'host_voice'],
+      ['podcast', 'voices', 'hostVoice'],
+      ['podcast', 'voices', 'host', 'voice_id'],
+      ['task_config', 'podcast', 'voices', 'host'],
+      ['config', 'podcast', 'voices', 'host'],
+      ['generate_podcast_audio', 'result', 'host_voice'],
+      ['generate_podcast_audio', 'result', 'host_voice_id'],
+      ['result', 'host_voice'],
+      ['result', 'host_voice_id'],
+    ];
+
+    const podcastGuestPaths: string[][] = [
+      ['podcast_guest_voice'],
+      ['kwargs', 'podcast_guest_voice'],
+      ['task_kwargs', 'podcast_guest_voice'],
+      ['config', 'podcast_guest_voice'],
+      ['task_config', 'podcast_guest_voice'],
+      ['settings', 'podcast_guest_voice'],
+      ['config', 'podcast', 'guest_voice'],
+      ['task_config', 'podcast', 'guest_voice'],
+      ['podcast', 'guest_voice'],
+      ['podcast', 'guestVoice'],
+      ['podcast', 'guest', 'voice_id'],
+      ['podcast', 'guest', 'id'],
+      ['podcast', 'guest', 'name'],
+      ['podcast', 'voices', 'guest'],
+      ['podcast', 'voices', 'guest_voice'],
+      ['podcast', 'voices', 'guestVoice'],
+      ['podcast', 'voices', 'guest', 'voice_id'],
+      ['task_config', 'podcast', 'voices', 'guest'],
+      ['config', 'podcast', 'voices', 'guest'],
+      ['generate_podcast_audio', 'result', 'guest_voice'],
+      ['generate_podcast_audio', 'result', 'guest_voice_id'],
+      ['result', 'guest_voice'],
+      ['result', 'guest_voice_id'],
+    ];
+
+    const voiceId =
+      pickFirstFromPaths(candidateSources, voiceIdPaths) ??
+      findStringByKeys(candidateSources, ['voice_id', 'voiceid']);
+
+    const podcastHostVoice =
+      pickFirstFromPaths(candidateSources, podcastHostPaths) ??
+      findStringByKeys(candidateSources, [
+        'podcast_host_voice',
+        'host_voice',
+        'hostvoice',
+      ]);
+
+    const podcastGuestVoice =
+      pickFirstFromPaths(candidateSources, podcastGuestPaths) ??
+      findStringByKeys(candidateSources, [
+        'podcast_guest_voice',
+        'guest_voice',
+        'guestvoice',
+      ]);
+
+    const stateKwargs =
+      (state as any)?.kwargs && typeof (state as any)?.kwargs === 'object'
+        ? ((state as any).kwargs as Record<string, unknown>)
+        : undefined;
+    const stateTaskKwargs =
+      (state as any)?.task_kwargs &&
+      typeof (state as any)?.task_kwargs === 'object'
+        ? ((state as any).task_kwargs as Record<string, unknown>)
+        : undefined;
+    const stateConfig =
+      (state as any)?.config && typeof (state as any)?.config === 'object'
+        ? ((state as any).config as Record<string, unknown>)
+        : undefined;
+    const stateTaskConfig =
+      (state as any)?.task_config &&
+      typeof (state as any)?.task_config === 'object'
+        ? ((state as any).task_config as Record<string, unknown>)
+        : undefined;
+    const stateSettings =
+      (state as any)?.settings && typeof (state as any)?.settings === 'object'
+        ? ((state as any).settings as Record<string, unknown>)
+        : undefined;
+
     // Improved progress calculation with better error handling and debugging
     const calculateProgress = (): number => {
       // Try multiple sources for progress information
@@ -620,6 +932,71 @@ const TaskProgressModal = ({
       created_at: createdAt || new Date().toISOString(),
       updated_at: updatedAt || createdAt || new Date().toISOString(),
     };
+
+    if (stateKwargs) {
+      computed.kwargs = stateKwargs;
+    } else if (
+      effectiveTask.kwargs &&
+      typeof effectiveTask.kwargs === 'object'
+    ) {
+      computed.kwargs = effectiveTask.kwargs as Record<string, unknown>;
+    }
+
+    if (stateTaskKwargs) {
+      computed.task_kwargs = stateTaskKwargs;
+    } else if (
+      (effectiveTask as any)?.task_kwargs &&
+      typeof (effectiveTask as any).task_kwargs === 'object'
+    ) {
+      computed.task_kwargs = (effectiveTask as any).task_kwargs as Record<
+        string,
+        unknown
+      >;
+    }
+
+    if (stateConfig) {
+      computed.config = stateConfig;
+    } else if (
+      (effectiveTask.detailed_state as any)?.config &&
+      typeof (effectiveTask.detailed_state as any)?.config === 'object'
+    ) {
+      computed.config = (effectiveTask.detailed_state as any).config as Record<
+        string,
+        unknown
+      >;
+    }
+
+    if (stateTaskConfig) {
+      computed.task_config = stateTaskConfig;
+    } else if (
+      (effectiveTask.detailed_state as any)?.task_config &&
+      typeof (effectiveTask.detailed_state as any)?.task_config === 'object'
+    ) {
+      computed.task_config = (effectiveTask.detailed_state as any)
+        .task_config as Record<string, unknown>;
+    }
+
+    if (stateSettings) {
+      computed.settings = stateSettings;
+    } else if (
+      (effectiveTask.detailed_state as any)?.settings &&
+      typeof (effectiveTask.detailed_state as any)?.settings === 'object'
+    ) {
+      computed.settings = (effectiveTask.detailed_state as any)
+        .settings as Record<string, unknown>;
+    }
+
+    if (voiceId) {
+      computed.voice_id = voiceId;
+    }
+
+    if (podcastHostVoice) {
+      computed.podcast_host_voice = podcastHostVoice;
+    }
+
+    if (podcastGuestVoice) {
+      computed.podcast_guest_voice = podcastGuestVoice;
+    }
 
     if (!computed.steps || typeof computed.steps !== 'object') {
       computed.steps = {};

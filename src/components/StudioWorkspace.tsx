@@ -15,10 +15,17 @@ import {
   cancelRun as apiCancel,
   getTaskProgress as apiGetProgress,
   retryTask,
+  getTtsVoices,
   type UploadPayload,
   type UploadResponse,
+  type TtsVoicesResponse,
 } from '@/services/client';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from '@tanstack/react-query';
 import { prefetchTaskDetail } from '@/services/queries';
 import dynamic from 'next/dynamic';
 
@@ -118,6 +125,9 @@ export function StudioWorkspace() {
   const [processingDetails, setProcessingDetails] =
     useState<ProcessingDetails | null>(null);
   const [voiceLanguage, setVoiceLanguage] = useState('english');
+  const [voiceId, setVoiceId] = useState<string>('');
+  const [podcastHostVoice, setPodcastHostVoice] = useState<string>('');
+  const [podcastGuestVoice, setPodcastGuestVoice] = useState<string>('');
   const [subtitleLanguage, setSubtitleLanguage] = useState('english');
   const [transcriptLanguage, setTranscriptLanguage] = useState('english');
   const [transcriptLangTouched, setTranscriptLangTouched] = useState(false);
@@ -180,6 +190,50 @@ export function StudioWorkspace() {
     // setPdfOutputMode('video');
     completionRedirectRef.current = false;
   }, []);
+
+  const voiceQuery = useQuery<TtsVoicesResponse>({
+    queryKey: ['ttsVoices', voiceLanguage],
+    queryFn: () => getTtsVoices(voiceLanguage),
+    enabled: Boolean(voiceLanguage),
+    staleTime: 1000 * 60 * 10,
+    placeholderData: keepPreviousData,
+  });
+
+  const availableVoices = useMemo(() => {
+    const voices = voiceQuery.data?.voices ?? [];
+    return voices.filter(
+      (voice) => typeof voice === 'string' && voice.trim().length > 0
+    );
+  }, [voiceQuery.data?.voices]);
+
+  useEffect(() => {
+    if (!availableVoices.length) {
+      setVoiceId('');
+      setPodcastHostVoice('');
+      setPodcastGuestVoice('');
+      return;
+    }
+
+    const primaryVoice = availableVoices[0];
+    const secondaryVoice =
+      availableVoices.find((voice) => voice !== primaryVoice) ?? primaryVoice;
+
+    setVoiceId((prev) =>
+      prev && availableVoices.includes(prev) ? prev : primaryVoice
+    );
+    setPodcastHostVoice((prev) =>
+      prev && availableVoices.includes(prev) ? prev : primaryVoice
+    );
+    setPodcastGuestVoice((prev) => {
+      if (prev && availableVoices.includes(prev)) {
+        return prev;
+      }
+      return secondaryVoice;
+    });
+  }, [availableVoices]);
+
+  const voiceOptionsLoading = voiceQuery.isFetching;
+  const voiceOptionsError = voiceQuery.isError;
 
   const formatFileSize = useCallback(
     (size: number | null | undefined) => {
@@ -320,6 +374,8 @@ export function StudioWorkspace() {
             : 'podcast'
           : 'video';
       const sourceType = uploadMode === 'pdf' ? 'pdf' : 'slides';
+      const generatePodcast = taskType !== 'video';
+      const generateVideo = taskType !== 'podcast';
 
       let payload: FormData | UploadPayload;
 
@@ -328,23 +384,34 @@ export function StudioWorkspace() {
         formData.append('file', file, file.name);
         formData.append('filename', file.name);
         formData.append('voice_language', voiceLanguage);
+        if (voiceId) {
+          formData.append('voice_id', voiceId);
+        }
         formData.append('generate_avatar', String(generateAvatar));
         formData.append('generate_subtitles', String(generateSubtitles));
-        formData.append('generate_podcast', String(taskType !== 'video'));
-        formData.append('generate_video', String(taskType !== 'podcast'));
+        formData.append('generate_podcast', String(generatePodcast));
+        formData.append('generate_video', String(generateVideo));
         formData.append('task_type', taskType);
         formData.append('source_type', sourceType);
 
         // Only include video_resolution for video tasks
-        if (taskType === 'video') {
+        if (generateVideo) {
           formData.append('video_resolution', videoResolution);
         }
 
         if (subtitleLanguage) {
           formData.append('subtitle_language', subtitleLanguage);
         }
-        if (taskType === 'podcast' && transcriptLanguage) {
+        if (generatePodcast && transcriptLanguage) {
           formData.append('transcript_language', transcriptLanguage);
+        }
+        if (generatePodcast) {
+          if (podcastHostVoice) {
+            formData.append('podcast_host_voice', podcastHostVoice);
+          }
+          if (podcastGuestVoice) {
+            formData.append('podcast_guest_voice', podcastGuestVoice);
+          }
         }
 
         payload = formData;
@@ -366,16 +433,17 @@ export function StudioWorkspace() {
           filename: file.name,
           file_data: base64File,
           voice_language: voiceLanguage,
+          voice_id: voiceId || null,
           generate_avatar: generateAvatar,
           generate_subtitles: generateSubtitles,
           task_type: taskType,
           source_type: sourceType,
-          generate_video: taskType !== 'podcast',
-          generate_podcast: taskType !== 'video',
+          generate_video: generateVideo,
+          generate_podcast: generatePodcast,
         };
 
         // Only include video_resolution for video tasks
-        if (taskType === 'video') {
+        if (generateVideo) {
           jsonPayload.video_resolution = videoResolution;
         }
 
@@ -383,8 +451,13 @@ export function StudioWorkspace() {
           jsonPayload.subtitle_language = subtitleLanguage;
         }
 
-        if (taskType === 'podcast' && transcriptLanguage) {
+        if (generatePodcast && transcriptLanguage) {
           jsonPayload.transcript_language = transcriptLanguage;
+        }
+
+        if (generatePodcast) {
+          jsonPayload.podcast_host_voice = podcastHostVoice || null;
+          jsonPayload.podcast_guest_voice = podcastGuestVoice || null;
         }
 
         payload = jsonPayload;
@@ -428,6 +501,9 @@ export function StudioWorkspace() {
     uploadMutation,
     videoResolution,
     voiceLanguage,
+    voiceId,
+    podcastHostVoice,
+    podcastGuestVoice,
     t,
     queryClient,
   ]);
@@ -967,6 +1043,15 @@ export function StudioWorkspace() {
               onFileChange={handleFileChange}
               voiceLanguage={voiceLanguage}
               setVoiceLanguage={setVoiceLanguage}
+              voiceOptions={availableVoices}
+              voiceId={voiceId}
+              setVoiceId={setVoiceId}
+              podcastHostVoice={podcastHostVoice}
+              setPodcastHostVoice={setPodcastHostVoice}
+              podcastGuestVoice={podcastGuestVoice}
+              setPodcastGuestVoice={setPodcastGuestVoice}
+              voiceOptionsLoading={voiceOptionsLoading}
+              voiceOptionsError={voiceOptionsError}
               subtitleLanguage={subtitleLanguage}
               setSubtitleLanguage={setSubtitleLanguage}
               transcriptLanguage={transcriptLanguage}

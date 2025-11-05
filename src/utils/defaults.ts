@@ -1,24 +1,30 @@
 export type GlobalRunDefaults = {
   voice_language: string;
+  voice_id?: string | null;
   subtitle_language?: string | null;
   transcript_language?: string | null;
+  podcast_host_voice?: string | null;
+  podcast_guest_voice?: string | null;
   video_resolution?: string;
 };
 
 const STORAGE_KEY = 'slidespeaker_run_defaults_v1';
-const DEFAULT_VALUES = { 
-  voice_language: 'english', 
-  subtitle_language: null, 
-  transcript_language: null, 
-  video_resolution: 'hd' 
+const DEFAULT_VALUES = {
+  voice_language: 'english',
+  voice_id: null,
+  subtitle_language: null,
+  transcript_language: null,
+  podcast_host_voice: null,
+  podcast_guest_voice: null,
+  video_resolution: 'hd',
 } as const;
 
 export const getGlobalRunDefaults = (): GlobalRunDefaults => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     const parsed = raw ? JSON.parse(raw) : null;
-    return parsed && typeof parsed === 'object' 
-      ? { ...DEFAULT_VALUES, ...parsed } 
+    return parsed && typeof parsed === 'object'
+      ? { ...DEFAULT_VALUES, ...parsed }
       : DEFAULT_VALUES;
   } catch {
     return DEFAULT_VALUES;
@@ -34,4 +40,3 @@ export const saveGlobalRunDefaults = (updates: Partial<GlobalRunDefaults>) => {
     // Silently fail to avoid breaking the application
   }
 };
-

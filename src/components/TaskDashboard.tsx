@@ -31,7 +31,11 @@ import {
   evictOldListQueries,
 } from '../services/queries';
 import { Link } from '@/navigation';
-import { getGlobalRunDefaults, saveGlobalRunDefaults } from '../utils/defaults';
+import {
+  getGlobalRunDefaults,
+  saveGlobalRunDefaults,
+  type GlobalRunDefaults,
+} from '../utils/defaults';
 import type { Task } from '../types';
 import { useI18n } from '@/i18n/hooks';
 import { getLanguageDisplayName } from '../utils/language';
@@ -716,9 +720,23 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
             };
           }
         );
-        // Use the new query structure for invalidation
+        // Invalidate queries to force a refresh from the server
         await queryClient.invalidateQueries({ queryKey: ['tasks'] });
         await queryClient.invalidateQueries({ queryKey: ['files'] });
+        await queryClient.invalidateQueries({ queryKey: ['tasksSearch'] });
+
+        // Force a re-fetch of the current page data
+        await queryClient.refetchQueries({ queryKey: ['files'] });
+
+        // Show success message
+        setToast({
+          type: 'success',
+          message: t(
+            'creations.toast.deleteSuccess',
+            undefined,
+            'Task deleted successfully'
+          ),
+        });
       } catch (error) {
         console.error('Failed to delete task from creations', error);
         alert(
@@ -944,7 +962,7 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
             </div>
           )}
           <div className="file-task-actions">
-            {!canRetry && (
+            {task.status === 'completed' && (
               <Link
                 className="file-task-action primary"
                 href={`/tasks/${task.task_id}`}
@@ -1025,13 +1043,17 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
         ? {
             task_type: 'video',
             voice_language: defs.voice_language,
+            voice_id: defs.voice_id ?? null,
             subtitle_language: defs.subtitle_language ?? null,
             video_resolution: defs.video_resolution || 'hd',
           }
         : {
             task_type: 'podcast',
             voice_language: defs.voice_language,
+            voice_id: null,
             transcript_language: defs.transcript_language ?? null,
+            podcast_host_voice: defs.podcast_host_voice ?? null,
+            podcast_guest_voice: defs.podcast_guest_voice ?? null,
             video_resolution: defs.video_resolution || 'hd',
           }
     );
@@ -1187,12 +1209,24 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
           onSubmit={(payload) => {
             if (!runFile?.upload_id) return;
             setRunSubmitting(true);
-            saveGlobalRunDefaults({
+            const updates: Partial<GlobalRunDefaults> = {
               voice_language: payload.voice_language,
               subtitle_language: payload.subtitle_language ?? null,
               transcript_language: payload.transcript_language ?? null,
+              podcast_host_voice:
+                payload.task_type === 'podcast'
+                  ? (payload.podcast_host_voice ?? null)
+                  : null,
+              podcast_guest_voice:
+                payload.task_type === 'podcast'
+                  ? (payload.podcast_guest_voice ?? null)
+                  : null,
               video_resolution: payload.video_resolution || 'hd',
-            });
+            };
+            if (payload.task_type === 'video') {
+              updates.voice_id = payload.voice_id ?? null;
+            }
+            saveGlobalRunDefaults(updates);
             runFileTask.mutate(
               { uploadId: runFile.upload_id, payload },
               {

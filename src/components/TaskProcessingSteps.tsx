@@ -55,7 +55,14 @@ const TaskProcessingSteps = ({
     : null;
 
   const { stepsForDisplay, latestFailedStep } = useMemo(() => {
-    const orderedSteps = sortSteps(steps);
+    const filteredEntries = Object.entries(steps || {}).filter(
+      ([stepName, stepData]) =>
+        stepName !== 'revise_transcripts' &&
+        normalizeStepStatus(stepData?.status) !== 'skipped'
+    );
+
+    const filteredSteps = Object.fromEntries(filteredEntries);
+    const orderedSteps = sortSteps(filteredSteps);
     const errors = Array.isArray(pd.errors) ? pd.errors : [];
     let failureStep: string | null = null;
 
@@ -107,7 +114,7 @@ const TaskProcessingSteps = ({
     });
 
     return {
-      stepsForDisplay: failureStep ? patched : steps,
+      stepsForDisplay: patched,
       latestFailedStep: failureStep,
     };
   }, [pd.errors, steps]);

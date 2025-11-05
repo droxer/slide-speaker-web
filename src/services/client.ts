@@ -1,7 +1,12 @@
 import axios from 'axios';
 import { resolveApiBaseUrl } from '@/utils/apiBaseUrl';
 import type { HealthStatus } from '@/types/health';
-import type { Task, DownloadsResponse, PodcastScriptResponse } from '@/types';
+import type {
+  Task,
+  DownloadsResponse,
+  PodcastScriptResponse,
+  PodcastSubtitlesResponse,
+} from '@/types';
 import type { ProfileResponse } from '@/types/user';
 
 const API_BASE_URL = resolveApiBaseUrl();
@@ -93,6 +98,7 @@ export interface UploadPayload {
   filename: string;
   file_data: string;
   voice_language?: string;
+  voice_id?: string | null;
   subtitle_language?: string | null;
   transcript_language?: string | null;
   video_resolution?: string;
@@ -102,6 +108,8 @@ export interface UploadPayload {
   generate_video?: boolean;
   task_type?: 'video' | 'podcast' | 'both';
   source_type?: 'pdf' | 'slides' | 'audio';
+  podcast_host_voice?: string | null;
+  podcast_guest_voice?: string | null;
 }
 
 export interface UploadResponse {
@@ -189,11 +197,57 @@ export const getVttText = async (taskId: string, language?: string) => {
   return String(res.data || '');
 };
 
+export interface TtsVoicesResponse {
+  model: string | null;
+  voices: string[];
+}
+
+export const getTtsVoices = async (
+  language: string
+): Promise<TtsVoicesResponse> => {
+  const res = await api.get(`/api/tts/voices`, {
+    params: { language },
+  });
+  const data = res.data ?? {};
+  const rawVoices: unknown[] = Array.isArray(data?.voices) ? data.voices : [];
+  const voices = rawVoices
+    .map((voice: unknown): string | null => {
+      if (voice == null) return null;
+      if (typeof voice === 'string') return voice;
+      if (
+        typeof voice === 'object' &&
+        'id' in (voice as Record<string, unknown>)
+      ) {
+        const candidate = (voice as Record<string, unknown>).id;
+        return typeof candidate === 'string' ? candidate : null;
+      }
+      return null;
+    })
+    .filter(
+      (voice: string | null): voice is string =>
+        typeof voice === 'string' && voice.trim().length > 0
+    );
+  const model =
+    data?.model != null && data.model !== ''
+      ? String(data.model)
+      : data?.service_name != null
+        ? String(data.service_name)
+        : null;
+  return { model, voices };
+};
+
 export const getPodcastScript = async (
   taskId: string
 ): Promise<PodcastScriptResponse> => {
   const res = await api.get(`/api/tasks/${taskId}/podcast/script`);
   return res.data as PodcastScriptResponse;
+};
+
+export const getPodcastSubtitles = async (
+  taskId: string
+): Promise<PodcastSubtitlesResponse> => {
+  const res = await api.get(`/api/tasks/${taskId}/podcast/subtitles`);
+  return res.data as PodcastSubtitlesResponse;
 };
 
 export const getUploads = async (): Promise<{ uploads: UploadSummary[] }> => {
