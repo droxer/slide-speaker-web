@@ -384,7 +384,7 @@ export function StudioWorkspace() {
         formData.append('file', file, file.name);
         formData.append('filename', file.name);
         formData.append('voice_language', voiceLanguage);
-        if (voiceId) {
+        if (voiceId && !generatePodcast) {
           formData.append('voice_id', voiceId);
         }
         formData.append('generate_avatar', String(generateAvatar));
@@ -433,7 +433,7 @@ export function StudioWorkspace() {
           filename: file.name,
           file_data: base64File,
           voice_language: voiceLanguage,
-          voice_id: voiceId || null,
+          voice_id: (!generatePodcast && voiceId) || null,
           generate_avatar: generateAvatar,
           generate_subtitles: generateSubtitles,
           task_type: taskType,
@@ -883,7 +883,10 @@ export function StudioWorkspace() {
 
   const progressQuery = useQuery({
     queryKey: ['progress', taskId],
-    queryFn: () => apiGetProgress<ProcessingDetails>(taskId as string),
+    queryFn: () =>
+      apiGetProgress<ProcessingDetails>(taskId as string, {
+        view: 'compact',
+      }),
     enabled:
       (status === 'processing' || status === 'failed') && Boolean(taskId),
     refetchInterval: 3000,

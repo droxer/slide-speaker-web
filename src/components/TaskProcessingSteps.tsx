@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useI18n } from '@/i18n/hooks';
 import { resolveTaskType } from '@/utils/taskType';
 import TaskMetadataDisplay from '@/components/TaskMetadataDisplay';
@@ -9,14 +10,15 @@ import TaskStepDisplay from '@/components/TaskStepDisplay';
 import TaskErrorDisplay from '@/components/TaskErrorDisplay';
 import { normalizeStepStatus } from '@/utils/stepLabels';
 import { sortSteps } from '@/utils/stepOrdering';
+import { getTaskProgress, type TaskProgressResponse } from '@/services/client';
 
 type TaskProcessingStepsProps = {
   taskId: string | null;
   uploadId: string | null;
   fileName: string | null;
-  progress: number;
+  progress?: number;
   onStop: () => void;
-  processingDetails: any;
+  processingDetails?: Partial<TaskProgressResponse> | null;
   onRetryFromStep?: (step: string) => void;
   isRetrying?: boolean;
   formatStepNameWithLanguages: (
@@ -30,7 +32,7 @@ const TaskProcessingSteps = ({
   taskId,
   uploadId,
   fileName,
-  progress,
+  progress = 0,
   onStop,
   processingDetails,
   onRetryFromStep,
@@ -38,8 +40,37 @@ const TaskProcessingSteps = ({
   formatStepNameWithLanguages,
 }: TaskProcessingStepsProps) => {
   const { t } = useI18n();
-  const pd = processingDetails || {};
-  const steps = (pd.steps || {}) as Record<string, any>;
+  const { data: liveDetails } = useQuery<
+    TaskProgressResponse,
+    Error,
+    CompactProgressPayload
+  >({
+    queryKey: ['progress', taskId],
+    queryFn: () => getTaskProgress(taskId as string, { view: 'compact' }),
+    enabled: Boolean(taskId),
+    refetchInterval: 3000,
+    refetchOnWindowFocus: false,
+    refetchIntervalInBackground: false,
+    select: (data) => toCompactProgressPayload(data),
+  });
+
+  const pd = useMemo(
+    () => toCompactProgressPayload(liveDetails ?? processingDetails),
+    [liveDetails, processingDetails]
+  );
+  const steps = pd.steps;
+
+  const normalizeProgress = (value: number | undefined | null) => {
+    if (typeof value !== 'number' || !Number.isFinite(value)) {
+      return 0;
+    }
+    if (value > 1) {
+      return Math.min(100, value);
+    }
+    return Math.min(100, Math.round(value * 100));
+  };
+
+  const progressValue = normalizeProgress(liveDetails?.progress ?? progress);
 
   const typeInfo = resolveTaskType(
     { task_type: pd.task_type, kwargs: (pd as any)?.kwargs || {} } as any,
@@ -67,7 +98,10 @@ const TaskProcessingSteps = ({
     let failureStep: string | null = null;
 
     for (let idx = errors.length - 1; idx >= 0; idx -= 1) {
-      const candidate = errors[idx]?.step;
+      const candidate =
+        errors[idx] && typeof errors[idx] === 'object'
+          ? (errors[idx] as any)?.step
+          : undefined;
       if (typeof candidate === 'string' && candidate.trim().length > 0) {
         failureStep = candidate;
         break;
@@ -155,7 +189,7 @@ const TaskProcessingSteps = ({
           </button>
         </header>
         <div className="processing-progress">
-          <TaskProgressDisplay progress={progress} />
+          <TaskProgressDisplay progress={progressValue} />
         </div>
 
         <div className="processing-steps">
@@ -200,7 +234,7 @@ const TaskProcessingSteps = ({
             />
 
             <TaskErrorDisplay
-              errors={pd.errors}
+              errors={Array.isArray(pd.errors) ? pd.errors : []}
               voiceLanguage={voiceLanguage}
               subtitleLanguage={subtitleLanguage}
               formatStepNameWithLanguages={formatStepNameWithLanguages}
@@ -247,7 +281,7 @@ const TaskProcessingSteps = ({
           <TaskMetadataDisplay
             taskId={taskId}
             fileName={fileName}
-            processingDetails={processingDetails}
+            processingDetails={pd}
           />
         </div>
       </div>
@@ -256,3 +290,159 @@ const TaskProcessingSteps = ({
 };
 
 export default TaskProcessingSteps;
+
+type CompactProgressPayload = {
+  status: string;
+  progress: number;
+  current_step: string;
+  steps: Record<string, { status?: string; blockedByFailure?: boolean }>;
+  errors?: unknown[];
+  filename?: string | null;
+  file_ext?: string | null;
+  source_type?: string | null;
+  voice_language?: string | null;
+  subtitle_language?: string | null;
+  transcript_language?: string | null;
+  podcast_transcript_language?: string | null;
+  generate_podcast?: boolean;
+  generate_video?: boolean;
+  generate_subtitles?: boolean;
+  generate_avatar?: boolean;
+  task_type?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+  voice_id?: string | null;
+  podcast_host_voice?: string | null;
+  podcast_guest_voice?: string | null;
+  message?: string | null;
+  kwargs?: Record<string, unknown> | undefined;
+  task_kwargs?: Record<string, unknown> | undefined;
+  task_config?: Record<string, unknown> | undefined;
+  settings?: Record<string, unknown> | undefined;
+};
+
+const RELEVANT_NESTED_KEYS = [
+  'voice_language',
+  'subtitle_language',
+  'transcript_language',
+  'podcast_transcript_language',
+  'voice_id',
+  'podcast_host_voice',
+  'podcast_guest_voice',
+  'generate_podcast',
+  'generate_video',
+  'generate_subtitles',
+  'generate_avatar',
+] as const;
+
+const pickRelevant = (value: unknown) => {
+  if (!value || typeof value !== 'object') return undefined;
+  const source = value as Record<string, unknown>;
+  const entries = RELEVANT_NESTED_KEYS.map((key) => [key, source[key]]).filter(
+    ([, v]) => v !== undefined
+  );
+  if (entries.length === 0) return undefined;
+  return Object.fromEntries(entries);
+};
+
+const toCompactProgressPayload = (
+  payload:
+    | Partial<TaskProgressResponse>
+    | CompactProgressPayload
+    | null
+    | undefined
+): CompactProgressPayload => {
+  // If payload is already a CompactProgressPayload, return it as-is
+  if (
+    payload &&
+    typeof payload === 'object' &&
+    'steps' in payload &&
+    typeof (payload as CompactProgressPayload).steps === 'object'
+  ) {
+    return payload as CompactProgressPayload;
+  }
+
+  const safe = typeof payload === 'object' && payload ? payload : {};
+  const steps = Object.entries(
+    (safe.steps && typeof safe.steps === 'object' ? safe.steps : {}) as Record<
+      string,
+      any
+    >
+  ).reduce<Record<string, { status?: string; blockedByFailure?: boolean }>>(
+    (acc, [stepName, stepData]) => {
+      if (!stepData || typeof stepData !== 'object') {
+        acc[stepName] = {};
+        return acc;
+      }
+      const status =
+        typeof (stepData as any).status === 'string'
+          ? String((stepData as any).status)
+          : undefined;
+      const blockedByFailure = Boolean((stepData as any).blockedByFailure);
+      const compact: { status?: string; blockedByFailure?: boolean } = {};
+      if (status) compact.status = status;
+      if (blockedByFailure) compact.blockedByFailure = true;
+      acc[stepName] = compact;
+      return acc;
+    },
+    {}
+  );
+
+  const coerceString = (value: unknown): string | null => {
+    if (typeof value !== 'string') return null;
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : null;
+  };
+
+  const coerceNumber = (value: unknown): number => {
+    if (typeof value !== 'number' || !Number.isFinite(value)) return 0;
+    return value;
+  };
+
+  const coerceBoolean = (value: unknown): boolean | undefined => {
+    if (typeof value === 'boolean') return value;
+    if (typeof value === 'string') {
+      if (value.toLowerCase() === 'true') return true;
+      if (value.toLowerCase() === 'false') return false;
+    }
+    return undefined;
+  };
+
+  const compactPayload: CompactProgressPayload = {
+    status: coerceString(safe.status) ?? 'unknown',
+    progress: coerceNumber(safe.progress),
+    current_step: coerceString(safe.current_step) ?? 'unknown',
+    steps,
+    errors: Array.isArray(safe.errors) ? safe.errors : [],
+    filename: coerceString(safe.filename),
+    file_ext: coerceString(safe.file_ext),
+    source_type: coerceString(safe.source_type),
+    voice_language: coerceString(safe.voice_language),
+    subtitle_language: coerceString(safe.subtitle_language),
+    transcript_language: coerceString(
+      (safe as any).transcript_language ??
+        (safe as any)?.kwargs?.transcript_language
+    ),
+    podcast_transcript_language: coerceString(
+      (safe as any).podcast_transcript_language ??
+        (safe as any)?.kwargs?.podcast_transcript_language
+    ),
+    generate_podcast: coerceBoolean(safe.generate_podcast),
+    generate_video: coerceBoolean(safe.generate_video),
+    generate_subtitles: coerceBoolean((safe as any).generate_subtitles),
+    generate_avatar: coerceBoolean((safe as any).generate_avatar),
+    task_type: coerceString(safe.task_type),
+    created_at: coerceString(safe.created_at),
+    updated_at: coerceString(safe.updated_at),
+    voice_id: coerceString((safe as any).voice_id),
+    podcast_host_voice: coerceString((safe as any).podcast_host_voice),
+    podcast_guest_voice: coerceString((safe as any).podcast_guest_voice),
+    message: coerceString((safe as any).message),
+    kwargs: pickRelevant((safe as any).kwargs),
+    task_kwargs: pickRelevant((safe as any).task_kwargs),
+    task_config: pickRelevant((safe as any).task_config),
+    settings: pickRelevant((safe as any).settings),
+  };
+
+  return compactPayload;
+};

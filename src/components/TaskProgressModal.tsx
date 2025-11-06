@@ -7,7 +7,7 @@ import type { ProcessingDetails } from './types';
 import { getStepLabel } from '@/utils/stepLabels';
 import { useI18n } from '@/i18n/hooks';
 import { sortSteps } from '@/utils/stepOrdering';
-import { useTaskQuery, prefetchTaskDetail } from '@/services/queries';
+import { useTaskQuery } from '@/services/queries';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { retryTask } from '@/services/client';
@@ -256,34 +256,12 @@ const TaskProgressModal = ({
   const { t } = useI18n();
   const queryClient = useQueryClient();
 
-  // Prefetch related task data when the modal is opened
-  useEffect(() => {
-    if (open && task?.task_id) {
-      // Prefetch task details for better performance when user navigates to task detail page
-      prefetchTaskDetail(undefined as any, task.task_id);
-    }
-  }, [open, task?.task_id]);
-
-  // Use task query with polling for active tasks
-  const shouldPoll =
-    open &&
-    task?.task_id &&
-    (task.status === 'processing' ||
-      task.status === 'queued' ||
-      task.status === 'pending' ||
-      task.status === 'failed');
-
   const { data: updatedTask } = useTaskQuery(
     task?.task_id || '',
     task || null,
-    shouldPoll
-      ? {
-          refetchInterval: 3000, // Poll every 3 seconds for active tasks
-          staleTime: 2000, // Consider data stale after 2 seconds when polling
-          // Disable polling when page is not visible to enable bfcache
-          refetchIntervalInBackground: false,
-        }
-      : undefined
+    {
+      enabled: false,
+    }
   );
 
   // Determine which task data to use - updated task from query or original prop

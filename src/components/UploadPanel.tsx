@@ -263,31 +263,33 @@ const UploadPanel = ({
             </select>
           </div>
 
-          <div className="video-option-card">
-            <div className="video-option-header">
-              <span className="video-option-icon">🗣️</span>
-              <span className="video-option-title">
-                {t('runTask.voiceSelection', undefined, 'Voice')}
-              </span>
+          {!isPodcastMode && (
+            <div className="video-option-card">
+              <div className="video-option-header">
+                <span className="video-option-icon">🗣️</span>
+                <span className="video-option-title">
+                  {t('runTask.voiceSelection', undefined, 'Voice')}
+                </span>
+              </div>
+              <select
+                id="voice-select"
+                value={hasVoiceOptions ? voiceId : ''}
+                onChange={(e) => setVoiceId(e.target.value)}
+                className="video-option-select"
+                disabled={!hasVoiceOptions}
+              >
+                {hasVoiceOptions ? (
+                  voiceOptions.map((voice) => (
+                    <option key={voice} value={voice}>
+                      {formatVoiceLabel(voice)}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">{voicePlaceholder}</option>
+                )}
+              </select>
             </div>
-            <select
-              id="voice-select"
-              value={hasVoiceOptions ? voiceId : ''}
-              onChange={(e) => setVoiceId(e.target.value)}
-              className="video-option-select"
-              disabled={!hasVoiceOptions}
-            >
-              {hasVoiceOptions ? (
-                voiceOptions.map((voice) => (
-                  <option key={voice} value={voice}>
-                    {formatVoiceLabel(voice)}
-                  </option>
-                ))
-              ) : (
-                <option value="">{voicePlaceholder}</option>
-              )}
-            </select>
-          </div>
+          )}
 
           {isPodcastMode && (
             <>

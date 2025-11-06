@@ -15,7 +15,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   cancelRun as apiCancelRun,
   deleteTask as apiDeleteTask,
-  purgeTask as apiPurgeTask,
   getHealth,
   retryTask,
 } from '../services/client';
@@ -660,15 +659,8 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
       try {
         await apiDeleteTask(taskId);
       } catch (error: any) {
-        const message = error?.response?.data?.error || error?.message || '';
-        if (
-          typeof message === 'string' &&
-          message.toLowerCase().includes('cannot be cancelled')
-        ) {
-          await apiPurgeTask(taskId);
-        } else {
-          throw error;
-        }
+        console.error('Failed to delete task:', error);
+        throw error;
       }
       try {
         setHiddenTasks((prev) => {

@@ -8,7 +8,6 @@ import {
   getTasks,
   searchTasks,
   getDownloads,
-  getTranscriptMarkdown,
   getVttText,
   cancelRun,
   deleteTask,
@@ -32,7 +31,6 @@ export const queries = {
     detail: (taskId: string) => ['tasks', 'detail', taskId] as const,
   },
   downloads: (taskId: string) => ['downloads', taskId] as const,
-  transcript: (taskId: string) => ['transcript', taskId] as const,
   vtt: (taskId: string, language?: string) =>
     language
       ? (['vtt', taskId, language] as const)
@@ -111,17 +109,6 @@ export const useDownloadsQuery = (taskId: string | null, enabled = true) => {
   });
 };
 
-export const useTranscriptQuery = (taskId: string | null, enabled = true) => {
-  const id = taskId || '';
-  return useQuery({
-    queryKey: queries.transcript(id),
-    queryFn: async () => {
-      return getTranscriptMarkdown(id);
-    },
-    enabled: Boolean(taskId) && enabled,
-  });
-};
-
 export const usePodcastScriptQuery = (
   taskId: string | null,
   enabled = true
@@ -186,6 +173,7 @@ export const useTaskQuery = (
     refetchInterval?: number | false | ((q: any) => number | false);
     staleTime?: number;
     refetchIntervalInBackground?: boolean;
+    enabled?: boolean;
   }
 ) => {
   return useQuery<Task | null>({
@@ -201,7 +189,7 @@ export const useTaskQuery = (
         throw error;
       }
     },
-    enabled: Boolean(taskId),
+    enabled: Boolean(taskId) && (opts?.enabled ?? true),
     staleTime:
       opts?.staleTime ??
       (initialData?.status === 'completed' ? 10 * 60 * 1000 : 30_000),

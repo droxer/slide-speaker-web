@@ -57,13 +57,6 @@ export const getDownloads = async (taskId: string) => {
   return res.data as DownloadsResponse;
 };
 
-export const getTranscriptMarkdown = async (taskId: string) => {
-  const res = await api.get(`/api/tasks/${taskId}/transcripts/markdown`, {
-    headers: { Accept: 'text/markdown' },
-  });
-  return String(res.data || '');
-};
-
 export const getTaskById = async (taskId: string): Promise<Task> => {
   const res = await api.get(`/api/tasks/${encodeURIComponent(taskId)}`);
   return res.data as Task;
@@ -71,10 +64,6 @@ export const getTaskById = async (taskId: string): Promise<Task> => {
 
 export const deleteTask = async (taskId: string) => {
   await api.delete(`/api/tasks/${taskId}/delete`);
-};
-
-export const purgeTask = async (taskId: string) => {
-  await api.delete(`/api/tasks/${taskId}/purge`);
 };
 
 export const cancelRun = async (taskId: string) => {
@@ -183,9 +172,12 @@ export interface TaskProgressResponse {
 }
 
 export const getTaskProgress = async <T = TaskProgressResponse>(
-  taskId: string
+  taskId: string,
+  opts?: { view?: 'compact' | 'full' }
 ): Promise<T> => {
-  const res = await api.get<T>(`/api/tasks/${taskId}/progress`);
+  const params =
+    opts?.view && opts.view !== 'full' ? { view: opts.view } : undefined;
+  const res = await api.get<T>(`/api/tasks/${taskId}/progress`, { params });
   return res.data;
 };
 
