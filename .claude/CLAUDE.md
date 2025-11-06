@@ -11,6 +11,7 @@ SlideSpeaker Web is a Next.js + React frontend application for transforming pres
 - **Framework**: Next.js 15+ (with App Router)
 - **Language**: TypeScript 5+
 - **Styling**: SCSS with CSS Modules, Google Fonts (Open Sans)
+- **Design System**: Flat 3.0 token set defined in `src/styles/_variables.scss`
 - **Authentication**: NextAuth.js for user authentication
 - **State Management**: Zustand for client state, React Query (TanStack Query) for server state
 - **Internationalization**: next-intl for multi-language support
@@ -138,11 +139,14 @@ make test        # Run unit tests
 - React Query hooks in `src/services/queries.ts` and `src/services/userQueries.ts`
 - API base URL configured via environment variable `NEXT_PUBLIC_API_BASE_URL`
 
-### Theming
+### Theming & Design Language
 
 - Supports light, dark, and high-contrast themes
 - Themes are persisted in localStorage and respect system preferences
 - Initial theme is applied via JavaScript in `layout.tsx` before hydration
+- Visuals follow the Flat 3.0 direction: bold accent gradients, soft neutrals, and large typographic scales from the shared CSS variables
+- Prefer palette tokens such as `--color-accent`, `--color-text-primary`, `--font-size-display`; avoid reintroducing legacy hex colors
+- Always render the product name as the exact English phrase “SlideSpeaker AI”, regardless of locale
 
 ## Key Components and Patterns
 

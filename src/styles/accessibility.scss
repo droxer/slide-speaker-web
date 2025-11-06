@@ -43,19 +43,6 @@
   outline-offset: 2px;
 }
 
-/* High Contrast Skip Links for High Contrast Themes */
-.theme-light-hc .skip-link {
-  background: #000;
-  color: #fff;
-  border: 2px solid #fff;
-}
-
-.theme-dark-hc .skip-link {
-  background: #fff;
-  color: #000;
-  border: 2px solid #000;
-}
-
 /* Focus Visible Polyfill - Enhanced focus indicators */
 .js-focus-visible :focus:not(.focus-visible) {
   outline: none;
@@ -70,13 +57,6 @@
 *:focus {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
-}
-
-/* High contrast focus indicators for high contrast themes */
-.theme-light-hc *:focus,
-.theme-dark-hc *:focus {
-  outline: 3px solid currentColor !important;
-  outline-offset: 2px !important;
 }
 
 /* Screen Reader Only - Hide content visually but keep it available to screen readers */
@@ -116,34 +96,6 @@
   }
 }
 
-/* High Contrast Mode Support */
-@media (prefers-contrast: high) {
-  /* Increase contrast for all elements */
-  * {
-    border-width: 2px !important;
-  }
-
-  /* Ensure text has sufficient contrast */
-  p, span, div, h1, h2, h3, h4, h5, h6, li, dt, dd {
-    color: #000 !important;
-  }
-
-  .theme-dark p,
-  .theme-dark span,
-  .theme-dark div,
-  .theme-dark h1,
-  .theme-dark h2,
-  .theme-dark h3,
-  .theme-dark h4,
-  .theme-dark h5,
-  .theme-dark h6,
-  .theme-dark li,
-  .theme-dark dt,
-  .theme-dark dd {
-    color: #fff !important;
-  }
-}
-
 /* Increased Text Size Support */
 @media (min-width: 1200px) and (min-height: 900px) {
   .large-text {
@@ -152,36 +104,36 @@
 }
 
 /* ARIA Landmark Regions */
-[role="banner"] {
+[role='banner'] {
   outline: none;
 }
 
-[role="main"] {
+[role='main'] {
   outline: none;
 }
 
-[role="navigation"] {
+[role='navigation'] {
   outline: none;
 }
 
-[role="contentinfo"] {
+[role='contentinfo'] {
   outline: none;
 }
 
-[role="complementary"] {
+[role='complementary'] {
   outline: none;
 }
 
-[role="search"] {
+[role='search'] {
   outline: none;
 }
 
 /* Form Accessibility */
-input[aria-invalid="true"] {
+input[aria-invalid='true'] {
   border-color: #ef4444;
 }
 
-input[aria-invalid="true"]:focus {
+input[aria-invalid='true']:focus {
   outline-color: #ef4444;
 }
 
@@ -204,26 +156,26 @@ label {
 
 /* Ensure interactive elements are keyboard accessible */
 button,
-input[type="button"],
-input[type="submit"],
-input[type="reset"],
-a[role="button"] {
+input[type='button'],
+input[type='submit'],
+input[type='reset'],
+a[role='button'] {
   cursor: pointer;
 }
 
 /* Focusable elements that should be in tab order */
-[tabindex]:not([tabindex="-1"]) {
+[tabindex]:not([tabindex='-1']) {
   outline: 2px solid transparent;
   outline-offset: 2px;
 }
 
-[tabindex]:not([tabindex="-1"]):focus {
+[tabindex]:not([tabindex='-1']):focus {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
 
 /* Hidden elements that should remain accessible to screen readers */
-[aria-hidden="true"] {
+[aria-hidden='true'] {
   display: none;
 }
 
@@ -235,13 +187,6 @@ a {
 a:hover,
 a:focus {
   text-decoration: none;
-}
-
-/* High contrast links for high contrast themes */
-.theme-light-hc a,
-.theme-dark-hc a {
-  text-decoration: underline !important;
-  font-weight: bold !important;
 }
 
 /* Ensure buttons have sufficient contrast */
@@ -273,16 +218,6 @@ textarea:focus {
   outline-offset: 2px;
 }
 
-/* High contrast form controls */
-.theme-light-hc input,
-.theme-light-hc select,
-.theme-light-hc textarea,
-.theme-dark-hc input,
-.theme-dark-hc select,
-.theme-dark-hc textarea {
-  border: 2px solid currentColor !important;
-}
-
 /* Ensure images have alt text */
 img[alt] {
   /* Images with alt text are accessible */
@@ -294,16 +229,21 @@ img:not([alt]) {
 }
 
 /* ARIA live regions */
-[aria-live="polite"] {
+[aria-live='polite'] {
   /* Announce updates when the user is idle */
 }
 
-[aria-live="assertive"] {
+[aria-live='assertive'] {
   /* Announce updates immediately */
 }
 
 /* Ensure proper heading structure */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   outline: none;
 }
 
@@ -331,11 +271,4 @@ h1, h2, h3, h4, h5, h6 {
 .dark-theme .text-high-contrast {
   color: #fff;
   background-color: #000;
-}
-
-/* High contrast theme specific overrides */
-.theme-light-hc .text-high-contrast,
-.theme-dark-hc .text-high-contrast {
-  color: inherit !important;
-  background-color: inherit !important;
 }

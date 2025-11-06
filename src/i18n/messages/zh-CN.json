@@ -4,7 +4,7 @@
     "skipToNavigation": "跳转到导航"
   },
   "header": {
-    "title": "幻灯演说 AI",
+    "title": "SlideSpeaker AI",
     "subtitle": "将幻灯片转化为 AI 驱动的视频",
     "login": "使用 Google 登录",
     "logout": "退出登录",
@@ -112,6 +112,8 @@
       "subtitles": "字幕语言",
       "subtitlesFormats": "VTT / SRT",
       "transcript": "脚本语言",
+      "podcastHostVoice": "主持人声音",
+      "podcastGuestVoice": "嘉宾声音",
       "metadataAria": "任务信息"
     },
     "status": {
@@ -150,6 +152,7 @@
         "podcast": "播客",
         "audio": "音频",
         "both": "视频 + 播客",
+        "file_purge": "文件清理",
         "unknown": "任务"
       }
     },
@@ -221,6 +224,9 @@
       "label": "输出"
     },
     "voiceLanguage": "配音语言",
+    "voiceSelection": "配音人声",
+    "hostVoice": "主持人声音",
+    "guestVoice": "嘉宾声音",
     "subtitleLanguage": "字幕语言",
     "transcriptLanguage": "脚本语言",
     "videoResolution": "视频分辨率",
@@ -273,7 +279,8 @@
       "taskCreated": "任务已创建：{id}",
       "createFailed": "创建任务失败",
       "cancelFailed": "取消任务失败",
-      "deleteFailed": "删除任务失败"
+      "deleteFailed": "删除任务失败",
+      "deleteSuccess": "任务删除成功"
     },
     "confirm": {
       "delete": "此操作将永久删除任务及其状态，确定继续吗？"
@@ -315,6 +322,14 @@
     "metadataAria": "任务信息",
     "progressLabel": "整体进度",
     "progressStatus": "正在为您的演示生成精彩内容…",
+    "haltAfterStep": "在 {step} 步骤后停止处理。",
+    "haltGeneric": "发生错误后处理已停止。",
+    "retryFromStep": "从 {step} 重新开始",
+    "retryLatest": "从最近的失败步骤重试",
+    "retrying": "正在重试…",
+    "retryQueued": "已排队重试，即将继续处理。",
+    "retryFailed": "重试任务失败，请稍后再试。",
+    "retry": "重试",
     "steps": {
       "extract_slides": "提取幻灯片",
       "analyze_slide_images": "分析内容",
@@ -336,6 +351,7 @@
       "generate_podcast_script": "生成播客脚本",
       "translate_podcast_script": "翻译播客脚本",
       "generate_podcast_audio": "生成播客音频",
+      "generate_podcast_subtitles": "生成播客字幕",
       "compose_podcast": "合成播客",
       "unknown": "初始化"
     },
@@ -388,6 +404,11 @@
       "pptDescription": "AI 会将幻灯片转换为带配音的视频。",
       "supportedBadge": "支持的文件",
       "supportedDescription": "支持 PDF、PPTX 和 PPT 文件"
+    },
+    "voice": {
+      "loading": "正在加载声音…",
+      "error": "无法获取声音，将使用默认设置。",
+      "none": "该语言暂无可用声音"
     },
     "notice": "AI 生成内容可能存在不准确，请仔细检查。",
     "createPodcast": "创建播客",

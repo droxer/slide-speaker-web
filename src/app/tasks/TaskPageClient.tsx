@@ -4,7 +4,11 @@ import React from 'react';
 import TaskDetailPage from '@/components/TaskDetailPage';
 import AppShell from '@/components/AppShell';
 import { resolveApiBaseUrl } from '@/utils/apiBaseUrl';
-import { useTaskQuery, useDownloadsQuery, useCancelTaskMutation } from '@/services/queries';
+import {
+  useTaskQuery,
+  useDownloadsQuery,
+  useCancelTaskMutation,
+} from '@/services/queries';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocale } from 'next-intl';
 import { useRouter } from '@/navigation';
@@ -19,7 +23,11 @@ type TaskPageClientProps = {
   initialHealth?: HealthStatus | null;
 };
 
-const TaskPageClient: React.FC<TaskPageClientProps> = ({ taskId, initialTask, initialHealth = null }) => {
+const TaskPageClient: React.FC<TaskPageClientProps> = ({
+  taskId,
+  initialTask,
+  initialHealth = null,
+}) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const locale = useLocale();
@@ -29,6 +37,14 @@ const TaskPageClient: React.FC<TaskPageClientProps> = ({ taskId, initialTask, in
   const cancelMutation = useCancelTaskMutation();
 
   const downloads = downloadsQuery.data?.items;
+
+  // Detect asset types from downloads
+  const hasVideoAsset =
+    downloads?.some((item) => item.type === 'video') ?? false;
+  const hasPodcastAsset =
+    downloads?.some((item) => item.type === 'podcast') ?? false;
+  const hasAudioAsset =
+    downloads?.some((item) => item.type === 'audio') ?? false;
 
   const isLoading = taskQuery.isLoading;
   const isError = taskQuery.isError;
@@ -45,7 +61,9 @@ const TaskPageClient: React.FC<TaskPageClientProps> = ({ taskId, initialTask, in
     if (isError) {
       return (
         <div className="content-card wide task-detail-card">
-          <p className="task-detail-card__empty">Failed to load task details. Please try again.</p>
+          <p className="task-detail-card__empty">
+            Failed to load task details. Please try again.
+          </p>
         </div>
       );
     }
@@ -61,8 +79,10 @@ const TaskPageClient: React.FC<TaskPageClientProps> = ({ taskId, initialTask, in
     return (
       <TaskDetailPage
         task={task}
-        downloads={downloads}
         apiBaseUrl={apiBaseUrl}
+        hasVideoAsset={hasVideoAsset}
+        hasPodcastAsset={hasPodcastAsset}
+        hasAudioAsset={hasAudioAsset}
       />
     );
   };

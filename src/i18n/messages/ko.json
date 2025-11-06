@@ -16,6 +16,11 @@
       "studio": "스튜디오",
       "creations": "작품"
     },
+    "voice": {
+      "loading": "음성을 불러오는 중…",
+      "error": "음성을 불러올 수 없어 기본 설정을 사용합니다.",
+      "none": "해당 언어에 사용 가능한 음성이 없습니다"
+    },
     "menu": {
       "studio": "스튜디오",
       "creations": "작품",
@@ -112,6 +117,8 @@
       "subtitles": "자막",
       "subtitlesFormats": "VTT / SRT",
       "transcript": "원고",
+      "podcastHostVoice": "호스트 음성",
+      "podcastGuestVoice": "게스트 음성",
       "metadataAria": "작업 메타데이터"
     },
     "status": {
@@ -150,6 +157,7 @@
         "podcast": "팟캐스트",
         "audio": "오디오",
         "both": "영상 및 팟캐스트",
+        "file_purge": "파일 삭제",
         "unknown": "작업"
       }
     },
@@ -218,6 +226,9 @@
       "label": "출력"
     },
     "voiceLanguage": "음성 언어",
+    "voiceSelection": "음성 선택",
+    "hostVoice": "호스트 음성",
+    "guestVoice": "게스트 음성",
     "subtitleLanguage": "자막 언어",
     "transcriptLanguage": "원고 언어",
     "videoResolution": "영상 해상도",
@@ -270,7 +281,8 @@
       "taskCreated": "작업이 생성되었습니다: {id}",
       "createFailed": "작업 생성에 실패했습니다",
       "cancelFailed": "작업 취소에 실패했습니다",
-      "deleteFailed": "작업 삭제에 실패했습니다"
+      "deleteFailed": "작업 삭제에 실패했습니다",
+      "deleteSuccess": "작업이 성공적으로 삭제되었습니다"
     },
     "confirm": {
       "delete": "이 작업과 상태가 영구적으로 삭제됩니다. 계속하시겠습니까?"
@@ -312,6 +324,14 @@
     "metadataAria": "작업 메타데이터",
     "progressLabel": "전체 진행률",
     "progressStatus": "프레젠테이션을 생생하게 만드는 중입니다…",
+    "haltAfterStep": "{step} 단계 이후 처리가 중단되었습니다.",
+    "haltGeneric": "오류가 발생해 처리가 중단되었습니다.",
+    "retryFromStep": "{step} 단계부터 다시 시도",
+    "retryLatest": "최근 실패 단계부터 재시도",
+    "retrying": "재시도 중…",
+    "retryQueued": "재시도가 대기열에 추가되었습니다. 곧 다시 진행됩니다.",
+    "retryFailed": "재시도에 실패했습니다. 다시 시도해 주세요.",
+    "retry": "재시도",
     "steps": {
       "extract_slides": "슬라이드 추출 중",
       "analyze_slide_images": "콘텐츠 분석 중",
@@ -333,6 +353,7 @@
       "generate_podcast_script": "팟캐스트 스크립트 생성 중",
       "translate_podcast_script": "팟캐스트 스크립트 번역 중",
       "generate_podcast_audio": "팟캐스트 오디오 생성 중",
+      "generate_podcast_subtitles": "팟캐스트 자막 생성 중",
       "compose_podcast": "팟캐스트 합성 중",
       "unknown": "초기화 중"
     },

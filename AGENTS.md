@@ -23,6 +23,13 @@
 - Use PascalCase for React components, camelCase for hooks/utilities, and uppercase snake case for constants (e.g., `API_BASE_URL`).
 - Co-locate component-specific styles in `.module.scss` files to keep scope narrow.
 
+## Design Language & Branding
+
+- Adopt the “Flat 3.0” visuals across surfaces and controls by using the design tokens defined in `src/styles/_variables.scss` (`--color-*`, `--font-size-*`, etc.).
+- Headline treatments favor large typography: use the responsive clamp-based sizes (`--font-size-display`, `--font-size-h1`, `--font-size-lead`) rather than hard-coded pixel values.
+- Primary actions lean on the accent spectrum (`var(--color-accent)`, `var(--color-accent-strong)`), with soft neutrals for secondary states; avoid re-introducing legacy gradients such as `#6366f1`.
+- The product name must remain “SlideSpeaker AI” verbatim for every locale and UI surface; never translate or stylize the wording itself.
+
 ## Testing Guidelines
 
 - Jest (`jest.config.js`) targets `src/**/__tests__` and `*.test.ts(x)` or `*.spec.ts(x)`. Mirror the directory of the code under test.

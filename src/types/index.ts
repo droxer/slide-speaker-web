@@ -79,6 +79,11 @@ export interface DownloadsResponse {
 export interface PodcastScriptLine {
   speaker: string;
   text: string;
+  voice?: string | null;
+  start?: number | null;
+  end?: number | null;
+  duration?: number | null;
+  segment_file?: string | null;
 }
 
 export interface PodcastScriptResponse {
@@ -89,4 +94,16 @@ export interface PodcastScriptResponse {
   source?: string | null;
 }
 
-export type {UserProfile, ProfileResponse} from './user';
+export interface PodcastSubtitleCue {
+  start: number;
+  end: number;
+  text: string;
+}
+
+export interface PodcastSubtitlesResponse {
+  cues: PodcastSubtitleCue[];
+  vtt_url?: string | null;
+  srt_url?: string | null;
+}
+
+export type { UserProfile, ProfileResponse } from './user';

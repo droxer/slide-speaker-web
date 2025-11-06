@@ -3,6 +3,7 @@
 @use './components/TaskDashboard.scss' as *;
 @use './components/TaskProcessingSteps.scss' as *;
 @use './components/TaskProgressModal.scss' as *;
+@use './components/TaskCreationModal.scss' as *;
 
 // Import component-specific SCSS files
 @use './_variables.scss';
@@ -40,7 +41,9 @@
   text-overflow: ellipsis;
 }
 
-.uploading-file__icon { font-size: 1.1rem; }
+.uploading-file__icon {
+  font-size: 1.1rem;
+}
 
 .uploading-file__text {
   overflow: hidden;
@@ -63,7 +66,11 @@
   width: 100%;
   padding: 1.5rem;
   border-radius: 18px;
-  background: linear-gradient(135deg, rgba(248, 250, 252, 0.92), rgba(229, 231, 235, 0.62));
+  background: linear-gradient(
+    135deg,
+    rgba(248, 250, 252, 0.92),
+    rgba(229, 231, 235, 0.62)
+  );
   border: 1px solid rgba(148, 163, 184, 0.28);
   box-shadow: 0 18px 44px rgba(15, 23, 42, 0.14);
   display: flex;
@@ -93,7 +100,9 @@
   letter-spacing: 0.01em;
 }
 
-.uploading-summary__chip-icon { font-size: 1rem; }
+.uploading-summary__chip-icon {
+  font-size: 1rem;
+}
 
 .uploading-summary__list {
   display: grid;
@@ -181,7 +190,11 @@
 }
 
 .file-upload-progress {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(248, 250, 252, 0.95));
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.08),
+    rgba(248, 250, 252, 0.95)
+  );
   border: 1px solid rgba(59, 130, 246, 0.2);
   box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
 }
@@ -285,5 +298,5 @@
 }
 
 .config-card.output-config {
-  border-left: 3px solid #6366f1;
+  border-left: 3px solid var(--color-accent);
 }

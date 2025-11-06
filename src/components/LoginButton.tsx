@@ -1,4 +1,3 @@
-import React from "react";
 interface LoginButtonProps {
   onClick: () => void;
   disabled?: boolean;
@@ -6,7 +5,12 @@ interface LoginButtonProps {
   className?: string;
 }
 
-const LoginButton = ({ onClick, disabled = false, label, className }: LoginButtonProps) => {
+const LoginButton = ({
+  onClick,
+  disabled = false,
+  label,
+  className,
+}: LoginButtonProps) => {
   return (
     <button
       type="button"

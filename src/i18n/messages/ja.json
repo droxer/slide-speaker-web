@@ -16,6 +16,11 @@
       "studio": "スタジオ",
       "creations": "作品"
     },
+    "voice": {
+      "loading": "音声を読み込み中…",
+      "error": "音声を取得できませんでした。デフォルトを使用します。",
+      "none": "この言語では利用できる音声がありません"
+    },
     "menu": {
       "studio": "スタジオ",
       "creations": "作品",
@@ -112,6 +117,8 @@
       "subtitles": "字幕",
       "subtitlesFormats": "VTT / SRT",
       "transcript": "原稿",
+      "podcastHostVoice": "ホスト音声",
+      "podcastGuestVoice": "ゲスト音声",
       "metadataAria": "タスクのメタデータ"
     },
     "status": {
@@ -150,6 +157,7 @@
         "podcast": "ポッドキャスト",
         "audio": "音声",
         "both": "動画とポッドキャスト",
+        "file_purge": "ファイル削除",
         "unknown": "タスク"
       }
     },
@@ -218,6 +226,9 @@
       "label": "出力"
     },
     "voiceLanguage": "音声の言語",
+    "voiceSelection": "音声の選択",
+    "hostVoice": "ホストの音声",
+    "guestVoice": "ゲストの音声",
     "subtitleLanguage": "字幕の言語",
     "transcriptLanguage": "原稿の言語",
     "videoResolution": "動画解像度",
@@ -270,7 +281,8 @@
       "taskCreated": "タスクを作成しました: {id}",
       "createFailed": "タスクの作成に失敗しました",
       "cancelFailed": "タスクのキャンセルに失敗しました",
-      "deleteFailed": "タスクの削除に失敗しました"
+      "deleteFailed": "タスクの削除に失敗しました",
+      "deleteSuccess": "タスクを削除しました"
     },
     "confirm": {
       "delete": "タスクとその状態を完全に削除します。続行しますか？"
@@ -312,6 +324,14 @@
     "metadataAria": "タスクのメタデータ",
     "progressLabel": "全体の進捗",
     "progressStatus": "プレゼンテーションを形にしています…",
+    "haltAfterStep": "{step} の後で処理が停止しました。",
+    "haltGeneric": "エラーが発生したため処理が停止しました。",
+    "retryFromStep": "{step} から再開する",
+    "retryLatest": "直近の失敗ステップから再試行",
+    "retrying": "再試行中…",
+    "retryQueued": "再試行をキューに登録しました。まもなく再開します。",
+    "retryFailed": "再試行に失敗しました。もう一度お試しください。",
+    "retry": "再試行",
     "steps": {
       "extract_slides": "スライドを抽出",
       "analyze_slide_images": "コンテンツを分析",
@@ -333,6 +353,7 @@
       "generate_podcast_script": "ポッドキャスト台本を作成",
       "translate_podcast_script": "ポッドキャスト台本を翻訳",
       "generate_podcast_audio": "ポッドキャスト音声を生成",
+      "generate_podcast_subtitles": "ポッドキャスト字幕を作成",
       "compose_podcast": "ポッドキャストを合成",
       "unknown": "初期化中"
     },

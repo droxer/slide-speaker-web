@@ -1,18 +1,42 @@
-import { useMutation, useQuery, useQueryClient, QueryClient } from '@tanstack/react-query';
-import { getTasks, searchTasks, getDownloads, getTranscriptMarkdown, getVttText, cancelRun, deleteTask, runFile, getTaskById, getPodcastScript, getUploads, getCurrentUserProfile, updateCurrentUserProfile, type UploadSummary } from './client';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  QueryClient,
+} from '@tanstack/react-query';
+import {
+  getTasks,
+  searchTasks,
+  getDownloads,
+  getVttText,
+  cancelRun,
+  deleteTask,
+  runFile,
+  getTaskById,
+  getPodcastScript,
+  getPodcastSubtitles,
+  getUploads,
+  getCurrentUserProfile,
+  updateCurrentUserProfile,
+  type UploadSummary,
+} from './client';
 import type { Task } from '../types';
 import type { ProfileResponse } from '@/types/user';
 
 export const queries = {
   tasks: {
-    list: (filters: { status: string; page: number; limit: number }) => ['tasks', 'list', filters] as const,
+    list: (filters: { status: string; page: number; limit: number }) =>
+      ['tasks', 'list', filters] as const,
     search: (q: string) => ['tasks', 'search', q] as const,
     detail: (taskId: string) => ['tasks', 'detail', taskId] as const,
   },
   downloads: (taskId: string) => ['downloads', taskId] as const,
-  transcript: (taskId: string) => ['transcript', taskId] as const,
-  vtt: (taskId: string, language?: string) => (language ? (['vtt', taskId, language] as const) : (['vtt', taskId] as const)),
+  vtt: (taskId: string, language?: string) =>
+    language
+      ? (['vtt', taskId, language] as const)
+      : (['vtt', taskId] as const),
   podcastScript: (taskId: string) => ['podcastScript', taskId] as const,
+  podcastSubtitles: (taskId: string) => ['podcastSubtitles', taskId] as const,
   user: {
     profile: () => ['user', 'profile'] as const,
   },
@@ -34,51 +58,79 @@ export const useTasksQuery = (
       params.append('limit', String(filters.limit));
       params.append('offset', String((filters.page - 1) * filters.limit));
       const res = await getTasks(Object.fromEntries(params));
-      const real = (res.tasks || []).filter((t: any) => typeof t?.task_id === 'string' && !t.task_id.startsWith('state_'));
+      const real = (res.tasks || []).filter(
+        (t: any) =>
+          typeof t?.task_id === 'string' && !t.task_id.startsWith('state_')
+      );
       return real as Task[];
     },
     refetchInterval: opts?.refetchInterval,
-    staleTime: opts?.staleTime ?? (filters.status === 'completed' ? 5 * 60 * 1000 : 30 * 1000),
+    staleTime:
+      opts?.staleTime ??
+      (filters.status === 'completed' ? 5 * 60 * 1000 : 30 * 1000),
     refetchIntervalInBackground: opts?.refetchIntervalInBackground,
   });
 };
 
 export const useSearchTasksQuery = (q: string) => {
   const query = q.trim();
-  return useQuery({ queryKey: queries.tasks.search(query), queryFn: () => searchTasks(query), enabled: query.length > 0, staleTime: 0 });
+  return useQuery({
+    queryKey: queries.tasks.search(query),
+    queryFn: () => searchTasks(query),
+    enabled: query.length > 0,
+    staleTime: 0,
+  });
 };
 
 export const prefetchDownloads = async (qc: QueryClient, taskId: string) => {
-  return qc.fetchQuery({ queryKey: queries.downloads(taskId), queryFn: () => getDownloads(taskId) });
+  return qc.fetchQuery({
+    queryKey: queries.downloads(taskId),
+    queryFn: () => getDownloads(taskId),
+  });
 };
 
-export const prefetchVtt = async (qc: QueryClient, taskId: string, language?: string) => {
-  return qc.prefetchQuery({ queryKey: queries.vtt(taskId, language), queryFn: () => getVttText(taskId, language) });
+export const prefetchVtt = async (
+  qc: QueryClient,
+  taskId: string,
+  language?: string
+) => {
+  return qc.prefetchQuery({
+    queryKey: queries.vtt(taskId, language),
+    queryFn: () => getVttText(taskId, language),
+  });
 };
 
 export const useDownloadsQuery = (taskId: string | null, enabled = true) => {
   const id = taskId || '';
-  return useQuery({ queryKey: queries.downloads(id), queryFn: () => getDownloads(id), enabled: Boolean(taskId) && enabled });
-};
-
-export const useTranscriptQuery = (taskId: string | null, enabled = true) => {
-  const id = taskId || '';
   return useQuery({
-    queryKey: queries.transcript(id),
-    queryFn: async () => {
-      return getTranscriptMarkdown(id);
-    },
-    enabled: Boolean(taskId) && enabled
+    queryKey: queries.downloads(id),
+    queryFn: () => getDownloads(id),
+    enabled: Boolean(taskId) && enabled,
   });
 };
 
-export const usePodcastScriptQuery = (taskId: string | null, enabled = true) => {
+export const usePodcastScriptQuery = (
+  taskId: string | null,
+  enabled = true
+) => {
   const id = taskId || '';
   return useQuery({
     queryKey: queries.podcastScript(id),
     queryFn: async () => {
       return getPodcastScript(id);
     },
+    enabled: Boolean(taskId) && enabled,
+  });
+};
+
+export const usePodcastSubtitlesQuery = (
+  taskId: string | null,
+  enabled = true
+) => {
+  const id = taskId || '';
+  return useQuery({
+    queryKey: queries.podcastSubtitles(id),
+    queryFn: async () => getPodcastSubtitles(id),
     enabled: Boolean(taskId) && enabled,
   });
 };
@@ -121,6 +173,7 @@ export const useTaskQuery = (
     refetchInterval?: number | false | ((q: any) => number | false);
     staleTime?: number;
     refetchIntervalInBackground?: boolean;
+    enabled?: boolean;
   }
 ) => {
   return useQuery<Task | null>({
@@ -136,8 +189,10 @@ export const useTaskQuery = (
         throw error;
       }
     },
-    enabled: Boolean(taskId),
-    staleTime: opts?.staleTime ?? (initialData?.status === 'completed' ? 10 * 60 * 1000 : 30_000),
+    enabled: Boolean(taskId) && (opts?.enabled ?? true),
+    staleTime:
+      opts?.staleTime ??
+      (initialData?.status === 'completed' ? 10 * 60 * 1000 : 30_000),
     refetchInterval: opts?.refetchInterval,
     refetchIntervalInBackground: opts?.refetchIntervalInBackground,
     initialData: initialData ?? undefined,
@@ -146,10 +201,16 @@ export const useTaskQuery = (
 
 // Cache selectors (helpers)
 export const getCachedDownloads = (qc: QueryClient, taskId: string) => {
-  return qc.getQueryData(queries.downloads(taskId)) as { items?: Array<{ type: string; url: string; download_url?: string }>} | undefined;
+  return qc.getQueryData(queries.downloads(taskId)) as
+    | { items?: Array<{ type: string; url: string; download_url?: string }> }
+    | undefined;
 };
 
-export const hasCachedVtt = (qc: QueryClient, taskId: string, language?: string) => {
+export const hasCachedVtt = (
+  qc: QueryClient,
+  taskId: string,
+  language?: string
+) => {
   const vttWithLang = qc.getQueryData(queries.vtt(taskId, language));
   const vttNoLang = qc.getQueryData(queries.vtt(taskId));
   const text = (vttWithLang as any) ?? (vttNoLang as any);
@@ -165,7 +226,18 @@ export const prefetchTaskPreview = async (
   const podcast = opts?.podcast === true;
   await prefetchDownloads(qc, taskId);
   if (podcast) {
-    // prefetchPodcastScript was removed as unused
+    await Promise.allSettled([
+      qc.prefetchQuery({
+        queryKey: queries.podcastScript(taskId),
+        queryFn: () => getPodcastScript(taskId),
+        staleTime: 5 * 60 * 1000,
+      }),
+      qc.prefetchQuery({
+        queryKey: queries.podcastSubtitles(taskId),
+        queryFn: () => getPodcastSubtitles(taskId),
+        staleTime: 5 * 60 * 1000,
+      }),
+    ]);
   } else {
     if (language) await prefetchVtt(qc, taskId, language);
     await prefetchVtt(qc, taskId);
@@ -180,13 +252,13 @@ export const prefetchTaskDetail = async (qc: QueryClient, taskId: string) => {
       qc.prefetchQuery({
         queryKey: queries.tasks.detail(taskId),
         queryFn: () => getTaskById(taskId),
-        staleTime: 5 * 60 * 1000 // 5 minutes for task details
+        staleTime: 5 * 60 * 1000, // 5 minutes for task details
       }),
       qc.prefetchQuery({
         queryKey: queries.downloads(taskId),
         queryFn: () => getDownloads(taskId),
-        staleTime: 2 * 60 * 1000 // 2 minutes for downloads
-      })
+        staleTime: 2 * 60 * 1000, // 2 minutes for downloads
+      }),
     ]);
   } catch (error) {
     console.warn('Prefetch failed:', error);
@@ -197,34 +269,38 @@ export const prefetchTaskDetail = async (qc: QueryClient, taskId: string) => {
 // Cache management utilities
 export const evictOldTaskQueries = (qc: QueryClient, maxAgeMinutes = 60) => {
   const now = Date.now();
-  const cutoff = now - (maxAgeMinutes * 60 * 1000);
+  const cutoff = now - maxAgeMinutes * 60 * 1000;
 
-  qc.getQueryCache().findAll().forEach(query => {
-    if (
-      Array.isArray(query.queryKey) &&
-      query.queryKey[0] === 'tasks' &&
-      query.queryKey[1] === 'detail' &&
-      query.state.dataUpdatedAt < cutoff
-    ) {
-      qc.removeQueries({ queryKey: query.queryKey });
-    }
-  });
+  qc.getQueryCache()
+    .findAll()
+    .forEach((query) => {
+      if (
+        Array.isArray(query.queryKey) &&
+        query.queryKey[0] === 'tasks' &&
+        query.queryKey[1] === 'detail' &&
+        query.state.dataUpdatedAt < cutoff
+      ) {
+        qc.removeQueries({ queryKey: query.queryKey });
+      }
+    });
 };
 
 export const evictOldListQueries = (qc: QueryClient, maxAgeMinutes = 30) => {
   const now = Date.now();
-  const cutoff = now - (maxAgeMinutes * 60 * 1000);
+  const cutoff = now - maxAgeMinutes * 60 * 1000;
 
-  qc.getQueryCache().findAll().forEach(query => {
-    if (
-      Array.isArray(query.queryKey) &&
-      query.queryKey[0] === 'tasks' &&
-      query.queryKey[1] === 'list' &&
-      query.state.dataUpdatedAt < cutoff
-    ) {
-      qc.removeQueries({ queryKey: query.queryKey });
-    }
-  });
+  qc.getQueryCache()
+    .findAll()
+    .forEach((query) => {
+      if (
+        Array.isArray(query.queryKey) &&
+        query.queryKey[0] === 'tasks' &&
+        query.queryKey[1] === 'list' &&
+        query.state.dataUpdatedAt < cutoff
+      ) {
+        qc.removeQueries({ queryKey: query.queryKey });
+      }
+    });
 };
 
 export const useCancelTaskMutation = () => {
@@ -241,7 +317,7 @@ export const useCancelTaskMutation = () => {
       // Optimistically update to 'cancelling' status
       qc.setQueryData(queries.tasks.detail(taskId), (old: any) => ({
         ...old,
-        status: 'cancelling'
+        status: 'cancelling',
       }));
 
       return { previousTask, taskId };
@@ -274,10 +350,13 @@ export const useCancelTaskMutation = () => {
             ...oldData,
             files: oldData.files.map((fileGroup: any) => ({
               ...fileGroup,
-              tasks: fileGroup.tasks?.map((task: any) =>
-                task.task_id === taskId ? { ...task, status: 'cancelled' } : task
-              ) || []
-            }))
+              tasks:
+                fileGroup.tasks?.map((task: any) =>
+                  task.task_id === taskId
+                    ? { ...task, status: 'cancelled' }
+                    : task
+                ) || [],
+            })),
           };
         }
       );
@@ -291,7 +370,7 @@ export const useFilesQuery = (
     refetchInterval?: number | false | ((q: any) => number | false);
     staleTime?: number;
     refetchIntervalInBackground?: boolean;
-  },
+  }
 ) => {
   return useQuery({
     queryKey: ['files', filters] as const,
@@ -306,9 +385,12 @@ export const useFilesQuery = (
         getUploads(),
       ]);
       const tasks = (taskRes.tasks || []).filter(
-        (t: any) => typeof t?.task_id === 'string' && !t.task_id.startsWith('state_'),
+        (t: any) =>
+          typeof t?.task_id === 'string' && !t.task_id.startsWith('state_')
       ) as Task[];
-      const uploads: UploadSummary[] = Array.isArray(uploadsRes.uploads) ? uploadsRes.uploads : [];
+      const uploads: UploadSummary[] = Array.isArray(uploadsRes.uploads)
+        ? uploadsRes.uploads
+        : [];
 
       type FileGroup = {
         upload_id?: string;
@@ -337,13 +419,16 @@ export const useFilesQuery = (
           uploadCreatedAt: upload.created_at ?? null,
           uploadUpdatedAt: upload.updated_at ?? null,
           upload,
-          latestUpdatedAt: upload.updated_at ? Date.parse(upload.updated_at) : undefined,
+          latestUpdatedAt: upload.updated_at
+            ? Date.parse(upload.updated_at)
+            : undefined,
         });
       }
 
       for (const task of tasks) {
         const uploadId = task.upload_id || task.kwargs?.upload_id;
-        const taskFilename = task.filename || task.kwargs?.filename || task.state?.filename;
+        const taskFilename =
+          task.filename || task.kwargs?.filename || task.state?.filename;
         const taskFileExt = task.file_ext || task.kwargs?.file_ext;
         const key = uploadId || `task:${task.task_id}`;
         if (!filesMap.has(key)) {
@@ -351,29 +436,45 @@ export const useFilesQuery = (
             upload_id: uploadId ?? undefined,
             filename: taskFilename,
             file_ext: taskFileExt,
-            source_type: (task as any)?.source_type || task.kwargs?.source_type || null,
+            source_type:
+              (task as any)?.source_type || task.kwargs?.source_type || null,
             tasks: [],
             uploadOnly: true,
             uploadCreatedAt: task.created_at,
             uploadUpdatedAt: task.updated_at,
-            latestUpdatedAt: Date.parse(task.updated_at || task.created_at || ''),
+            latestUpdatedAt: Date.parse(
+              task.updated_at || task.created_at || ''
+            ),
           });
         }
         const group = filesMap.get(key)!;
         group.tasks.push(task);
         group.filename = group.filename || taskFilename;
         group.file_ext = group.file_ext || taskFileExt;
-        group.source_type = group.source_type || (task as any)?.source_type || task.kwargs?.source_type || null;
+        group.source_type =
+          group.source_type ||
+          (task as any)?.source_type ||
+          task.kwargs?.source_type ||
+          null;
         group.uploadOnly = false;
         const updatedTs = Date.parse(task.updated_at || task.created_at || '');
         if (!Number.isNaN(updatedTs)) {
-          group.latestUpdatedAt = Math.max(group.latestUpdatedAt ?? updatedTs, updatedTs);
+          group.latestUpdatedAt = Math.max(
+            group.latestUpdatedAt ?? updatedTs,
+            updatedTs
+          );
         }
       }
 
       const files = Array.from(filesMap.values()).sort((a, b) => {
-        const aTime = (a.latestUpdatedAt ?? Date.parse(a.uploadUpdatedAt || a.uploadCreatedAt || '')) || 0;
-        const bTime = (b.latestUpdatedAt ?? Date.parse(b.uploadUpdatedAt || b.uploadCreatedAt || '')) || 0;
+        const aTime =
+          (a.latestUpdatedAt ??
+            Date.parse(a.uploadUpdatedAt || a.uploadCreatedAt || '')) ||
+          0;
+        const bTime =
+          (b.latestUpdatedAt ??
+            Date.parse(b.uploadUpdatedAt || b.uploadCreatedAt || '')) ||
+          0;
         return bTime - aTime;
       });
 
@@ -395,17 +496,38 @@ export const useFilesQuery = (
 export const useRunFileTaskMutation = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ uploadId, payload }: { uploadId: string; payload: any }) => runFile(uploadId, payload),
+    mutationFn: ({ uploadId, payload }: { uploadId: string; payload: any }) =>
+      runFile(uploadId, payload),
     onMutate: async ({ uploadId, payload }) => {
       // Cancel any outgoing refetches
       await qc.cancelQueries({ queryKey: ['files'] as any, exact: false });
-      await qc.cancelQueries({ queryKey: queries.tasks.list({ status: 'all', page: 1, limit: 10 }) as any, exact: false });
-      await qc.cancelQueries({ queryKey: queries.tasks.search('') as any, exact: false });
+      await qc.cancelQueries({
+        queryKey: queries.tasks.list({
+          status: 'all',
+          page: 1,
+          limit: 10,
+        }) as any,
+        exact: false,
+      });
+      await qc.cancelQueries({
+        queryKey: queries.tasks.search('') as any,
+        exact: false,
+      });
     },
     onSettled: async () => {
       await qc.invalidateQueries({ queryKey: ['files'] as any, exact: false });
-      await qc.invalidateQueries({ queryKey: queries.tasks.list({ status: 'all', page: 1, limit: 10 }) as any, exact: false });
-      await qc.invalidateQueries({ queryKey: queries.tasks.search('') as any, exact: false });
+      await qc.invalidateQueries({
+        queryKey: queries.tasks.list({
+          status: 'all',
+          page: 1,
+          limit: 10,
+        }) as any,
+        exact: false,
+      });
+      await qc.invalidateQueries({
+        queryKey: queries.tasks.search('') as any,
+        exact: false,
+      });
     },
   });
 };
@@ -416,8 +538,18 @@ export const usePurgeTaskMutation = () => {
     mutationFn: (taskId: string) => deleteTask(taskId),
     onMutate: async (taskId) => {
       // Cancel any outgoing refetches
-      await qc.cancelQueries({ queryKey: queries.tasks.list({ status: 'all', page: 1, limit: 10 }) as any, exact: false });
-      await qc.cancelQueries({ queryKey: queries.tasks.search('') as any, exact: false });
+      await qc.cancelQueries({
+        queryKey: queries.tasks.list({
+          status: 'all',
+          page: 1,
+          limit: 10,
+        }) as any,
+        exact: false,
+      });
+      await qc.cancelQueries({
+        queryKey: queries.tasks.search('') as any,
+        exact: false,
+      });
 
       // Optimistically remove the task from cache
       qc.setQueriesData(
@@ -437,18 +569,32 @@ export const usePurgeTaskMutation = () => {
             files: oldData.files
               .map((fileGroup: any) => ({
                 ...fileGroup,
-                tasks: fileGroup.tasks?.filter((task: any) => task.task_id !== taskId) || []
+                tasks:
+                  fileGroup.tasks?.filter(
+                    (task: any) => task.task_id !== taskId
+                  ) || [],
               }))
-              .filter((fileGroup: any) =>
-                fileGroup.tasks?.length > 0 || fileGroup.uploadOnly
-              )
+              .filter(
+                (fileGroup: any) =>
+                  fileGroup.tasks?.length > 0 || fileGroup.uploadOnly
+              ),
           };
         }
       );
     },
     onSettled: async () => {
-      await qc.invalidateQueries({ queryKey: queries.tasks.list({ status: 'all', page: 1, limit: 10 }) as any, exact: false });
-      await qc.invalidateQueries({ queryKey: queries.tasks.search('') as any, exact: false });
+      await qc.invalidateQueries({
+        queryKey: queries.tasks.list({
+          status: 'all',
+          page: 1,
+          limit: 10,
+        }) as any,
+        exact: false,
+      });
+      await qc.invalidateQueries({
+        queryKey: queries.tasks.search('') as any,
+        exact: false,
+      });
     },
   });
 };

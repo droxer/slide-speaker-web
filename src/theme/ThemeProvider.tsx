@@ -1,13 +1,20 @@
 'use client';
 
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useThemeStore } from '@/stores/themeStore';
 
-type ThemeMode = 'light' | 'dark' | 'auto' | 'light-hc' | 'dark-hc';
+type ThemeMode = 'light' | 'dark' | 'auto';
 
 type ThemeContextValue = {
   mode: ThemeMode;
-  theme: 'light' | 'dark' | 'light-hc' | 'dark-hc';
+  theme: 'light' | 'dark';
   setTheme: (mode: ThemeMode) => void;
   toggleTheme: () => void;
 };
@@ -16,7 +23,13 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export const THEME_STORAGE_KEY = 'slidespeaker_ui_theme';
 
-export function ThemeProvider({ children, initialTheme }: { children: React.ReactNode; initialTheme?: string | null }) {
+export function ThemeProvider({
+  children,
+  initialTheme,
+}: {
+  children: React.ReactNode;
+  initialTheme?: string | null;
+}) {
   const { mode, theme, setTheme: setThemeMode, toggleTheme } = useThemeStore();
 
   // Initialize theme from props or localStorage
@@ -31,12 +44,14 @@ export function ThemeProvider({ children, initialTheme }: { children: React.Reac
       mode,
       theme,
       setTheme: setThemeMode,
-      toggleTheme
+      toggleTheme,
     }),
     [mode, theme, setThemeMode, toggleTheme]
   );
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+  );
 }
 
 export function useTheme() {

@@ -5,12 +5,15 @@ import { Link } from '@/navigation';
 import VideoPlayer from '@/components/VideoPlayer';
 import AudioPlayer from '@/components/AudioPlayer';
 import PodcastPlayer from '@/components/PodcastPlayer';
-import DownloadSection, { DownloadLinkItem } from '@/components/DownloadSection';
 import { resolveLanguages, getLanguageDisplayName } from '@/utils/language';
-import { usePodcastScriptQuery, prefetchTaskDetail } from '@/services/queries';
+import { usePodcastScriptQuery } from '@/services/queries';
 import { useI18n } from '@/i18n/hooks';
-import { getTaskStatusClass, getTaskStatusIcon, getTaskStatusLabel } from '@/utils/taskStatus';
-import type { Task, DownloadItem } from '@/types';
+import {
+  getTaskStatusClass,
+  getTaskStatusIcon,
+  getTaskStatusLabel,
+} from '@/utils/taskStatus';
+import type { Task } from '@/types';
 import { api as apiClient } from '@/services/client';
 
 const formatDateTime = (value?: string) => {
@@ -29,49 +32,35 @@ const formatTaskType = (type?: string) => {
     .join(' ');
 };
 
-const downloadLabel = (
-  type: string,
-  t: (key: string, vars?: Record<string, string | number>, fallback?: string) => string,
-) => {
-  const normalized = type?.toLowerCase?.() ?? '';
-  switch (normalized) {
-    case 'video':
-      return t('task.list.videoLabel');
-    case 'audio':
-      return t('task.list.audioLabel');
-    case 'podcast':
-      return t('task.list.podcastLabel');
-    case 'transcript':
-      return t('task.list.transcriptLabel');
-    case 'vtt_subtitles':
-      return t('task.list.vttLabel');
-    case 'srt_subtitles':
-      return t('task.list.srtLabel');
-    case 'subtitles':
-    case 'subtitle':
-      return t('task.list.subtitlesLabel', undefined, 'Subtitles');
-    default:
-      return normalized ? normalized.toUpperCase() : 'File';
-  }
-};
-
 type TaskDetailPageProps = {
   task: Task;
-  downloads?: DownloadItem[];
   apiBaseUrl: string;
+  hasVideoAsset?: boolean;
+  hasPodcastAsset?: boolean;
+  hasAudioAsset?: boolean;
 };
 
 const TaskDetailPage = ({
   task,
-  downloads,
   apiBaseUrl,
+  hasVideoAsset: propHasVideoAsset = false,
+  hasPodcastAsset: propHasPodcastAsset = false,
+  hasAudioAsset: propHasAudioAsset = false,
 }: TaskDetailPageProps) => {
   const { t, locale } = useI18n();
-  const { voiceLanguage, subtitleLanguage, transcriptLanguage } = resolveLanguages(task);
-  const languageLabel = React.useCallback((code: string) => {
-    const normalized = (code || '').toLowerCase();
-    return t(`language.display.${normalized}`, undefined, getLanguageDisplayName(code));
-  }, [t]);
+  const { voiceLanguage, subtitleLanguage, transcriptLanguage } =
+    resolveLanguages(task);
+  const languageLabel = React.useCallback(
+    (code: string) => {
+      const normalized = (code || '').toLowerCase();
+      return t(
+        `language.display.${normalized}`,
+        undefined,
+        getLanguageDisplayName(code)
+      );
+    },
+    [t]
+  );
   const captionLang = transcriptLanguage ?? subtitleLanguage;
 
   // Prefetch related task data for better navigation experience
@@ -91,7 +80,7 @@ const TaskDetailPage = ({
   const displayTaskType = t(
     `task.detail.type.${taskTypeKey || 'unknown'}`,
     undefined,
-    formatTaskType(task.task_type),
+    formatTaskType(task.task_type)
   );
 
   // Get consistent status styling using utility functions
@@ -100,17 +89,24 @@ const TaskDetailPage = ({
   const statusLabel = getTaskStatusLabel(task.status, t);
   const statusContent = `${statusIcon} ${statusLabel}`;
   const [previewTab, setPreviewTab] = useState<'video' | 'audio'>('video');
-  const hasVideoAsset = downloads?.some((item) => item.type === 'video') ?? false;
-  const hasPodcastAsset = downloads?.some((item) => item.type === 'podcast') ?? false;
-  const hasAudioAsset = hasPodcastAsset || (downloads?.some((item) => item.type === 'audio') ?? false);
-  const mediaType: 'video' | 'audio' = taskType === 'podcast' && !hasVideoAsset ? 'audio' : 'video';
+  const hasVideoAsset = propHasVideoAsset;
+  const hasPodcastAsset = propHasPodcastAsset;
+  const hasAudioAsset = propHasAudioAsset || hasPodcastAsset;
+  const mediaType: 'video' | 'audio' =
+    taskType === 'podcast' && !hasVideoAsset ? 'audio' : 'video';
   const availableTabs = useMemo<Array<'video' | 'audio'>>(() => {
     const tabs: Array<'video' | 'audio'> = [];
     if (mediaType === 'video' || hasVideoAsset) tabs.push('video');
-    if (mediaType === 'audio' || hasAudioAsset || hasPodcastAsset || taskType !== 'podcast') tabs.push('audio');
+    if (
+      mediaType === 'audio' ||
+      hasAudioAsset ||
+      hasPodcastAsset ||
+      taskType !== 'podcast'
+    )
+      tabs.push('audio');
     return tabs;
   }, [mediaType, hasVideoAsset, hasAudioAsset, hasPodcastAsset, taskType]);
-  
+
   const pathFor = (path: string) => {
     try {
       const base = apiClient.defaults.baseURL || apiBaseUrl;
@@ -126,7 +122,9 @@ const TaskDetailPage = ({
       // Fallback: ensure path starts with '/' and concatenate with apiBaseUrl
       const normalizedPath = path.startsWith('/') ? path : `/${path}`;
       if (!apiBaseUrl || apiBaseUrl === '/') return normalizedPath;
-      const normalizedBaseUrl = apiBaseUrl.endsWith('/') ? apiBaseUrl.slice(0, -1) : apiBaseUrl;
+      const normalizedBaseUrl = apiBaseUrl.endsWith('/')
+        ? apiBaseUrl.slice(0, -1)
+        : apiBaseUrl;
       return `${normalizedBaseUrl}${normalizedPath}`;
     }
   };
@@ -134,9 +132,15 @@ const TaskDetailPage = ({
   const videoUrl = pathFor(`/api/tasks/${task.task_id}/video`);
   const podcastUrl = pathFor(`/api/tasks/${task.task_id}/podcast`);
   const audioUrl = pathFor(`/api/tasks/${task.task_id}/audio`);
-  const audioPreviewUrl = (taskType === 'podcast' || hasPodcastAsset) ? podcastUrl : audioUrl;
-  const subtitleUrl = pathFor(`/api/tasks/${task.task_id}/subtitles/vtt${captionLang ? `?language=${encodeURIComponent(captionLang)}` : ''}`);
-  const podcastScriptQuery = usePodcastScriptQuery(task.task_id, availableTabs.includes('audio') && hasPodcastAsset);
+  const shouldUsePodcastPlayer = taskType === 'podcast' || hasPodcastAsset;
+  const audioPreviewUrl = shouldUsePodcastPlayer ? podcastUrl : audioUrl;
+  const subtitleUrl = pathFor(
+    `/api/tasks/${task.task_id}/subtitles/vtt${captionLang ? `?language=${encodeURIComponent(captionLang)}` : ''}`
+  );
+  const podcastScriptQuery = usePodcastScriptQuery(
+    task.task_id,
+    availableTabs.includes('audio') && shouldUsePodcastPlayer
+  );
 
   useEffect(() => {
     if (!availableTabs.includes(previewTab) && availableTabs.length > 0) {
@@ -144,27 +148,23 @@ const TaskDetailPage = ({
     }
   }, [availableTabs, previewTab]);
 
-  const filteredDownloads = React.useMemo(() => {
-    if (!downloads) return [];
-    return downloads.filter((item) => {
-      if (String(item.type || '').toLowerCase() !== 'transcript') return true;
-      return taskType === 'podcast';
-    });
-  }, [downloads, taskType]);
-
   return (
     <div className="task-detail-page">
       <div className="content-card wide task-detail-card">
         <header className="task-detail-card__header">
           <div className="task-detail-card__heading">
             <p className="task-detail-card__breadcrumb">
-              <Link href="/creations" locale={locale}>{t('header.view.creations')}</Link>
+              <Link href="/creations" locale={locale}>
+                {t('header.view.creations')}
+              </Link>
               <span aria-hidden="true"> / </span>
               <span>{t('task.detail.breadcrumb.task')}</span>
             </p>
             <div className="task-detail-card__title-row">
               <h1>{filename}</h1>
-              <span className="task-detail-card__type-pill">{displayTaskType}</span>
+              <span className="task-detail-card__type-pill">
+                {displayTaskType}
+              </span>
               <div className={`task-status ${statusClass}`}>
                 {statusContent}
               </div>
@@ -176,7 +176,11 @@ const TaskDetailPage = ({
         </header>
 
         <section className="task-detail-card__section">
-          <div className="mode-toggle compact" role="tablist" aria-label={t('task.detail.previewTabs', undefined, 'Preview')}>
+          <div
+            className="mode-toggle compact"
+            role="tablist"
+            aria-label={t('task.detail.previewTabs', undefined, 'Preview')}
+          >
             {availableTabs.includes('video') && (
               <button
                 type="button"
@@ -196,12 +200,25 @@ const TaskDetailPage = ({
                 aria-selected={previewTab === 'audio'}
                 onClick={() => setPreviewTab('audio')}
               >
-                🎧 {(taskType === 'podcast' || hasPodcastAsset) ? t('task.detail.podcastPreview') : t('task.detail.audioPreview', undefined, 'Audio Preview')}
+                🎧{' '}
+                {taskType === 'podcast' || hasPodcastAsset
+                  ? t('task.detail.podcastPreview')
+                  : t('task.detail.audioPreview', undefined, 'Audio Preview')}
               </button>
             )}
           </div>
 
-          <div className="task-detail-card__media" role="tabpanel" aria-label={previewTab === 'video' ? t('task.detail.videoPreview') : (taskType === 'podcast' || hasPodcastAsset) ? t('task.detail.podcastPreview') : t('task.detail.audioPreview', undefined, 'Audio Preview')}>
+          <div
+            className="task-detail-card__media"
+            role="tabpanel"
+            aria-label={
+              previewTab === 'video'
+                ? t('task.detail.videoPreview')
+                : taskType === 'podcast' || hasPodcastAsset
+                  ? t('task.detail.podcastPreview')
+                  : t('task.detail.audioPreview', undefined, 'Audio Preview')
+            }
+          >
             {previewTab === 'video' && availableTabs.includes('video') && (
               <VideoPlayer
                 className="task-detail-card__video"
@@ -212,10 +229,12 @@ const TaskDetailPage = ({
                 autoPlay={false}
               />
             )}
-            {previewTab === 'audio' && availableTabs.includes('audio') && (
-              hasPodcastAsset ? (
+            {previewTab === 'audio' &&
+              availableTabs.includes('audio') &&
+              (shouldUsePodcastPlayer ? (
                 <PodcastPlayer
                   className="task-detail-card__audio"
+                  taskId={task.task_id}
                   src={audioPreviewUrl}
                   script={podcastScriptQuery.data}
                 />
@@ -223,78 +242,64 @@ const TaskDetailPage = ({
                 <AudioPlayer
                   className="task-detail-card__audio"
                   src={audioPreviewUrl}
-                  vttUrl={taskType === 'podcast' ? undefined : subtitleUrl}
+                  vttUrl={subtitleUrl}
                   showTranscript
                 />
-              )
-            )}
+              ))}
           </div>
         </section>
 
         <section className="task-detail-card__section task-detail-card__section--subtle">
-          <div className="task-detail-card__facts" aria-label={t('task.detail.metadataAria', undefined, 'Task metadata')}>
+          <div
+            className="task-detail-card__facts"
+            aria-label={t(
+              'task.detail.metadataAria',
+              undefined,
+              'Task metadata'
+            )}
+          >
             <div className="task-detail-card__fact-group">
               <div className="task-detail-card__fact">
-                <span className="task-detail-card__fact-label">{t('task.detail.voice')}</span>
-                <span className="task-detail-card__fact-value">{getLanguageDisplayName(voiceLanguage, t)}</span>
+                <span className="task-detail-card__fact-label">
+                  {t('task.detail.voice')}
+                </span>
+                <span className="task-detail-card__fact-value">
+                  {getLanguageDisplayName(voiceLanguage, t)}
+                </span>
               </div>
               <div className="task-detail-card__fact">
-                <span className="task-detail-card__fact-label">{taskType === 'podcast' ? t('task.detail.transcript') : t('task.detail.subtitlesFormats')}</span>
-                <span className="task-detail-card__fact-value">{getLanguageDisplayName(transcriptLanguage ?? subtitleLanguage, t)}</span>
+                <span className="task-detail-card__fact-label">
+                  {taskType === 'podcast'
+                    ? t('task.detail.transcript')
+                    : t('task.detail.subtitlesFormats')}
+                </span>
+                <span className="task-detail-card__fact-value">
+                  {getLanguageDisplayName(
+                    transcriptLanguage ?? subtitleLanguage,
+                    t
+                  )}
+                </span>
               </div>
             </div>
             <div className="task-detail-card__fact-group subtle-meta">
               <div className="task-detail-card__fact">
-                <span className="task-detail-card__fact-label">{t('task.detail.created')}</span>
-                <span className="task-detail-card__fact-value subtle-meta__value">{formatDateTime(task.created_at)}</span>
+                <span className="task-detail-card__fact-label">
+                  {t('task.detail.created')}
+                </span>
+                <span className="task-detail-card__fact-value subtle-meta__value">
+                  {formatDateTime(task.created_at)}
+                </span>
               </div>
               <div className="task-detail-card__fact">
-                <span className="task-detail-card__fact-label">{t('task.detail.updated')}</span>
-                <span className="task-detail-card__fact-value subtle-meta__value">{formatDateTime(task.updated_at)}</span>
+                <span className="task-detail-card__fact-label">
+                  {t('task.detail.updated')}
+                </span>
+                <span className="task-detail-card__fact-value subtle-meta__value">
+                  {formatDateTime(task.updated_at)}
+                </span>
               </div>
             </div>
           </div>
-        </section>
-
-        <section className="task-detail-card__section">
-          <h2>{t('task.detail.downloads')}</h2>
-          {filteredDownloads.length > 0 ? (
-            <DownloadSection
-              links={filteredDownloads.map((item) => {
-                // Construct full URLs by combining the API base URL with the relative paths from the API
-                const baseUrl = apiClient.defaults.baseURL || apiBaseUrl || '';
-                const path = item.download_url || item.url;
-                // Ensure path starts with '/' and construct full URL
-                const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-                const fullUrl = baseUrl ? `${baseUrl.replace(/\/+$/, '')}${normalizedPath}` : normalizedPath;
-
-                const label = downloadLabel(item.type, t);
-                const typeKey = String(item.type || '').toLowerCase();
-                const copyMessageKey = typeKey === 'podcast'
-                  ? 'notifications.podcastCopied'
-                  : typeKey === 'video'
-                    ? 'notifications.videoCopied'
-                    : typeKey === 'audio'
-                      ? 'notifications.audioCopied'
-                      : typeKey === 'transcript'
-                        ? 'notifications.transcriptCopied'
-                        : typeKey === 'vtt'
-                          ? 'notifications.vttCopied'
-                          : typeKey === 'srt'
-                            ? 'notifications.srtCopied'
-                            : undefined;
-                return {
-                  key: `${item.type}-${fullUrl}`,
-                  label,
-                  url: fullUrl,
-                  copyLabel: t('actions.copy'),
-                  copyMessage: copyMessageKey ? t(copyMessageKey) : undefined,
-                } satisfies DownloadLinkItem;
-              })}
-            />
-          ) : (
-            <p className="task-detail-card__empty">{t('task.detail.noDownloads')}</p>
-          )}
         </section>
       </div>
     </div>

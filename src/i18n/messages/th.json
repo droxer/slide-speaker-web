@@ -16,6 +16,11 @@
       "studio": "สตูดิโอ",
       "creations": "ผลงาน"
     },
+    "voice": {
+      "loading": "กำลังโหลดเสียง…",
+      "error": "ไม่พบเสียง จะใช้ค่าเริ่มต้นแทน",
+      "none": "ไม่มีเสียงสำหรับภาษานี้"
+    },
     "menu": {
       "studio": "สตูดิโอ",
       "creations": "ผลงาน",
@@ -112,6 +117,8 @@
       "subtitles": "คำบรรยาย",
       "subtitlesFormats": "VTT / SRT",
       "transcript": "บทความ",
+      "podcastHostVoice": "เสียงโฮสต์",
+      "podcastGuestVoice": "เสียงแขกรับเชิญ",
       "metadataAria": "ข้อมูลเมตาของงาน"
     },
     "status": {
@@ -150,6 +157,7 @@
         "podcast": "พอดคาสต์",
         "audio": "เสียง",
         "both": "วิดีโอและพอดคาสต์",
+        "file_purge": "ลบไฟล์",
         "unknown": "งาน"
       }
     },
@@ -218,6 +226,9 @@
       "label": "ผลลัพธ์"
     },
     "voiceLanguage": "ภาษาเสียงพูด",
+    "voiceSelection": "เลือกเสียง",
+    "hostVoice": "เสียงผู้บรรยายหลัก",
+    "guestVoice": "เสียงผู้ร่วมสนทนา",
     "subtitleLanguage": "ภาษาคำบรรยาย",
     "transcriptLanguage": "ภาษาบทความ",
     "videoResolution": "ความละเอียดวิดีโอ",
@@ -270,7 +281,8 @@
       "taskCreated": "สร้างงานแล้ว: {id}",
       "createFailed": "สร้างงานล้มเหลว",
       "cancelFailed": "ยกเลิกงานล้มเหลว",
-      "deleteFailed": "ลบงานล้มเหลว"
+      "deleteFailed": "ลบงานล้มเหลว",
+      "deleteSuccess": "ลบงานสำเร็จ"
     },
     "confirm": {
       "delete": "การดำเนินการนี้จะลบงานและสถานะทั้งหมดถาวร ดำเนินการต่อ?"
@@ -312,6 +324,14 @@
     "metadataAria": "ข้อมูลเมตาของงาน",
     "progressLabel": "ความคืบหน้าโดยรวม",
     "progressStatus": "เรากำลังนำการนำเสนอของคุณมาสู่ชีวิต…",
+    "haltAfterStep": "การประมวลผลหยุดหลังขั้นตอน {step}",
+    "haltGeneric": "การประมวลผลหยุดเนื่องจากเกิดข้อผิดพลาด",
+    "retryFromStep": "ลองอีกครั้งตั้งแต่ {step}",
+    "retryLatest": "ลองอีกครั้งจากขั้นตอนที่ล้มเหลวล่าสุด",
+    "retrying": "กำลังลองใหม่…",
+    "retryQueued": "จัดคิวการลองใหม่แล้ว ระบบจะดำเนินการต่อในไม่ช้า",
+    "retryFailed": "ไม่สามารถลองใหม่ได้ โปรดลองอีกครั้ง",
+    "retry": "ลองใหม่",
     "steps": {
       "extract_slides": "แยกสไลด์",
       "analyze_slide_images": "วิเคราะห์เนื้อหา",
@@ -333,6 +353,7 @@
       "generate_podcast_script": "สร้างบทพอดคาสต์",
       "translate_podcast_script": "แปลบทพอดคาสต์",
       "generate_podcast_audio": "สร้างเสียงพอดคาสต์",
+      "generate_podcast_subtitles": "สร้างคำบรรยายพอดคาสต์",
       "compose_podcast": "ประกอบพอดคาสต์",
       "unknown": "กำลังเริ่มต้น"
     },

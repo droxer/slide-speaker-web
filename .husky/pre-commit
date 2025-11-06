@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+# Run a full typecheck before lint-staged so lint-staged doesn't re-invoke tsc with file arguments
+./scripts/run-tsc-precommit.sh
+
 # Run lint-staged to lint only staged files
 npx lint-staged

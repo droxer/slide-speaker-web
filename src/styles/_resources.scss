@@ -55,7 +55,8 @@
   margin-top: 0.75rem;
 }
 
-.copy-btn, .download-btn {
+.copy-btn,
+.download-btn {
   flex: 1;
   padding: 0.65rem 0.85rem;
   border: none;
@@ -120,7 +121,7 @@
 
 /* Enhanced Resource Links */
 .resource-links {
-  border-top: 2px solid rgba(226, 232, 240, 0.8);
+  border-top: 2px solid var(--color-border);
   padding-top: 1.5rem;
   margin-top: 1.5rem;
 }
@@ -129,30 +130,26 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(248, 250, 252, 0.8);
-  border: 1px solid rgba(203, 213, 225, 0.6);
-  border-radius: 12px;
-  padding: 0.5rem;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem;
   margin-bottom: 0.75rem;
   transition: all 0.2s ease;
 }
 
 .url-copy-row:hover {
-  background: rgba(241, 245, 249, 0.9);
-  border-color: rgba(148, 163, 184, 0.8);
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
 }
 
 .resource-label-inline {
   font-weight: 700;
-  color: #1e293b;
-  font-size: 0.85rem;
+  color: var(--color-accent);
+  font-size: 0.8rem;
   min-width: 40px;
   text-align: center;
-  letter-spacing: -0.1px;
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -162,36 +159,38 @@
   border: none;
   padding: 0.5rem 0.75rem;
   font-size: 0.75rem;
-  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-  color: #1e293b;
+  font-family:
+    'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New',
+    monospace;
+  color: var(--color-text-primary);
   outline: none;
   min-width: 0;
 }
 
 .copy-btn-enhanced {
-  background: linear-gradient(135deg, #4f46e5, #4338ca);
-  color: white;
+  background: var(--color-accent);
+  color: #ffffff;
   border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 600;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 650;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
-  box-shadow: 0 1px 4px rgba(79, 70, 229, 0.2);
+  box-shadow: 0 8px 16px rgba(31, 26, 56, 0.16);
   min-width: 44px;
   position: relative;
   overflow: hidden;
 }
 
 .copy-btn-enhanced:hover {
-  background: linear-gradient(135deg, #4338ca, #3730a3);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+  background: var(--color-accent-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(18, 11, 45, 0.24);
 }
 
 .copy-btn-enhanced:active {
   transform: translateY(0);
-  box-shadow: 0 1px 4px rgba(79, 70, 229, 0.25);
+  box-shadow: 0 6px 12px rgba(18, 11, 45, 0.2);
 }

@@ -4,7 +4,7 @@
     "skipToNavigation": "跳至導覽"
   },
   "header": {
-    "title": "簡報演說 AI",
+    "title": "SlideSpeaker AI",
     "subtitle": "將簡報轉化為 AI 驅動的影片",
     "login": "使用 Google 登入",
     "logout": "登出",
@@ -112,6 +112,8 @@
       "subtitles": "字幕語言",
       "subtitlesFormats": "VTT / SRT",
       "transcript": "逐字稿語言",
+      "podcastHostVoice": "主持人聲音",
+      "podcastGuestVoice": "嘉賓聲音",
       "metadataAria": "任務資訊"
     },
     "status": {
@@ -150,6 +152,7 @@
         "podcast": "播客",
         "audio": "音訊",
         "both": "影片 + 播客",
+        "file_purge": "檔案清理",
         "unknown": "任務"
       }
     },
@@ -218,6 +221,9 @@
       "label": "輸出"
     },
     "voiceLanguage": "配音語言",
+    "voiceSelection": "配音人聲",
+    "hostVoice": "主持人聲音",
+    "guestVoice": "來賓聲音",
     "subtitleLanguage": "字幕語言",
     "transcriptLanguage": "逐字稿語言",
     "videoResolution": "影片解析度",
@@ -270,7 +276,8 @@
       "taskCreated": "任務已建立：{id}",
       "createFailed": "建立任務失敗",
       "cancelFailed": "取消任務失敗",
-      "deleteFailed": "刪除任務失敗"
+      "deleteFailed": "刪除任務失敗",
+      "deleteSuccess": "任務刪除成功"
     },
     "confirm": {
       "delete": "此動作會永久刪除任務與其狀態，確定要繼續嗎？"
@@ -312,6 +319,14 @@
     "metadataAria": "任務資訊",
     "progressLabel": "整體進度",
     "progressStatus": "正在為您的簡報注入活力…",
+    "haltAfterStep": "在 {step} 步驟後停止處理。",
+    "haltGeneric": "發生錯誤後處理已停止。",
+    "retryFromStep": "從 {step} 重新開始",
+    "retryLatest": "從最近的失敗步驟重試",
+    "retrying": "正在重試…",
+    "retryQueued": "已排入重試佇列，稍後將繼續處理。",
+    "retryFailed": "重試失敗，請稍後再試。",
+    "retry": "重試",
     "steps": {
       "extract_slides": "擷取投影片",
       "analyze_slide_images": "分析內容",
@@ -333,6 +348,7 @@
       "generate_podcast_script": "產生播客腳本",
       "translate_podcast_script": "翻譯播客腳本",
       "generate_podcast_audio": "產生播客音訊",
+      "generate_podcast_subtitles": "產生播客字幕",
       "compose_podcast": "合成播客",
       "unknown": "初始化"
     },
@@ -385,6 +401,11 @@
       "pptDescription": "AI 會將投影片轉換為帶配音的影片。",
       "supportedBadge": "支援的檔案",
       "supportedDescription": "支援 PDF、PPTX 與 PPT 檔案"
+    },
+    "voice": {
+      "loading": "正在載入聲音…",
+      "error": "無法取得聲音，將使用預設設定。",
+      "none": "此語言暫無可用聲音"
     },
     "summary": {
       "file": "檔案",

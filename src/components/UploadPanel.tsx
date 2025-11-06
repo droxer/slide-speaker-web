@@ -12,6 +12,15 @@ type UploadPanelProps = {
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   voiceLanguage: string;
   setVoiceLanguage: (v: string) => void;
+  voiceOptions: string[];
+  voiceId: string;
+  setVoiceId: (v: string) => void;
+  podcastHostVoice: string;
+  setPodcastHostVoice: (v: string) => void;
+  podcastGuestVoice: string;
+  setPodcastGuestVoice: (v: string) => void;
+  voiceOptionsLoading: boolean;
+  voiceOptionsError: boolean;
   subtitleLanguage: string;
   setSubtitleLanguage: (v: string) => void;
   transcriptLanguage: string;
@@ -42,6 +51,15 @@ const UploadPanel = ({
   onFileChange,
   voiceLanguage,
   setVoiceLanguage,
+  voiceOptions,
+  voiceId,
+  setVoiceId,
+  podcastHostVoice,
+  setPodcastHostVoice,
+  podcastGuestVoice,
+  setPodcastGuestVoice,
+  voiceOptionsLoading,
+  voiceOptionsError,
   subtitleLanguage,
   setSubtitleLanguage,
   transcriptLanguage,
@@ -54,14 +72,41 @@ const UploadPanel = ({
   getFileTypeHint,
 }: UploadPanelProps) => {
   const { t } = useI18n();
-  const subtitleTitle = uploadMode === 'pdf' && pdfOutputMode === 'podcast'
-    ? t('runTask.transcriptLanguage')
-    : t('runTask.subtitleLanguage');
+  const subtitleTitle =
+    uploadMode === 'pdf' && pdfOutputMode === 'podcast'
+      ? t('runTask.transcriptLanguage')
+      : t('runTask.subtitleLanguage');
+  const isPodcastMode = uploadMode === 'pdf' && pdfOutputMode === 'podcast';
+  const hasVoiceOptions = voiceOptions.length > 0;
+  const voicePlaceholder = voiceOptionsLoading
+    ? t('upload.voice.loading', undefined, 'Loading voices…')
+    : voiceOptionsError
+      ? t(
+          'upload.voice.error',
+          undefined,
+          'Voices unavailable - defaults will be used.'
+        )
+      : t(
+          'upload.voice.none',
+          undefined,
+          'No voices available for this language'
+        );
+
+  const formatVoiceLabel = (voice: string) =>
+    voice
+      .split(/[_\s]+/)
+      .map((part) => (part ? part[0]?.toUpperCase() + part.slice(1) : ''))
+      .join(' ')
+      .trim() || voice;
 
   const displayLanguage = (code: string) => {
     const normalized = (code || '').toLowerCase();
     const fallback = getLanguageDisplayName(code);
-    return t(`language.display.${normalized}`, undefined, fallback || t('common.unknown', undefined, 'Unknown'));
+    return t(
+      `language.display.${normalized}`,
+      undefined,
+      fallback || t('common.unknown', undefined, 'Unknown')
+    );
   };
 
   const fileLabel = useMemo(() => {
@@ -74,18 +119,31 @@ const UploadPanel = ({
   const fileHint = useMemo(() => {
     if (file) return getFileTypeHint(file.name);
     return uploadMode === 'pdf'
-      ? t('upload.file.hintPdf', undefined, 'PDF will be processed into a video or podcast')
-      : t('upload.file.hintSlides', undefined, 'Slides will be processed into a narrated video');
+      ? t(
+          'upload.file.hintPdf',
+          undefined,
+          'PDF will be processed into a video or podcast'
+        )
+      : t(
+          'upload.file.hintSlides',
+          undefined,
+          'Slides will be processed into a narrated video'
+        );
   }, [file, getFileTypeHint, t, uploadMode]);
 
-  const pdfCreateLabel = pdfOutputMode === 'podcast'
-    ? t('upload.createPodcast', undefined, 'Create Podcast')
-    : t('upload.createVideo', undefined, 'Create Video');
+  const pdfCreateLabel =
+    pdfOutputMode === 'podcast'
+      ? t('upload.createPodcast', undefined, 'Create Podcast')
+      : t('upload.createVideo', undefined, 'Create Video');
 
   return (
     <>
       <div className="upload-view">
-        <div className="mode-toggle" role="tablist" aria-label={t('upload.modeToggle.aria', undefined, 'Entry Mode')}>
+        <div
+          className="mode-toggle"
+          role="tablist"
+          aria-label={t('upload.modeToggle.aria', undefined, 'Entry Mode')}
+        >
           <button
             type="button"
             className={`toggle-btn ${uploadMode === 'slides' ? 'active' : ''}`}
@@ -110,16 +168,34 @@ const UploadPanel = ({
         <div className="mode-explainer" aria-live="polite">
           {uploadMode === 'slides' ? (
             <>
-              <strong>{t('upload.mode.slidesHeading', undefined, 'Slides Mode:')}</strong> {t('upload.mode.slidesDescription', undefined, 'Processes each slide individually for transcripts, audio, subtitles, and composes a final video.')}
+              <strong>
+                {t('upload.mode.slidesHeading', undefined, 'Slides Mode:')}
+              </strong>{' '}
+              {t(
+                'upload.mode.slidesDescription',
+                undefined,
+                'Processes each slide individually for transcripts, audio, subtitles, and composes a final video.'
+              )}
             </>
           ) : (
             <>
-              <strong>{t('upload.mode.pdfHeading', undefined, 'PDF Mode:')}</strong> {t('upload.mode.pdfDescription', undefined, 'Segments the document into chapters; generate a video (audio + subtitles) or a two-speaker podcast (MP3).')}
+              <strong>
+                {t('upload.mode.pdfHeading', undefined, 'PDF Mode:')}
+              </strong>{' '}
+              {t(
+                'upload.mode.pdfDescription',
+                undefined,
+                'Segments the document into chapters; generate a video (audio + subtitles) or a two-speaker podcast (MP3).'
+              )}
             </>
           )}
         </div>
         {uploadMode === 'pdf' && (
-          <div className="mode-toggle" role="tablist" aria-label={t('upload.pdfOutput.aria', undefined, 'PDF Output')}>
+          <div
+            className="mode-toggle"
+            role="tablist"
+            aria-label={t('upload.pdfOutput.aria', undefined, 'PDF Output')}
+          >
             <button
               type="button"
               className={`toggle-btn ${pdfOutputMode === 'video' ? 'active' : ''}`}
@@ -153,7 +229,9 @@ const UploadPanel = ({
           <label htmlFor="file-upload" className="file-upload-label">
             <div className="upload-section-header">
               <span className="upload-section-icon">📁</span>
-              <span className="upload-section-title">{uploadMode === 'pdf' ? 'PDF Document' : 'Presentation Slides'}</span>
+              <span className="upload-section-title">
+                {uploadMode === 'pdf' ? 'PDF Document' : 'Presentation Slides'}
+              </span>
             </div>
             <div className="upload-icon">
               {getFileTypeIcon(file?.name || '')}
@@ -167,14 +245,106 @@ const UploadPanel = ({
           <div className="video-option-card">
             <div className="video-option-header">
               <span className="video-option-icon">🌐</span>
-              <span className="video-option-title">{t('runTask.voiceLanguage')}</span>
+              <span className="video-option-title">
+                {t('runTask.voiceLanguage')}
+              </span>
             </div>
-            <select id="voice-language-select" value={voiceLanguage} onChange={(e) => setVoiceLanguage(e.target.value)} className="video-option-select">
+            <select
+              id="voice-language-select"
+              value={voiceLanguage}
+              onChange={(e) => setVoiceLanguage(e.target.value)}
+              className="video-option-select"
+            >
               {LANGS.map((code) => (
-                <option key={code} value={code}>{getLanguageDisplayName(code, t)}</option>
+                <option key={code} value={code}>
+                  {getLanguageDisplayName(code, t)}
+                </option>
               ))}
             </select>
           </div>
+
+          {!isPodcastMode && (
+            <div className="video-option-card">
+              <div className="video-option-header">
+                <span className="video-option-icon">🗣️</span>
+                <span className="video-option-title">
+                  {t('runTask.voiceSelection', undefined, 'Voice')}
+                </span>
+              </div>
+              <select
+                id="voice-select"
+                value={hasVoiceOptions ? voiceId : ''}
+                onChange={(e) => setVoiceId(e.target.value)}
+                className="video-option-select"
+                disabled={!hasVoiceOptions}
+              >
+                {hasVoiceOptions ? (
+                  voiceOptions.map((voice) => (
+                    <option key={voice} value={voice}>
+                      {formatVoiceLabel(voice)}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">{voicePlaceholder}</option>
+                )}
+              </select>
+            </div>
+          )}
+
+          {isPodcastMode && (
+            <>
+              <div className="video-option-card">
+                <div className="video-option-header">
+                  <span className="video-option-icon">🎙️</span>
+                  <span className="video-option-title">
+                    {t('runTask.hostVoice', undefined, 'Host voice')}
+                  </span>
+                </div>
+                <select
+                  id="podcast-host-voice-select"
+                  value={hasVoiceOptions ? podcastHostVoice : ''}
+                  onChange={(e) => setPodcastHostVoice(e.target.value)}
+                  className="video-option-select"
+                  disabled={!hasVoiceOptions}
+                >
+                  {hasVoiceOptions ? (
+                    voiceOptions.map((voice) => (
+                      <option key={`host-${voice}`} value={voice}>
+                        {formatVoiceLabel(voice)}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="">{voicePlaceholder}</option>
+                  )}
+                </select>
+              </div>
+              <div className="video-option-card">
+                <div className="video-option-header">
+                  <span className="video-option-icon">🎧</span>
+                  <span className="video-option-title">
+                    {t('runTask.guestVoice', undefined, 'Guest voice')}
+                  </span>
+                </div>
+                <select
+                  id="podcast-guest-voice-select"
+                  value={hasVoiceOptions ? podcastGuestVoice : ''}
+                  onChange={(e) => setPodcastGuestVoice(e.target.value)}
+                  className="video-option-select"
+                  disabled={!hasVoiceOptions}
+                >
+                  {hasVoiceOptions ? (
+                    voiceOptions.map((voice) => (
+                      <option key={`guest-${voice}`} value={voice}>
+                        {formatVoiceLabel(voice)}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="">{voicePlaceholder}</option>
+                  )}
+                </select>
+              </div>
+            </>
+          )}
 
           <div className="video-option-card">
             <div className="video-option-header">
@@ -183,7 +353,11 @@ const UploadPanel = ({
             </div>
             <select
               id="subtitle-language-select"
-              value={uploadMode === 'pdf' && pdfOutputMode === 'podcast' ? transcriptLanguage : subtitleLanguage}
+              value={
+                uploadMode === 'pdf' && pdfOutputMode === 'podcast'
+                  ? transcriptLanguage
+                  : subtitleLanguage
+              }
               onChange={(e) => {
                 const v = e.target.value;
                 if (uploadMode === 'pdf' && pdfOutputMode === 'podcast') {
@@ -196,7 +370,9 @@ const UploadPanel = ({
               className="video-option-select"
             >
               {LANGS.map((code) => (
-                <option key={code} value={code}>{getLanguageDisplayName(code, t)}</option>
+                <option key={code} value={code}>
+                  {getLanguageDisplayName(code, t)}
+                </option>
               ))}
             </select>
           </div>
@@ -205,9 +381,16 @@ const UploadPanel = ({
             <div className="video-option-card">
               <div className="video-option-header">
                 <span className="video-option-icon">📺</span>
-                <span className="video-option-title">{t('runTask.videoResolution')}</span>
+                <span className="video-option-title">
+                  {t('runTask.videoResolution')}
+                </span>
               </div>
-              <select id="video-resolution-select" value={videoResolution} onChange={(e) => setVideoResolution(e.target.value)} className="video-option-select">
+              <select
+                id="video-resolution-select"
+                value={videoResolution}
+                onChange={(e) => setVideoResolution(e.target.value)}
+                className="video-option-select"
+              >
                 <option value="sd">{t('runTask.resolution.sd')}</option>
                 <option value="hd">{t('runTask.resolution.hd')}</option>
                 <option value="fullhd">{t('runTask.resolution.fullhd')}</option>
@@ -217,11 +400,19 @@ const UploadPanel = ({
         </div>
       </div>
 
-      <div className="ai-notice-subtle">{t('upload.notice', undefined, 'AI-generated content may contain inaccuracies. Review carefully.')}</div>
+      <div className="ai-notice-subtle">
+        {t(
+          'upload.notice',
+          undefined,
+          'AI-generated content may contain inaccuracies. Review carefully.'
+        )}
+      </div>
 
       {file && (
         <button onClick={onCreate} className="primary-btn" disabled={uploading}>
-          {uploadMode === 'pdf' ? pdfCreateLabel : t('upload.createVideo', undefined, 'Create Video')}
+          {uploadMode === 'pdf'
+            ? pdfCreateLabel
+            : t('upload.createVideo', undefined, 'Create Video')}
         </button>
       )}
     </>
