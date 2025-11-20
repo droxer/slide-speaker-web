@@ -69,7 +69,7 @@
 
 .task-detail-card__type-pill {
   padding: 0.4rem 0.85rem;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   background: var(--color-accent-soft);
   color: var(--color-accent-strong);
   font-size: 0.85rem;
@@ -88,7 +88,7 @@
 
 .task-detail-card__status-generic {
   padding: 0.25rem 0.75rem;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -137,7 +137,7 @@
   color: var(--color-text-primary);
   border: 1px solid var(--color-border);
   padding: 0.45rem 1.35rem 0.45rem 0.85rem;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   transition:
     border-color 0.2s ease,
     background 0.2s ease,
@@ -289,7 +289,7 @@
 
 .task-detail-card__progressbar {
   background: var(--color-surface-muted);
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   height: 10px;
   overflow: hidden;
 }
