@@ -129,7 +129,11 @@
   left: -12px;
   right: -12px;
   bottom: -12px;
-  background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(124, 58, 237, 0.08));
+  background: linear-gradient(
+    135deg,
+    rgba(79, 70, 229, 0.08),
+    rgba(124, 58, 237, 0.08)
+  );
   border-radius: 28px;
   z-index: -1;
   opacity: 0.6;
@@ -145,7 +149,10 @@
   margin-top: 0.5rem;
 }
 
-.preview-info-compact:hover { box-shadow: none; transform: none; }
+.preview-info-compact:hover {
+  box-shadow: none;
+  transform: none;
+}
 
 .preview-info-compact h4 {
   margin: 0 0 1.5rem 0;
@@ -258,7 +265,9 @@
 .processing-transcript pre {
   white-space: pre-wrap;
   margin: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
   /* Reduce to align with overall UI scale (~13px) */
   font-size: 0.8125rem;
   color: #0f172a;
@@ -338,7 +347,7 @@
 .processing-summary__copy {
   border: 1px solid rgba(148, 163, 184, 0.6);
   background: transparent;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   padding: 2px 8px;
   font-size: 0.7rem;
   font-weight: 600;
@@ -422,11 +431,11 @@
   background: #eff6ff;
 }
 
-.podcast-transcript .conv-line[role="button"] {
+.podcast-transcript .conv-line[role='button'] {
   cursor: pointer;
 }
 
-.podcast-transcript .conv-line[role="button"]:hover {
+.podcast-transcript .conv-line[role='button']:hover {
   background: #f1f5f9;
 }
 

@@ -102,7 +102,7 @@
 .health-indicator .hi-chip {
   font-size: 11px;
   padding: 2px 6px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   border: 1px solid #e5e7eb;
   background: #f8fafc;
 }
@@ -726,7 +726,7 @@
 
 .task-status {
   padding: 4px 10px;
-  border-radius: 9999px;
+  border-radius: var(--radius-md);
   font-size: 12px;
   font-weight: 700;
   text-transform: none;
@@ -956,7 +956,7 @@
   align-items: center;
   gap: 6px;
   padding: 4px 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-size: 12px;
   font-weight: 600;
   line-height: 1;
@@ -1052,7 +1052,7 @@
   color: #1f2937;
   background: #f1f5f9;
   border: 1px solid #e2e8f0;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   padding: 2px 6px;
   letter-spacing: 0.2px;
 }
@@ -1078,7 +1078,7 @@
   align-items: center;
   gap: 4px;
   padding: 2px 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -1152,7 +1152,7 @@
   width: 100%;
   height: 6px;
   background: #e5e7eb;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 .progress-fill {
@@ -1162,7 +1162,7 @@
     var(--color-accent-tertiary),
     var(--color-accent)
   );
-  border-radius: 999px;
+  border-radius: var(--radius-md);
 }
 .timestamps-row {
   margin-top: 6px;
@@ -1271,7 +1271,7 @@
   background: #e2e8f0;
   border: 1px solid #cbd5e1;
   padding: 4px 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   letter-spacing: 0.2px;
 }
 
@@ -1547,7 +1547,7 @@
 }
 .file-count-pill {
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   background: #f1f5f9;
   border: 1px solid #e2e8f0;
   font-size: 12px;
@@ -1568,7 +1568,7 @@
   align-items: center;
   gap: 6px;
   padding: 4px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   font-weight: 600;
@@ -1649,7 +1649,7 @@
   align-items: center;
   gap: 6px;
   padding: 4px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   border: 1px solid #e2e8f0;
   background: #f8fafc;
   font-size: 12px;
@@ -1721,7 +1721,7 @@
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   border: 1px solid #e2e8f0;
   background: #f8fafc;
   color: #1f2937;
@@ -1761,7 +1761,7 @@
   align-items: center;
   justify-content: center;
   padding: 7px 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   border: 1px solid #d1d5db;
   background: #ffffff;
   color: #0f172a;
@@ -1962,7 +1962,7 @@
   align-items: center;
   font-size: 12px;
   font-weight: 700;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   padding: 4px 12px;
   border: 1px solid rgba(148, 163, 184, 0.4);
   background: rgba(241, 245, 249, 0.8);
@@ -1998,7 +1998,7 @@
   display: inline-flex;
   align-items: center;
   padding: 3px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(148, 163, 184, 0.45);
   background: rgba(241, 245, 249, 0.85);
   font-size: 11px;
@@ -2061,7 +2061,7 @@
   align-items: center;
   gap: 4px;
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(148, 163, 184, 0.4);
   background: rgba(241, 245, 249, 0.8);
   font-weight: 600;
@@ -2085,7 +2085,7 @@
   justify-content: center;
   gap: 6px;
   padding: 8px 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.2px;
@@ -2914,7 +2914,7 @@
 .modal-mode-toggle .toggle-btn {
   padding: 4px 8px;
   font-size: 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
 }
 .modal-mode-toggle .toggle-btn.active {
   background: #e2e8f0;
@@ -2968,7 +2968,7 @@
   font-weight: 800;
   letter-spacing: 1.4px;
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--brand-1) 22%, white 78%);
   color: color-mix(in srgb, var(--brand-1) 70%, black 30%);
 }
