@@ -76,7 +76,12 @@
     "nameLabel": "顯示名稱",
     "namePlaceholder": "我們應該如何稱呼你？",
     "languageLabel": "偏好語言",
-    "themeLabel": "偏好主題",
+    "appearanceLabel": "外觀模式",
+    "theme": {
+      "autoHint": "依照系統設定自動切換。",
+      "lightHint": "使用中性柔和的淺色主題。",
+      "darkHint": "使用石墨風格的深色模式。"
+    },
     "saveButton": "儲存變更",
     "saving": "正在儲存…",
     "saveSuccess": "資料已更新",

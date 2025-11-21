@@ -1,0 +1,49 @@
+.uploadPanel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 1.1vw + 0.75rem, 1.75rem);
+}
+
+.fileUploadArea {
+  border-radius: 18px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.notice {
+  margin-top: 0.5rem;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.primaryButton {
+  min-width: 220px;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .uploadPanel {
+    gap: 1rem;
+  }
+
+  .actions {
+    justify-content: stretch;
+  }
+
+  .primaryButton {
+    width: 100%;
+  }
+}

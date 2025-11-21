@@ -51,13 +51,6 @@ const shortenFileName = (
   return base.slice(0, head) + '…' + base.slice(-tail);
 };
 
-const modalAlignmentStyles: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minHeight: '100vh',
-};
-
 const TaskCreationModal = ({
   open,
   isPdf,
@@ -333,7 +326,6 @@ const TaskCreationModal = ({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      style={modalAlignmentStyles}
     >
       <div
         ref={modalRef}

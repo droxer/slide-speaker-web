@@ -10,6 +10,7 @@ import { usePodcastScriptQuery } from '@/services/queries';
 import { useI18n } from '@/i18n/hooks';
 import type { Task } from '@/types';
 import { api as apiClient } from '@/services/client';
+import styles from './TaskDetailPage.module.scss';
 
 const formatDateTime = (value?: string) => {
   if (!value) return 'Unknown';
@@ -140,8 +141,8 @@ const TaskDetailPage = ({
   }, [availableTabs, previewTab]);
 
   return (
-    <div className="task-detail-page">
-      <div className="content-card wide task-detail-card">
+    <div className={`task-detail-page ${styles.page}`}>
+      <div className={`content-card wide task-detail-card ${styles.card}`}>
         <header className="task-detail-card__header">
           <div className="task-detail-card__heading">
             <div className="task-detail-card__title-row">
@@ -165,7 +166,7 @@ const TaskDetailPage = ({
 
         <section className="task-detail-card__section">
           <div
-            className="mode-toggle compact"
+            className={`mode-toggle compact ${styles.previewTabs}`}
             role="tablist"
             aria-label={t('task.detail.previewTabs', undefined, 'Preview')}
           >
@@ -197,7 +198,7 @@ const TaskDetailPage = ({
           </div>
 
           <div
-            className="task-detail-card__media"
+            className={`task-detail-card__media ${styles.media}`}
             role="tabpanel"
             aria-label={
               previewTab === 'video'

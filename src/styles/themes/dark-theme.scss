@@ -1,27 +1,27 @@
 /* Dark theme overrides applied when <body> has class `theme-dark` */
 
 body.theme-dark {
-  --color-canvas: #07090f;
-  --color-surface: #0a0e16;
-  --color-surface-alt: #111826;
-  --color-surface-muted: #1a2131;
-  --color-border: rgba(255, 255, 255, 0.12);
-  --color-border-strong: rgba(255, 255, 255, 0.22);
-  --color-heading: #f7f3e6;
-  --color-text-primary: #f2eee1;
-  --color-text-secondary: #ddd7c7;
-  --color-text-muted: #aeb4c3;
-  --color-accent: #f0ede0;
-  --color-accent-strong: #e1d7c0;
-  --color-accent-soft: rgba(240, 237, 224, 0.18);
-  --color-accent-secondary: #82cfc0;
-  --color-accent-tertiary: #f3cdb0;
-  --color-accent-contrast: var(--color-canvas);
-  --color-success: #77e4c0;
-  --color-warning: #f6c98c;
-  --color-danger: #f58e7a;
-  --shadow-soft: 0 20px 40px rgba(0, 0, 0, 0.45);
-  --shadow-crisp: 0 28px 64px rgba(0, 0, 0, 0.6);
+  --color-canvas: #1b1b1b;
+  --color-surface: #1f1f1f;
+  --color-surface-alt: #232323;
+  --color-surface-muted: #2b2b2b;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.16);
+  --color-heading: #f5f5f2;
+  --color-text-primary: #f2f1ec;
+  --color-text-secondary: #d7d4cb;
+  --color-text-muted: #a7a59c;
+  --color-accent: #f4f2ec;
+  --color-accent-strong: #fdfcf7;
+  --color-accent-soft: rgba(244, 242, 236, 0.2);
+  --color-accent-secondary: #a8acb3;
+  --color-accent-tertiary: #7fc2b8;
+  --color-accent-contrast: #131313;
+  --color-success: #64c59c;
+  --color-warning: #edc066;
+  --color-danger: #f07f6a;
+  --shadow-soft: 0 18px 48px rgba(0, 0, 0, 0.45);
+  --shadow-crisp: 0 28px 70px rgba(0, 0, 0, 0.6);
   --dark-surface: var(--color-surface);
   --dark-surface-alt: var(--color-surface-alt);
   --dark-border: var(--color-border);
@@ -33,32 +33,32 @@ body.theme-dark {
   --brand-1: var(--color-accent);
   --brand-2: var(--color-accent-secondary);
   --brand-3: var(--color-accent-tertiary);
-  --brand-aurora-a: rgba(240, 237, 224, 0.1);
-  --brand-aurora-b: rgba(130, 207, 192, 0.12);
-  --media-controls-bg-audio: rgba(8, 12, 20, 0.85);
-  --task-audio-bg: rgba(7, 11, 18, 0.92);
-  --task-audio-border: rgba(255, 255, 255, 0.1);
-  --task-audio-shadow: 0 28px 60px rgba(0, 0, 0, 0.7);
-  --task-audio-control-bg: rgba(9, 15, 25, 0.95);
-  --task-audio-control-panel: rgba(8, 13, 22, 0.95);
+  --brand-aurora-a: rgba(244, 242, 236, 0.14);
+  --brand-aurora-b: rgba(127, 194, 184, 0.2);
+  --media-controls-bg-audio: rgba(10, 10, 10, 0.85);
+  --task-audio-bg: rgba(18, 18, 18, 0.95);
+  --task-audio-border: rgba(255, 255, 255, 0.08);
+  --task-audio-shadow: 0 32px 72px rgba(0, 0, 0, 0.65);
+  --task-audio-control-bg: rgba(26, 26, 26, 0.95);
+  --task-audio-control-panel: rgba(24, 24, 24, 0.92);
   --task-audio-control-divider: rgba(255, 255, 255, 0.12);
   --task-audio-control-text: var(--dark-text);
-  --task-audio-transcript-bg: rgba(8, 13, 22, 0.92);
+  --task-audio-transcript-bg: rgba(24, 24, 24, 0.92);
   --task-audio-transcript-border: rgba(255, 255, 255, 0.12);
   --task-audio-transcript-text: var(--dark-text);
   --task-audio-backdrop: blur(10px);
-  --tint-accent-soft: rgba(240, 237, 224, 0.1);
-  --tint-accent-border: rgba(240, 237, 224, 0.28);
-  --tint-accent-mid: rgba(240, 237, 224, 0.38);
-  --tint-accent-strong: rgba(240, 237, 224, 0.48);
-  --tint-success-soft: rgba(119, 228, 192, 0.22);
-  --tint-success-border: rgba(119, 228, 192, 0.42);
-  --tint-warning-soft: rgba(246, 201, 140, 0.2);
-  --tint-warning-border: rgba(246, 201, 140, 0.38);
-  --tint-danger-soft: rgba(245, 142, 122, 0.22);
-  --tint-danger-border: rgba(245, 142, 122, 0.4);
-  --tint-neutral-soft: rgba(174, 180, 195, 0.22);
-  --tint-neutral-border: rgba(174, 180, 195, 0.34);
+  --tint-accent-soft: rgba(244, 242, 236, 0.16);
+  --tint-accent-border: rgba(244, 242, 236, 0.32);
+  --tint-accent-mid: rgba(244, 242, 236, 0.42);
+  --tint-accent-strong: rgba(244, 242, 236, 0.55);
+  --tint-success-soft: rgba(100, 197, 156, 0.24);
+  --tint-success-border: rgba(100, 197, 156, 0.42);
+  --tint-warning-soft: rgba(237, 192, 102, 0.22);
+  --tint-warning-border: rgba(237, 192, 102, 0.38);
+  --tint-danger-soft: rgba(240, 127, 106, 0.24);
+  --tint-danger-border: rgba(240, 127, 106, 0.42);
+  --tint-neutral-soft: rgba(167, 165, 156, 0.22);
+  --tint-neutral-border: rgba(167, 165, 156, 0.34);
   background: var(--color-canvas) !important;
   color: var(--dark-text);
   color-scheme: dark;
@@ -69,7 +69,7 @@ body.dark-theme .App {
 }
 
 body.dark-theme .profile-card {
-  background: var(--dark-surface) !important;
+  background: var(--color-surface) !important;
   border: 1px solid var(--dark-border) !important;
   color: var(--dark-text) !important;
   box-shadow: 0 18px 40px rgba(2, 6, 23, 0.6) !important;
@@ -101,7 +101,7 @@ body.dark-theme .profile-feedback.error {
 body.dark-theme .app-header {
   background: var(--color-surface) !important;
   border-bottom: 1px solid var(--color-border);
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
   color: var(--color-text-primary) !important;
 }
 
@@ -193,7 +193,7 @@ body.dark-theme .file-group,
 body.dark-theme .file-group-header,
 body.dark-theme .mode-toggle,
 body.dark-theme .theme-toggle {
-  background: var(--color-surface-alt) !important;
+  background: var(--color-surface) !important;
   border: 1px solid var(--color-border) !important;
   box-shadow: var(--shadow-soft) !important;
   color: var(--color-text-primary) !important;
@@ -1949,12 +1949,35 @@ body.dark-theme .page-info {
   color: var(--dark-text) !important;
 }
 body.dark-theme .task-type-icon__img {
-  border-radius: 4px;
-  padding: 2px;
-  background: color-mix(in srgb, var(--color-surface) 85%, #0d1117);
+  border-radius: 6px;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  filter: brightness(1.05) contrast(1.05);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
 }
 body.dark-theme .file-task-type-badge .task-type-icon {
   background: rgba(226, 232, 240, 0.08);
+}
+
+body.dark-theme .file-task-type-badge {
+  color: var(--color-text-primary);
+}
+
+body.dark-theme .file-task-type-badge.type-video {
+  color: var(--color-accent);
+}
+
+body.dark-theme .file-task-type-badge.type-podcast {
+  color: var(--color-accent-secondary);
+}
+
+body.dark-theme .file-task-type-badge.type-both {
+  color: var(--color-accent-tertiary);
+}
+
+body.dark-theme .file-task-type-badge.type-audio {
+  color: var(--color-warning);
 }
 
 body.dark-theme .task-detail-card__type-pill .task-type-icon {

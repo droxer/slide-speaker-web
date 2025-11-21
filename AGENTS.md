@@ -21,11 +21,11 @@
 - Prettier enforces 2-space indentation, 80-char line width, semicolons, and single quotes; format with `pnpm exec prettier --write <files>`.
 - Follow the Next.js/TypeScript lint ruleset (`eslint.config.mjs`); avoid disabling rules inline unless there is a documented exception.
 - Use PascalCase for React components, camelCase for hooks/utilities, and uppercase snake case for constants (e.g., `API_BASE_URL`).
-- Co-locate component-specific styles in `.module.scss` files to keep scope narrow.
+- Co-locate component-specific styles in `.module.scss` files to keep scope narrow. Layout-scaffolding components such as `AppShell`, `UploadPanel`, and `TaskDetailPage` must source their spacing, max-width, and background tokens from their paired modules rather than global selectors.
 
 ## Design Language & Branding
 
-- Adopt the “Flat 3.0” visuals across surfaces and controls by using the design tokens defined in `src/styles/_variables.scss` (`--color-*`, `--font-size-*`, etc.).
+- Adopt the “Flat 3.0” visuals across surfaces and controls by using the design tokens defined in `src/styles/_variables.scss` (`--color-*`, `--font-size-*`, etc.). When creating new modules, mirror the spacing rhythm already established in `AppShell.module.scss`, `UploadPanel.module.scss`, or `TaskDetailPage.module.scss` unless a feature-specific spec states otherwise.
 - Headline treatments favor large typography: use the responsive clamp-based sizes (`--font-size-display`, `--font-size-h1`, `--font-size-lead`) rather than hard-coded pixel values.
 - Primary actions lean on the accent spectrum (`var(--color-accent)`, `var(--color-accent-strong)`), with soft neutrals for secondary states; avoid re-introducing legacy gradients such as `#6366f1`.
 - The product name must remain “SlideSpeaker AI” verbatim for every locale and UI surface; never translate or stylize the wording itself.

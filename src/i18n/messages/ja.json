@@ -81,7 +81,12 @@
     "nameLabel": "表示名",
     "namePlaceholder": "どのようにお呼びすればよいですか？",
     "languageLabel": "希望言語",
-    "themeLabel": "希望テーマ",
+    "appearanceLabel": "外観",
+    "theme": {
+      "autoHint": "OS の設定に合わせます。",
+      "lightHint": "ニュートラルなライトテーマを使用します。",
+      "darkHint": "グラファイト調のダークテーマを使用します。"
+    },
     "saveButton": "変更を保存",
     "saving": "保存中…",
     "saveSuccess": "プロフィールを更新しました",

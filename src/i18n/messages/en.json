@@ -76,7 +76,12 @@
     "nameLabel": "Display name",
     "namePlaceholder": "How should we address you?",
     "languageLabel": "Preferred language",
-    "themeLabel": "Preferred theme",
+    "appearanceLabel": "Appearance",
+    "theme": {
+      "autoHint": "Match your operating system setting.",
+      "lightHint": "Use the neutral daylight palette.",
+      "darkHint": "Use the graphite night mode."
+    },
     "saveButton": "Save changes",
     "saving": "Saving…",
     "saveSuccess": "Profile updated",

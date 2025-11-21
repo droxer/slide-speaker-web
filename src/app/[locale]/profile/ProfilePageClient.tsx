@@ -140,6 +140,39 @@ export default function ProfilePageClient({
     }));
   }, []);
 
+  const themeOptions = React.useMemo(
+    () => [
+      {
+        value: 'auto',
+        label: t('footer.theme.auto', undefined, 'Auto'),
+        description: t(
+          'profile.theme.autoHint',
+          undefined,
+          'Match your operating system setting.'
+        ),
+      },
+      {
+        value: 'light',
+        label: t('footer.theme.light', undefined, 'Light'),
+        description: t(
+          'profile.theme.lightHint',
+          undefined,
+          'Use the neutral daylight palette.'
+        ),
+      },
+      {
+        value: 'dark',
+        label: t('footer.theme.dark', undefined, 'Dark'),
+        description: t(
+          'profile.theme.darkHint',
+          undefined,
+          'Use the graphite night mode.'
+        ),
+      },
+    ],
+    [t]
+  );
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     setMessage(null);
@@ -210,24 +243,49 @@ export default function ProfilePageClient({
               ))}
             </select>
 
-            <label htmlFor="profile-theme">
-              {t('profile.themeLabel', undefined, 'Preferred theme')}
-            </label>
-            <select
-              id="profile-theme"
-              value={theme}
-              onChange={(event) => setTheme(event.target.value)}
-            >
-              <option value="auto">
-                {t('footer.theme.auto', undefined, 'Auto')}
-              </option>
-              <option value="light">
-                {t('footer.theme.light', undefined, 'Light')}
-              </option>
-              <option value="dark">
-                {t('footer.theme.dark', undefined, 'Dark')}
-              </option>
-            </select>
+            <fieldset className="profile-theme-group">
+              <legend>
+                {t('profile.appearanceLabel', undefined, 'Appearance')}
+              </legend>
+              <div
+                className="profile-theme-options"
+                role="radiogroup"
+                aria-label={t(
+                  'profile.appearanceLabel',
+                  undefined,
+                  'Appearance'
+                )}
+              >
+                {themeOptions.map((option) => (
+                  <label
+                    key={option.value}
+                    className={`theme-option${theme === option.value ? ' selected' : ''}`}
+                    title={option.description}
+                  >
+                    <input
+                      type="radio"
+                      name="profile-theme"
+                      value={option.value}
+                      checked={theme === option.value}
+                      onChange={(event) => setTheme(event.target.value)}
+                      aria-describedby={`theme-${option.value}-hint`}
+                    />
+                    <span className="theme-option__marker" aria-hidden="true" />
+                    <span className="theme-option__labels">
+                      <span className="theme-option__title">
+                        {option.label}
+                      </span>
+                      <span
+                        id={`theme-${option.value}-hint`}
+                        className="sr-only"
+                      >
+                        {option.description}
+                      </span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
 
             <div className="profile-actions">
               <button

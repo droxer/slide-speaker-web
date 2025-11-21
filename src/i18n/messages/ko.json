@@ -81,7 +81,12 @@
     "nameLabel": "표시 이름",
     "namePlaceholder": "어떻게 불러드릴까요?",
     "languageLabel": "선호 언어",
-    "themeLabel": "선호 테마",
+    "appearanceLabel": "표시 모드",
+    "theme": {
+      "autoHint": "OS 설정과 동일하게 적용합니다.",
+      "lightHint": "차분한 라이트 팔레트를 사용합니다.",
+      "darkHint": "그래파이트 톤의 다크 모드를 사용합니다."
+    },
     "saveButton": "변경 사항 저장",
     "saving": "저장 중…",
     "saveSuccess": "프로필이 업데이트되었습니다",
