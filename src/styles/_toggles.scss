@@ -21,7 +21,11 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      transparent 50%
+    );
     pointer-events: none;
   }
 
@@ -33,79 +37,50 @@
   }
 }
 
-/* AI-styled toggle variant */
+/* AI-styled toggle variant - Ultra simple design */
 .view-toggle.ai-toggle {
-  background: rgba(17, 24, 39, 0.35);
-  border: 1px solid color-mix(in srgb, var(--brand-1) 35%, transparent);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
   border-radius: 14px;
   padding: 6px;
-  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.18), inset 0 1px 0 rgba(255,255,255,0.06);
-  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-soft);
 }
 
 .view-toggle.ai-toggle .toggle-btn {
   border-radius: 10px;
-  background: radial-gradient(120% 120% at 0% 0%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
-  color: #e5e7eb;
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid transparent;
 }
 
-.view-toggle.ai-toggle .toggle-btn .toggle-icon { filter: none; }
+.view-toggle.ai-toggle .toggle-btn .toggle-icon {
+  filter: none;
+}
 
 .view-toggle.ai-toggle .toggle-btn:hover {
-  background: radial-gradient(120% 120% at 0% 0%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%);
-  border-color: rgba(148,163,184,0.4);
+  background: var(--color-surface-muted);
+  color: var(--color-text-primary);
 }
 
 .view-toggle.ai-toggle .toggle-btn.active {
-  color: #ffffff;
-  border-color: color-mix(in srgb, var(--brand-1) 75%, transparent);
-  background:
-    radial-gradient(120% 120% at 100% 0%, color-mix(in srgb, var(--brand-1) 22%, transparent) 0%, color-mix(in srgb, var(--brand-1) 8%, transparent) 60%, color-mix(in srgb, var(--brand-1) 4%, transparent) 100%),
-    radial-gradient(120% 120% at 0% 100%, color-mix(in srgb, var(--brand-2) 18%, transparent) 0%, color-mix(in srgb, var(--brand-2) 6%, transparent) 60%, color-mix(in srgb, var(--brand-2) 2%, transparent) 100%);
-  box-shadow:
-    0 10px 30px rgba(99,102,241,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.18);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Animated aurora shimmer */
-@keyframes ai-aurora {
-  0% { transform: translateX(-120%); }
-  50% { transform: translateX(0%); }
-  100% { transform: translateX(120%); }
-}
-
-/* Alternative shimmer that doesn't cause layout shifts */
-@keyframes ai-aurora-no-shift {
-  0% { opacity: 0.3; }
-  50% { opacity: 0.6; }
-  100% { opacity: 0.3; }
-}
-
-.view-toggle.ai-toggle .toggle-btn.active::before {
-  content: "";
-  position: absolute;
-  inset: -40% -10% -40% -60%;
-  background: linear-gradient(120deg, transparent 0%, var(--brand-aurora-a) 50%, transparent 100%);
-  filter: blur(24px);
-  animation: ai-aurora 3.6s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .view-toggle.ai-toggle .toggle-btn.active::before { animation: none; display: none; }
+  color: var(--color-accent-contrast);
+  background: var(--color-accent);
+  border-color: var(--color-accent-strong);
 }
 
 .view-toggle.ai-toggle .toggle-btn:focus-visible {
-  outline: 2px solid rgba(99,102,241,0.6);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
 @media (max-width: 768px) {
-  .view-toggle.ai-toggle { background: rgba(31, 41, 55, 0.5); }
-  .view-toggle.ai-toggle .toggle-btn { color: #f3f4f6; }
+  .view-toggle.ai-toggle {
+    background: var(--color-surface-muted);
+    border-color: var(--color-border);
+  }
+  .view-toggle.ai-toggle .toggle-btn {
+    color: var(--color-text-secondary);
+  }
 }
 
 .toggle-btn {
@@ -150,8 +125,14 @@
   }
 
   /* Avoid showing a border after click; theme overrides add focus-visible rings */
-  &:focus { outline: none; box-shadow: none; }
-  &:focus-visible { outline: none; box-shadow: none; }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
 
   &:active {
     transform: translateY(0) scale(0.98);
@@ -190,7 +171,11 @@
 /* Alternative clean design - glass toggle */
 .glass-toggle {
   display: flex;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
   backdrop-filter: blur(20px);
   border-radius: 16px;
   padding: 6px;

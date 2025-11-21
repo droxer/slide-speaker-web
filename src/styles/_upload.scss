@@ -143,27 +143,6 @@
   margin-top: 0.5rem;
 }
 
-.file-type-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 650;
-  margin-bottom: 0.5rem;
-  background: var(--color-surface-muted);
-  color: var(--color-text-secondary);
-}
-
-.file-type-badge.pdf {
-  background: #ffe4e6;
-  color: #b42318;
-}
-
-.file-type-badge.ppt {
-  background: #ffedd5;
-  color: #b45309;
-}
-
 .file-type-description {
   font-size: 0.9rem;
   color: var(--color-text-muted);

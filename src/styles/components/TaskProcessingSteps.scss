@@ -138,12 +138,17 @@
 .processing-steps__pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  justify-content: center;
+  gap: 0.15rem;
   padding: 0.25rem 0.65rem;
   border-radius: var(--radius-md);
   font-size: 0.7rem;
   font-weight: 600;
   border: 1px solid transparent;
+
+  .task-type-icon {
+    gap: 0.1rem;
+  }
 }
 
 .processing-steps__pill--video {
@@ -610,22 +615,6 @@
   margin: 12px 0 8px;
 }
 
-/* Small file type badge */
-.file-type-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 8px;
-  border-radius: var(--radius-md);
-  font-size: 12px;
-  font-weight: 700;
-  border: 1px solid #e2e8f0;
-  background: #f8fafc;
-  color: #334155;
-}
-.output-badges .file-type-badge {
-  margin-left: 6px;
-}
-
 /* Inline preview (processing view) */
 .preview-block {
   margin-top: 12px;
@@ -937,33 +926,6 @@
 }
 .steps-container h4 .steps-title {
   flex: 1 1 auto;
-}
-
-/* File type indicator for processing steps */
-.file-type-indicator {
-  text-align: center;
-  margin-bottom: 1.5rem;
-
-  .file-type-badge {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    border-radius: 24px;
-    font-size: 0.95rem;
-    font-weight: 650;
-    background: var(--color-accent);
-    color: #ffffff;
-    box-shadow: 0 8px 18px rgba(95, 45, 225, 0.25);
-  }
-
-  .file-type-badge.pdf {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
-  }
-
-  .file-type-badge.ppt {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
-  }
 }
 
 /* File context text in processing view */

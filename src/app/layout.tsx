@@ -1,16 +1,54 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { cookies, headers } from 'next/headers';
-import { Open_Sans } from 'next/font/google';
+import {
+  Open_Sans,
+  Noto_Sans_SC,
+  Noto_Sans_TC,
+  Noto_Sans_JP,
+  Noto_Sans_KR,
+  Noto_Sans_Thai,
+} from 'next/font/google';
 import { defaultLocale, locales, type Locale } from '@/i18n/config';
 import { PRODUCT_NAME } from '@/constants/product';
 import './globals.scss';
 
+// Load fonts for all supported languages
 const openSans = Open_Sans({
   subsets: ['latin'],
   display: 'swap',
   weight: ['300', '400', '600', '700'],
   style: ['normal', 'italic'],
+});
+
+const notoSansSC = Noto_Sans_SC({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['300', '400', '500', '700'],
+});
+
+const notoSansTC = Noto_Sans_TC({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['300', '400', '500', '700'],
+});
+
+const notoSansJP = Noto_Sans_JP({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['300', '400', '500', '700'],
+});
+
+const notoSansKR = Noto_Sans_KR({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['300', '400', '500', '700'],
+});
+
+const notoSansThai = Noto_Sans_Thai({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['300', '400', '500', '700'],
 });
 
 const themeInitScript = `(() => {
@@ -72,14 +110,34 @@ export const metadata: Metadata = {
   description: `Transform presentations into rich multimedia experiences with ${PRODUCT_NAME}.`,
 };
 
+// Helper function to get the appropriate font class for the locale
+const getFontClass = (locale: Locale): string => {
+  switch (locale) {
+    case 'zh-CN':
+      return notoSansSC.className;
+    case 'zh-TW':
+      return notoSansTC.className;
+    case 'ja':
+      return notoSansJP.className;
+    case 'ko':
+      return notoSansKR.className;
+    case 'th':
+      return notoSansThai.className;
+    case 'en':
+    default:
+      return openSans.className;
+  }
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
   const locale = await deriveLocale();
+  const fontClass = getFontClass(locale);
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={openSans.className} suppressHydrationWarning>
+      <body className={fontClass} suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {children}
       </body>

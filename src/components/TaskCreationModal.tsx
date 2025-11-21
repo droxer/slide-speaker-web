@@ -4,6 +4,7 @@ import { useI18n } from '@/i18n/hooks';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { getTtsVoices, type TtsVoicesResponse } from '@/services/client';
+import TaskTypeIcon from '@/components/TaskTypeIcon';
 
 type RunTaskPayload = {
   task_type: 'video' | 'podcast';
@@ -48,13 +49,6 @@ const shortenFileName = (
   const head = Math.max(12, Math.floor((max - 1) / 2));
   const tail = max - head - 1;
   return base.slice(0, head) + '…' + base.slice(-tail);
-};
-
-const modalAlignmentStyles: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minHeight: '100vh',
 };
 
 const TaskCreationModal = ({
@@ -136,6 +130,11 @@ const TaskCreationModal = ({
         .trim() || voice
     );
   }, []);
+
+  const taskTypeLabel =
+    taskType === 'podcast'
+      ? t('task.list.podcastLabel', undefined, 'Podcast')
+      : t('task.list.videoLabel', undefined, 'Video');
 
   // Use focus trap for the modal
   const modalRef = useFocusTrap(open);
@@ -327,7 +326,6 @@ const TaskCreationModal = ({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      style={modalAlignmentStyles}
     >
       <div
         ref={modalRef}
@@ -337,8 +335,15 @@ const TaskCreationModal = ({
       >
         <div className="run-task-modal__header-bar" data-kind={taskType}>
           <div className="run-task-modal__header-left">
-            <span className="run-task-modal__header-icon" aria-hidden="true">
-              {taskType === 'podcast' ? '🎧' : '🎬'}
+            <span className="run-task-modal__type-chip">
+              <TaskTypeIcon
+                typeKey={taskType}
+                label={taskTypeLabel}
+                size="sm"
+              />
+              <span className="run-task-modal__type-label">
+                {taskTypeLabel}
+              </span>
             </span>
             <span className="run-task-modal__header-text">
               {taskType === 'podcast'
@@ -361,20 +366,9 @@ const TaskCreationModal = ({
               title={t('actions.close')}
               onClick={onClose}
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <path
-                  d="M6 6l12 12M18 6L6 18"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
+              <span className="run-task-modal__close-icon" aria-hidden="true">
+                ×
+              </span>
             </button>
           </div>
         </div>

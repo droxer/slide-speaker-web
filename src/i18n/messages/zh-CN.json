@@ -76,7 +76,12 @@
     "nameLabel": "显示名称",
     "namePlaceholder": "我们应该如何称呼你？",
     "languageLabel": "偏好语言",
-    "themeLabel": "偏好主题",
+    "appearanceLabel": "外观模式",
+    "theme": {
+      "autoHint": "跟随系统外观自动切换。",
+      "lightHint": "使用明亮且中性的配色。",
+      "darkHint": "使用石墨风格的深色模式。"
+    },
     "saveButton": "保存更改",
     "saving": "正在保存…",
     "saveSuccess": "资料已更新",
@@ -112,6 +117,7 @@
       "subtitles": "字幕语言",
       "subtitlesFormats": "VTT / SRT",
       "transcript": "脚本语言",
+      "taskId": "任务 ID",
       "podcastHostVoice": "主持人声音",
       "podcastGuestVoice": "嘉宾声音",
       "metadataAria": "任务信息"
@@ -260,6 +266,13 @@
     },
     "title": "作品库",
     "summary": "{files} 个文件 · {creations} 个作品 · {running} 个运行中",
+    "summaryLabels": {
+      "files": "文件",
+      "creations": "作品",
+      "running": "运行中",
+      "total": "总计"
+    },
+    "summaryTotal": " · 共 {total} 项",
     "empty": "暂无任务",
     "upload": {
       "placeholder": "文件已上传。立即生成新作品。"

@@ -81,7 +81,12 @@
     "nameLabel": "表示名",
     "namePlaceholder": "どのようにお呼びすればよいですか？",
     "languageLabel": "希望言語",
-    "themeLabel": "希望テーマ",
+    "appearanceLabel": "外観",
+    "theme": {
+      "autoHint": "OS の設定に合わせます。",
+      "lightHint": "ニュートラルなライトテーマを使用します。",
+      "darkHint": "グラファイト調のダークテーマを使用します。"
+    },
     "saveButton": "変更を保存",
     "saving": "保存中…",
     "saveSuccess": "プロフィールを更新しました",
@@ -117,6 +122,7 @@
       "subtitles": "字幕",
       "subtitlesFormats": "VTT / SRT",
       "transcript": "原稿",
+      "taskId": "タスクID",
       "podcastHostVoice": "ホスト音声",
       "podcastGuestVoice": "ゲスト音声",
       "metadataAria": "タスクのメタデータ"
@@ -262,6 +268,13 @@
     },
     "title": "作品",
     "summary": "{files} ファイル · {creations} 件の作品 · {running} 件処理中",
+    "summaryLabels": {
+      "files": "ファイル",
+      "creations": "作品",
+      "running": "処理中",
+      "total": "合計"
+    },
+    "summaryTotal": " · 合計 {total} 件",
     "empty": "タスクが見つかりません",
     "upload": {
       "placeholder": "アップロードの準備ができました。新しい作品を実行して始めましょう。"
@@ -406,6 +419,11 @@
       "pptDescription": "AIがスライドをナレーション付き動画に変換します。",
       "supportedBadge": "対応ファイル",
       "supportedDescription": "PDF、PPTX、PPTファイルに対応"
+    },
+    "voice": {
+      "loading": "音声を読み込み中…",
+      "error": "音声を取得できませんでした。デフォルトを使用します。",
+      "none": "この言語では利用できる音声がありません"
     },
     "summary": {
       "file": "ファイル",

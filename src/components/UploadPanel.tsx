@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useI18n } from '@/i18n/hooks';
 import { getLanguageDisplayName } from '../utils/language';
 import { getFileTypeIcon } from '@/utils/fileIcons';
+import styles from './UploadPanel.module.scss';
 
 type UploadPanelProps = {
   uploadMode: 'slides' | 'pdf';
@@ -137,7 +138,7 @@ const UploadPanel = ({
       : t('upload.createVideo', undefined, 'Create Video');
 
   return (
-    <>
+    <section className={styles.uploadPanel}>
       <div className="upload-view">
         <div
           className="mode-toggle"
@@ -218,7 +219,7 @@ const UploadPanel = ({
             </button>
           </div>
         )}
-        <div className="file-upload-area">
+        <div className={`file-upload-area ${styles.fileUploadArea}`}>
           <input
             type="file"
             id="file-upload"
@@ -241,7 +242,7 @@ const UploadPanel = ({
           </label>
         </div>
 
-        <div className="options-panel">
+        <div className={`options-panel ${styles.options}`}>
           <div className="video-option-card">
             <div className="video-option-header">
               <span className="video-option-icon">🌐</span>
@@ -400,7 +401,7 @@ const UploadPanel = ({
         </div>
       </div>
 
-      <div className="ai-notice-subtle">
+      <div className={`ai-notice-subtle ${styles.notice}`}>
         {t(
           'upload.notice',
           undefined,
@@ -409,13 +410,19 @@ const UploadPanel = ({
       </div>
 
       {file && (
-        <button onClick={onCreate} className="primary-btn" disabled={uploading}>
-          {uploadMode === 'pdf'
-            ? pdfCreateLabel
-            : t('upload.createVideo', undefined, 'Create Video')}
-        </button>
+        <div className={styles.actions}>
+          <button
+            onClick={onCreate}
+            className={`primary-btn ${styles.primaryButton}`}
+            disabled={uploading}
+          >
+            {uploadMode === 'pdf'
+              ? pdfCreateLabel
+              : t('upload.createVideo', undefined, 'Create Video')}
+          </button>
+        </div>
       )}
-    </>
+    </section>
   );
 };
 

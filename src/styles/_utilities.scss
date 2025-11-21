@@ -31,17 +31,23 @@
   text-decoration: underline;
 }
 
-/* Small file type badge */
-.file-type-badge {
+/* Icon-only indicator for task types */
+.task-type-icon {
   display: inline-flex;
   align-items: center;
-  padding: 3px 8px;
-  border-radius: var(--radius-md);
-  font-size: 12px;
-  font-weight: 700;
-  border: 1px solid #e2e8f0;
-  background: #f8fafc;
-  color: #334155;
+  justify-content: center;
+  gap: 0.2rem;
+  line-height: 0;
+}
+
+.task-type-icon__img {
+  display: block;
+  border-radius: 0;
+  object-fit: contain;
+}
+
+.task-type-icon--stacked {
+  gap: 0.1rem;
 }
 
 /* Output type indicators (video / podcast) */

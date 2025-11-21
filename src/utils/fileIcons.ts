@@ -1,3 +1,4 @@
+// Keep emoji icons for backward compatibility
 export const getFileTypeIcon = (fileExt: string): string => {
   if (!fileExt) return '📄';
 
@@ -5,15 +6,59 @@ export const getFileTypeIcon = (fileExt: string): string => {
 
   const iconMap: Record<string, string> = {
     pdf: '📑',
-    ppt: '📊', pptx: '📊',
-    doc: '📝', docx: '📝',
-    xls: '📈', xlsx: '📈',
-    jpg: '🖼️', jpeg: '🖼️', png: '🖼️', gif: '🖼️', svg: '🖼️',
-    mp4: '🎬', avi: '🎬', mov: '🎬', wmv: '🎬',
-    mp3: '🎵', wav: '🎵', aac: '🎵', flac: '🎵',
+    ppt: '📊',
+    pptx: '📊',
+    doc: '📝',
+    docx: '📝',
+    xls: '📈',
+    xlsx: '📈',
+    jpg: '🖼️',
+    jpeg: '🖼️',
+    png: '🖼️',
+    gif: '🖼️',
+    svg: '🖼️',
+    mp4: '🎬',
+    avi: '🎬',
+    mov: '🎬',
+    wmv: '🎬',
+    mp3: '🎵',
+    wav: '🎵',
+    aac: '🎵',
+    flac: '🎵',
   };
 
   return iconMap[ext] || '📄';
+};
+
+// New function to get image source paths for PNG icons
+export const getFileTypeIconPath = (fileExt: string): string | null => {
+  if (!fileExt) return null;
+
+  const ext = fileExt.toLowerCase().replace(/^\./, '');
+
+  const iconPathMap: Record<string, string> = {
+    pdf: '/pdf.png',
+    ppt: '/ppt.png',
+    pptx: '/ppt.png',
+  };
+
+  return iconPathMap[ext] || null;
+};
+
+// Helper function to check if a PNG icon exists for the file type
+export const hasPngIcon = (fileExt: string): boolean => {
+  return getFileTypeIconPath(fileExt) !== null;
+};
+
+// Function to get the appropriate icon (PNG path or emoji)
+export const getFileIconSource = (
+  fileExt: string
+): { type: 'png' | 'emoji'; value: string } => {
+  const pngPath = getFileTypeIconPath(fileExt);
+  if (pngPath) {
+    return { type: 'png', value: pngPath };
+  }
+  return { type: 'emoji', value: getFileTypeIcon(fileExt) };
 };
 
 export const isPdf = (fileExt?: string): boolean => {

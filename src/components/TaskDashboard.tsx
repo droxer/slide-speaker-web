@@ -30,6 +30,7 @@ import {
   evictOldListQueries,
 } from '../services/queries';
 import { Link } from '@/navigation';
+import TaskTypeIcon from '@/components/TaskTypeIcon';
 import {
   getGlobalRunDefaults,
   saveGlobalRunDefaults,
@@ -44,9 +45,11 @@ import {
   getTaskStatusLabel,
   type TaskStatus,
 } from '@/utils/taskStatus';
+import Image from 'next/image';
 import {
   getFileTypeIcon,
   getFileTypeCategory,
+  getFileTypeIconPath,
   isPdf,
   isPowerPoint,
 } from '@/utils/fileIcons';
@@ -108,7 +111,6 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
     new Set()
   );
-  const [copiedTaskId, setCopiedTaskId] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(20); // Initial visible items for virtualization
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -331,7 +333,7 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
           filterHidden(g.tasks).filter((t) => t.status === 'processing').length,
         0
       );
-      return { filesCount, creationsCount, runningCount };
+      return { filesCount, creationsCount, runningCount, total: 0 };
     }
     const filesData = filesQuery.data as any;
     const files = (filesData?.files || []) as Array<{
@@ -357,6 +359,65 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
       total: filesData?.total || 0,
     };
   }, [searching, searchGroups, filesQuery.data, status, hiddenTasks]);
+
+  const summaryAnnouncement = useMemo(
+    () =>
+      t(
+        'creations.summary',
+        {
+          files: counts.filesCount,
+          creations: counts.creationsCount,
+          running: counts.runningCount,
+        },
+        `${counts.filesCount} files · ${counts.creationsCount} creations · ${counts.runningCount} running`
+      ),
+    [counts.creationsCount, counts.filesCount, counts.runningCount, t]
+  );
+
+  const totalAnnouncement =
+    counts.total && counts.total > 0
+      ? t(
+          'creations.summaryTotal',
+          { total: counts.total },
+          ` · ${counts.total} total`
+        )
+      : '';
+
+  const summaryItems = useMemo(() => {
+    const items: Array<{ key: string; label: string; value: number }> = [
+      {
+        key: 'files',
+        label: t('creations.summaryLabels.files', undefined, 'Files'),
+        value: counts.filesCount,
+      },
+      {
+        key: 'creations',
+        label: t('creations.summaryLabels.creations', undefined, 'Creations'),
+        value: counts.creationsCount,
+      },
+      {
+        key: 'running',
+        label: t('creations.summaryLabels.running', undefined, 'Running'),
+        value: counts.runningCount,
+      },
+    ];
+
+    if (counts.total && counts.total > 0) {
+      items.push({
+        key: 'total',
+        label: t('creations.summaryLabels.total', undefined, 'Total'),
+        value: counts.total,
+      });
+    }
+
+    return items;
+  }, [
+    counts.creationsCount,
+    counts.filesCount,
+    counts.runningCount,
+    counts.total,
+    t,
+  ]);
 
   const STATUS_ORDER: TaskStatus[] = [
     'processing',
@@ -387,21 +448,7 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
     });
   }, []);
 
-  const handleCopyTaskId = useCallback(
-    async (taskId: string, e: MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      try {
-        await navigator.clipboard.writeText(taskId);
-        setCopiedTaskId(taskId);
-        // Show feedback for 2 seconds
-        setTimeout(() => setCopiedTaskId(null), 2000);
-      } catch (error) {
-        console.error('Failed to copy task ID:', error);
-      }
-    },
-    []
-  );
+  const handleCopyTaskId = useCallback(async () => {}, []);
 
   const renderFileGroup = (group: FileGroup, key: string) => {
     const allTasks = [...(group.tasks || [])]
@@ -489,22 +536,31 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
               }
             >
               <div className="file-icon">
-                <span
-                  className={`file-icon-${getFileTypeCategory(effectiveFileExt)}`}
-                >
-                  {getFileTypeIcon(effectiveFileExt)}
-                </span>
+                {(() => {
+                  const iconPath = getFileTypeIconPath(effectiveFileExt);
+                  if (iconPath) {
+                    return (
+                      <Image
+                        src={iconPath}
+                        alt={`${effectiveFileExt} file`}
+                        width={20}
+                        height={20}
+                        className={`file-icon-${getFileTypeCategory(effectiveFileExt)}`}
+                      />
+                    );
+                  }
+                  return (
+                    <span
+                      className={`file-icon-${getFileTypeCategory(effectiveFileExt)}`}
+                    >
+                      {getFileTypeIcon(effectiveFileExt)}
+                    </span>
+                  );
+                })()}
               </div>
               <div className="file-title-info">
                 <div className="file-title-text">
                   {formatFileName(fileName || undefined, 48)}
-                  {fileExt && (
-                    <div
-                      className={`file-type-badge${isPdfFile ? ' pdf' : isPresentationFile ? ' ppt' : ''}`}
-                    >
-                      {fileExt.replace(/^\./, '').toUpperCase()}
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
@@ -580,7 +636,7 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
                 </button>
                 {isPdf(effectiveFileExt) && (
                   <button
-                    className="file-action-btn secondary"
+                    className="file-action-btn primary"
                     title={t('actions.generatePodcast')}
                     onClick={() =>
                       onRun(
@@ -901,21 +957,10 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
                 <span className="file-task-icon" aria-hidden="true">
                   {icon}
                 </span>
-                <span
-                  className={`file-task-id ${copiedTaskId === task.task_id ? 'copied' : ''}`}
-                  onClick={(e) => handleCopyTaskId(task.task_id, e)}
-                  style={{ cursor: 'pointer', userSelect: 'none' }}
-                  title={
-                    copiedTaskId === task.task_id
-                      ? t('common.copied', undefined, 'Copied!')
-                      : t('task.list.copyId', undefined, 'Copy task ID')
-                  }
-                >
-                  {copiedTaskId === task.task_id ? '✓' : task.task_id}
-                </span>
+                <span className="file-task-id">{task.task_id}</span>
               </Link>
               <span className={`file-task-type-badge type-${typeKey}`}>
-                {typeLabel}
+                <TaskTypeIcon typeKey={typeKey} label={typeLabel} size="sm" />
               </span>
             </div>
             {/* Only show status badge for in-progress tasks (processing or queued) */}
@@ -954,21 +999,6 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
             </div>
           )}
           <div className="file-task-actions">
-            {task.status === 'completed' && (
-              <Link
-                className="file-task-action primary"
-                href={`/tasks/${task.task_id}`}
-                title={t(
-                  'task.list.openTaskTitle',
-                  { id: task.task_id },
-                  `Open task ${task.task_id}`
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {t('actions.open', undefined, 'Open')}
-              </Link>
-            )}
             {canRetry && (
               <button
                 type="button"
@@ -995,7 +1025,7 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
             {canDelete && (
               <button
                 type="button"
-                className="file-task-action danger"
+                className="file-task-action danger file-task-action--delete"
                 onClick={() => onDelete(task.task_id)}
                 title={t('actions.delete', undefined, 'Delete')}
               >
@@ -1016,7 +1046,6 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
       retryMutation,
       setProcessingTask,
       t,
-      copiedTaskId,
       handleCopyTaskId,
       queryClient,
     ]
@@ -1056,7 +1085,7 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
     if (searching) {
       if (!searchGroups.length) {
         return (
-          <div className="no-tasks">
+          <div className="no-tasks creations-empty">
             {t('creations.empty', undefined, 'No tasks found')}
           </div>
         );
@@ -1088,7 +1117,7 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
     const files = ((filesQuery.data as any)?.files || []) as FileGroup[];
     if (!files.length) {
       return (
-        <div className="no-tasks">
+        <div className="no-tasks creations-empty">
           {t('creations.empty', undefined, 'No tasks found')}
         </div>
       );
@@ -1120,16 +1149,18 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
           {t('creations.title', undefined, 'Creations')}
         </h2>
         <div className="monitor-counts" aria-live="polite">
-          {t(
-            'creations.summary',
-            {
-              files: counts.filesCount,
-              creations: counts.creationsCount,
-              running: counts.runningCount,
-            },
-            `${counts.filesCount} files · ${counts.creationsCount} creations · ${counts.runningCount} running`
-          )}
-          {counts.total > 0 && <span> · {counts.total} total</span>}
+          <p className="sr-only">
+            {summaryAnnouncement}
+            {totalAnnouncement}
+          </p>
+          <dl className="creations-summary" aria-hidden="true">
+            {summaryItems.map((item) => (
+              <div className="summary-item" key={item.key}>
+                <dt className="summary-label">{item.label}</dt>
+                <dd className="summary-value">{item.value}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
         <div className="monitor-controls">
           <form
@@ -1164,6 +1195,7 @@ const TaskDashboard = ({ apiBaseUrl }: TaskDashboardProps) => {
           </select>
         </div>
       </div>
+      <div className="creations-list-divider" aria-hidden="true" />
       <div className="task-list">{renderGroups()}</div>
 
       <div className="pagination">
