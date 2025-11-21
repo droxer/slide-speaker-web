@@ -31,27 +31,6 @@
   margin-bottom: 1.5rem;
 }
 
-.file-type-indicator .file-type-badge {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  border-radius: 24px;
-  font-size: 0.95rem;
-  font-weight: 650;
-  background: var(--color-accent);
-  color: #ffffff;
-  box-shadow: 0 8px 18px rgba(95, 45, 225, 0.25);
-}
-
-.file-type-indicator .file-type-badge.pdf {
-  background: #f87171;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
-}
-
-.file-type-indicator .file-type-badge.ppt {
-  background: #60a5fa;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
-}
-
 /* File context text in processing view */
 .file-context-text {
   font-size: 1rem;

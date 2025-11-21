@@ -50,8 +50,20 @@
     gap: 0.75rem;
   }
 
-  &__header-icon {
-    font-size: 1.25rem;
+  &__type-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+  }
+
+  &__type-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #0f172a;
   }
 
   &__header-text {
@@ -93,6 +105,14 @@
       outline: 2px solid rgba(95, 45, 225, 0.7);
       outline-offset: 2px;
     }
+  }
+
+  &__close-icon {
+    font-size: 1.35rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &__body {

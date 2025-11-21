@@ -983,9 +983,6 @@ export function StudioWorkspace() {
       if (ext === 'pdf') {
         return (
           <div className="file-type-hint pdf">
-            <span className="file-type-badge pdf">
-              {t('upload.file.pdfBadge', undefined, 'PDF')}
-            </span>
             <div className="file-type-description">
               {t(
                 'upload.file.pdfDescription',
@@ -1000,9 +997,6 @@ export function StudioWorkspace() {
       if (ext === 'pptx' || ext === 'ppt') {
         return (
           <div className="file-type-hint ppt">
-            <span className="file-type-badge ppt">
-              {t('upload.file.pptBadge', undefined, 'PPT')}
-            </span>
             <div className="file-type-description">
               {t(
                 'upload.file.pptDescription',
@@ -1016,9 +1010,6 @@ export function StudioWorkspace() {
 
       return (
         <div className="file-type-hint">
-          <span className="file-type-badge">
-            {t('upload.file.supportedBadge', undefined, 'Supported File')}
-          </span>
           <div className="file-type-description">
             {t(
               'upload.file.supportedDescription',

@@ -317,14 +317,15 @@ body.dark-theme .file-action-btn.primary:hover:not(:disabled) {
 }
 
 body.dark-theme .file-action-btn.secondary {
-  background: var(--color-accent-secondary) !important;
+  background: var(--color-accent) !important;
   color: var(--color-canvas) !important;
-  border-color: var(--color-accent-secondary) !important;
+  border-color: var(--color-accent) !important;
+  box-shadow: var(--shadow-soft) !important;
 }
 
 body.dark-theme .file-action-btn.secondary:hover:not(:disabled) {
-  background: rgba(142, 213, 201, 0.85) !important;
-  border-color: var(--color-accent-secondary) !important;
+  background: var(--color-accent-strong) !important;
+  border-color: var(--color-accent-strong) !important;
 }
 
 body.dark-theme .content-card h1,
@@ -431,29 +432,15 @@ body.dark-theme .content-card strong,
 body.dark-theme .content-card .info-value,
 body.dark-theme .content-card .info-label,
 body.dark-theme .content-card .badge,
-body.dark-theme .content-card .file-type-badge,
 body.dark-theme .content-card .steps-subtitle,
 body.dark-theme .content-card .section-title {
   color: var(--dark-text) !important;
 }
 
-body.dark-theme .file-type-badge,
 body.dark-theme .badge {
   background: rgba(51, 65, 85, 0.7) !important;
   border-color: rgba(71, 85, 105, 0.5) !important;
   color: var(--dark-text-muted) !important;
-}
-
-body.dark-theme .file-type-badge.pdf {
-  background: rgba(151, 28, 28, 0.25) !important;
-  color: var(--color-danger) !important;
-  border-color: rgba(248, 113, 113, 0.4) !important;
-}
-
-body.dark-theme .file-type-badge.ppt {
-  background: rgba(59, 130, 246, 0.25) !important;
-  color: var(--color-accent-secondary) !important;
-  border-color: rgba(59, 130, 246, 0.4) !important;
 }
 
 body.dark-theme .upload-text,
@@ -1462,15 +1449,15 @@ body.dark-theme .audio-transcript-row.active {
 }
 
 body.dark-theme .audio-transcript-ts {
-  background: rgba(99, 102, 241, 0.18);
-  color: rgba(226, 232, 240, 0.92);
-  border: 1px solid rgba(129, 140, 248, 0.4);
+  background: var(--tint-accent-soft);
+  color: var(--color-accent);
+  border: 1px solid var(--tint-accent-border);
 }
 
 body.dark-theme .audio-transcript-row.active .audio-transcript-ts {
-  background: rgba(129, 140, 248, 0.32);
-  color: var(--color-text-primary);
-  border-color: rgba(165, 180, 252, 0.7);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  border-color: var(--color-accent);
 }
 
 body.dark-theme .audio-transcript::-webkit-scrollbar {
@@ -1960,4 +1947,16 @@ body.dark-theme .page-button:disabled {
 
 body.dark-theme .page-info {
   color: var(--dark-text) !important;
+}
+body.dark-theme .task-type-icon__img {
+  border-radius: 4px;
+  padding: 2px;
+  background: color-mix(in srgb, var(--color-surface) 85%, #0d1117);
+}
+body.dark-theme .file-task-type-badge .task-type-icon {
+  background: rgba(226, 232, 240, 0.08);
+}
+
+body.dark-theme .task-detail-card__type-pill .task-type-icon {
+  background: rgba(226, 232, 240, 0.08);
 }

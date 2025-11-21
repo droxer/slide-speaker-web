@@ -112,6 +112,7 @@
       "subtitles": "字幕语言",
       "subtitlesFormats": "VTT / SRT",
       "transcript": "脚本语言",
+      "taskId": "任务 ID",
       "podcastHostVoice": "主持人声音",
       "podcastGuestVoice": "嘉宾声音",
       "metadataAria": "任务信息"
@@ -260,6 +261,13 @@
     },
     "title": "作品库",
     "summary": "{files} 个文件 · {creations} 个作品 · {running} 个运行中",
+    "summaryLabels": {
+      "files": "文件",
+      "creations": "作品",
+      "running": "运行中",
+      "total": "总计"
+    },
+    "summaryTotal": " · 共 {total} 项",
     "empty": "暂无任务",
     "upload": {
       "placeholder": "文件已上传。立即生成新作品。"

@@ -112,6 +112,7 @@
       "subtitles": "Subtitles",
       "subtitlesFormats": "VTT / SRT",
       "transcript": "Transcript",
+      "taskId": "Task ID",
       "podcastHostVoice": "Host Voice",
       "podcastGuestVoice": "Guest Voice",
       "metadataAria": "Task metadata"
@@ -257,6 +258,13 @@
     },
     "title": "Creations",
     "summary": "{files} files · {creations} creations · {running} running",
+    "summaryLabels": {
+      "files": "Files",
+      "creations": "Creations",
+      "running": "Running",
+      "total": "Total"
+    },
+    "summaryTotal": " · {total} total",
     "empty": "No tasks found",
     "upload": {
       "placeholder": "Upload is ready. Run a new creation to get started."

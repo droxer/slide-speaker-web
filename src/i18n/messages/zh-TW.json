@@ -112,6 +112,7 @@
       "subtitles": "字幕語言",
       "subtitlesFormats": "VTT / SRT",
       "transcript": "逐字稿語言",
+      "taskId": "任務 ID",
       "podcastHostVoice": "主持人聲音",
       "podcastGuestVoice": "嘉賓聲音",
       "metadataAria": "任務資訊"
@@ -257,6 +258,13 @@
     },
     "title": "作品庫",
     "summary": "{files} 個檔案 · {creations} 個作品 · {running} 個進行中",
+    "summaryLabels": {
+      "files": "檔案",
+      "creations": "作品",
+      "running": "進行中",
+      "total": "總計"
+    },
+    "summaryTotal": " · 共 {total} 項",
     "empty": "目前沒有任務",
     "upload": {
       "placeholder": "檔案已上傳。立即建立新的作品。"

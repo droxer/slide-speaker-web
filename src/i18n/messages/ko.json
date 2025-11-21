@@ -117,6 +117,7 @@
       "subtitles": "자막",
       "subtitlesFormats": "VTT / SRT",
       "transcript": "원고",
+      "taskId": "작업 ID",
       "podcastHostVoice": "호스트 음성",
       "podcastGuestVoice": "게스트 음성",
       "metadataAria": "작업 메타데이터"
@@ -262,6 +263,13 @@
     },
     "title": "작품",
     "summary": "{files}개의 파일 · {creations}건의 작품 · {running}건 진행 중",
+    "summaryLabels": {
+      "files": "파일",
+      "creations": "작품",
+      "running": "진행 중",
+      "total": "총계"
+    },
+    "summaryTotal": " · 총 {total}건",
     "empty": "작업을 찾을 수 없습니다",
     "upload": {
       "placeholder": "업로드가 준비되었습니다. 새 작업을 실행해 시작하세요."
@@ -406,6 +414,11 @@
       "pptDescription": "AI가 슬라이드를 내레이션이 포함된 영상으로 변환합니다.",
       "supportedBadge": "지원되는 파일",
       "supportedDescription": "PDF, PPTX, PPT 파일을 지원합니다"
+    },
+    "voice": {
+      "loading": "음성을 불러오는 중…",
+      "error": "음성을 사용할 수 없어 기본 설정이 적용됩니다.",
+      "none": "해당 언어에 사용할 수 있는 음성이 없습니다"
     },
     "summary": {
       "file": "파일",

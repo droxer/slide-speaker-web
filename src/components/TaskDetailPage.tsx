@@ -1,18 +1,13 @@
 'use client';
 
 import React, { useMemo, useState, useEffect } from 'react';
-import { Link } from '@/navigation';
 import VideoPlayer from '@/components/VideoPlayer';
 import AudioPlayer from '@/components/AudioPlayer';
 import PodcastPlayer from '@/components/PodcastPlayer';
+import TaskTypeIcon from '@/components/TaskTypeIcon';
 import { resolveLanguages, getLanguageDisplayName } from '@/utils/language';
 import { usePodcastScriptQuery } from '@/services/queries';
 import { useI18n } from '@/i18n/hooks';
-import {
-  getTaskStatusClass,
-  getTaskStatusIcon,
-  getTaskStatusLabel,
-} from '@/utils/taskStatus';
 import type { Task } from '@/types';
 import { api as apiClient } from '@/services/client';
 
@@ -47,7 +42,7 @@ const TaskDetailPage = ({
   hasPodcastAsset: propHasPodcastAsset = false,
   hasAudioAsset: propHasAudioAsset = false,
 }: TaskDetailPageProps) => {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const { voiceLanguage, subtitleLanguage, transcriptLanguage } =
     resolveLanguages(task);
   const languageLabel = React.useCallback(
@@ -84,10 +79,6 @@ const TaskDetailPage = ({
   );
 
   // Get consistent status styling using utility functions
-  const statusClass = getTaskStatusClass(task.status);
-  const statusIcon = getTaskStatusIcon(task.status);
-  const statusLabel = getTaskStatusLabel(task.status, t);
-  const statusContent = `${statusIcon} ${statusLabel}`;
   const [previewTab, setPreviewTab] = useState<'video' | 'audio'>('video');
   const hasVideoAsset = propHasVideoAsset;
   const hasPodcastAsset = propHasPodcastAsset;
@@ -153,25 +144,22 @@ const TaskDetailPage = ({
       <div className="content-card wide task-detail-card">
         <header className="task-detail-card__header">
           <div className="task-detail-card__heading">
-            <p className="task-detail-card__breadcrumb">
-              <Link href="/creations" locale={locale}>
-                {t('header.view.creations')}
-              </Link>
-              <span aria-hidden="true"> / </span>
-              <span>{t('task.detail.breadcrumb.task')}</span>
-            </p>
             <div className="task-detail-card__title-row">
               <h1>{filename}</h1>
               <span className="task-detail-card__type-pill">
-                {displayTaskType}
+                <TaskTypeIcon
+                  typeKey={taskTypeKey}
+                  label={displayTaskType}
+                  size="md"
+                />
               </span>
-              <div className={`task-status ${statusClass}`}>
-                {statusContent}
-              </div>
             </div>
-            <p className="task-detail-card__meta">
-              <span>Task ID: {task.task_id}</span>
-            </p>
+            <div className="task-detail-card__meta">
+              <span className="task-detail-card__task-id-chip">
+                {t('task.detail.taskId', undefined, 'Task ID')}
+                <strong>{task.task_id}</strong>
+              </span>
+            </div>
           </div>
         </header>
 

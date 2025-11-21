@@ -8,6 +8,7 @@ import TaskMetadataDisplay from '@/components/TaskMetadataDisplay';
 import TaskProgressDisplay from '@/components/TaskProgressDisplay';
 import TaskStepDisplay from '@/components/TaskStepDisplay';
 import TaskErrorDisplay from '@/components/TaskErrorDisplay';
+import TaskTypeIcon from '@/components/TaskTypeIcon';
 import { normalizeStepStatus } from '@/utils/stepLabels';
 import { sortSteps } from '@/utils/stepOrdering';
 import { getTaskProgress, type TaskProgressResponse } from '@/services/client';
@@ -207,7 +208,15 @@ const TaskProcessingSteps = ({
                     'Video generation enabled'
                   )}
                 >
-                  {t('task.list.videoLabel')}
+                  <TaskTypeIcon
+                    typeKey="video"
+                    label={t(
+                      'processing.preview.videoEnabled',
+                      undefined,
+                      'Video generation enabled'
+                    )}
+                    size="sm"
+                  />
                 </span>
               )}
               {['podcast', 'both'].includes(taskTypeKey) && (
@@ -219,7 +228,15 @@ const TaskProcessingSteps = ({
                     'Podcast generation enabled'
                   )}
                 >
-                  {t('task.list.podcastLabel')}
+                  <TaskTypeIcon
+                    typeKey="podcast"
+                    label={t(
+                      'processing.preview.podcastEnabled',
+                      undefined,
+                      'Podcast generation enabled'
+                    )}
+                    size="sm"
+                  />
                 </span>
               )}
             </div>
