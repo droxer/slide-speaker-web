@@ -259,9 +259,11 @@ const TaskCreationModal = ({
     document.addEventListener('keydown', onKey);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
     return () => {
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = prevOverflow;
+      document.body.classList.remove('modal-open');
     };
   }, [open, onClose]);
 
@@ -363,11 +365,13 @@ const TaskCreationModal = ({
               type="button"
               className="run-task-modal__close-btn"
               aria-label={t('actions.close')}
-              title={t('actions.close')}
               onClick={onClose}
             >
               <span className="run-task-modal__close-icon" aria-hidden="true">
                 ×
+              </span>
+              <span className="run-task-modal__close-label">
+                {t('actions.close')}
               </span>
             </button>
           </div>

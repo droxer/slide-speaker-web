@@ -66,7 +66,7 @@
   gap: 0.75rem;
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(217, 212, 235, 0.6);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .upload-section-icon {
@@ -102,7 +102,7 @@
 }
 
 .file-upload-label:hover {
-  background: #f8f6ff;
+  background: var(--color-surface-alt);
   border-color: var(--color-accent);
   transform: translateY(-2px);
   box-shadow: 0 14px 30px rgba(31, 26, 56, 0.12);
@@ -165,8 +165,9 @@
 /* Mode toggle */
 .mode-toggle {
   display: flex;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-soft);
   border-radius: 8px;
   padding: 4px;
   gap: 4px;
@@ -198,12 +199,12 @@
 
 .mode-toggle .toggle-btn.active {
   background: var(--color-accent);
-  color: #ffffff;
-  box-shadow: 0 10px 24px rgba(31, 26, 56, 0.18);
+  color: var(--color-accent-contrast);
+  box-shadow: var(--shadow-crisp);
 }
 
 .mode-toggle .toggle-btn:focus-visible {
-  outline: 3px solid rgba(95, 45, 225, 0.25);
+  outline: 3px solid var(--tint-accent-border);
   outline-offset: 2px;
 }
 
@@ -278,7 +279,7 @@
 .video-option-select:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 4px rgba(95, 45, 225, 0.18);
+  box-shadow: 0 0 0 4px var(--tint-accent-soft);
 }
 
 /* Task Creation Modal field styles */

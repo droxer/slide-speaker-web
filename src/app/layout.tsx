@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { cookies, headers } from 'next/headers';
 import {
-  Open_Sans,
+  Noto_Sans,
   Noto_Sans_SC,
   Noto_Sans_TC,
   Noto_Sans_JP,
@@ -14,10 +14,10 @@ import { PRODUCT_NAME } from '@/constants/product';
 import './globals.scss';
 
 // Load fonts for all supported languages
-const openSans = Open_Sans({
+const notoSans = Noto_Sans({
   subsets: ['latin'],
   display: 'swap',
-  weight: ['300', '400', '600', '700'],
+  weight: ['300', '400', '500', '600', '700'],
   style: ['normal', 'italic'],
 });
 
@@ -125,7 +125,7 @@ const getFontClass = (locale: Locale): string => {
       return notoSansThai.className;
     case 'en':
     default:
-      return openSans.className;
+      return notoSans.className;
   }
 };
 
