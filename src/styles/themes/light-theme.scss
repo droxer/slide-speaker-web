@@ -272,7 +272,7 @@ body.theme-light .user-menu-trigger:focus-visible {
 }
 
 body.theme-light .user-menu {
-  background: var(--color-surface);
+  background: var(--color-surface-alt);
   border: 1px solid var(--color-border);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
@@ -284,6 +284,10 @@ body.theme-light .user-menu button {
 body.theme-light .user-menu button:hover,
 body.theme-light .user-menu button:focus-visible {
   background: var(--color-surface-muted);
+}
+
+body.theme-light .task-monitor {
+  background: var(--color-surface-alt);
 }
 
 body.theme-light .user-chip__avatar {

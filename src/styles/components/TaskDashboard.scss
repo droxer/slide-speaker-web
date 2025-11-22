@@ -2,7 +2,7 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-  background: var(--color-surface);
+  background: var(--color-surface-alt);
   min-height: 100vh;
   color: var(--color-text-primary);
 }
@@ -2193,7 +2193,7 @@
 @media (max-width: 768px) {
   .task-monitor {
     padding: 15px;
-    background: #f8fafc;
+    background: var(--color-surface-alt);
   }
 
   /* Improved file-group-header responsive design */

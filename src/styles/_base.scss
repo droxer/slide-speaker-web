@@ -42,6 +42,12 @@ body.theme-light {
   color-scheme: light;
 }
 
+body.theme-dark.modal-open,
+body.dark-theme.modal-open {
+  background-image: none;
+  background-color: var(--color-canvas);
+}
+
 ::selection {
   color: #ffffff;
   background: var(--color-accent);

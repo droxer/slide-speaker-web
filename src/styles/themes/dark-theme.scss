@@ -85,9 +85,15 @@ body.dark-theme .profile-form label {
 
 body.dark-theme .profile-form input,
 body.dark-theme .profile-form select {
-  background: rgba(15, 23, 42, 0.82) !important;
+  background: var(--color-surface-alt) !important;
   border: 1px solid var(--dark-border) !important;
   color: var(--dark-text) !important;
+}
+
+body.dark-theme .profile-form input:focus,
+body.dark-theme .profile-form select:focus {
+  background: var(--color-surface) !important;
+  box-shadow: 0 0 0 4px var(--tint-accent-soft) !important;
 }
 
 body.dark-theme .profile-feedback.success {
@@ -360,9 +366,9 @@ body.dark-theme .user-chip__avatar {
 }
 
 body.dark-theme .user-menu {
-  background: rgba(15, 23, 42, 0.94) !important;
-  border: 1px solid rgba(99, 102, 241, 0.28) !important;
-  box-shadow: 0 20px 48px -20px rgba(2, 6, 23, 0.85) !important;
+  background: var(--color-surface-alt) !important;
+  border: 1px solid var(--dark-border) !important;
+  box-shadow: var(--shadow-soft) !important;
 }
 
 body.dark-theme .run-task-content .run-summary .summary-fields div,
@@ -421,6 +427,10 @@ body.dark-theme .user-menu button:focus-visible {
   background: rgba(99, 102, 241, 0.22) !important;
 }
 
+body.dark-theme .task-monitor {
+  background: var(--color-surface-alt) !important;
+}
+
 body.dark-theme .content-card p,
 body.dark-theme .content-card label,
 body.dark-theme .content-card span,
@@ -466,9 +476,9 @@ body.dark-theme .file-upload-area {
 }
 
 body.dark-theme .file-upload-label {
-  background: rgba(15, 23, 42, 0.9) !important;
+  background: var(--color-surface) !important;
   border-color: var(--dark-border) !important;
-  color: var(--dark-text-muted) !important;
+  color: var(--dark-text) !important;
 }
 
 body.dark-theme .file-upload-label:hover {
@@ -491,17 +501,8 @@ body.dark-theme .mode-explainer strong {
   color: var(--dark-text) !important;
 }
 
-body.dark-theme .file-upload-label {
-  color: var(--dark-text-muted) !important;
-}
-
-body.dark-theme .file-upload-label:hover {
-  background: rgba(51, 65, 85, 0.9) !important;
-  border-color: var(--dark-border-strong) !important;
-}
-
 body.dark-theme .task-monitor {
-  background: rgba(15, 23, 42, 0.85) !important;
+  background: var(--color-surface-alt) !important;
 }
 
 body.dark-theme .mode-toggle .toggle-btn {
