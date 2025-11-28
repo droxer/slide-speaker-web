@@ -58,6 +58,13 @@ body.theme-dark {
   --tint-danger-soft: rgba(240, 127, 106, 0.24);
   --tint-danger-border: rgba(240, 127, 106, 0.42);
   --tint-neutral-soft: rgba(167, 165, 156, 0.22);
+
+  /* Header tokens */
+  --app-header-bg: var(--color-surface);
+  --app-header-border-color: var(--color-border);
+  --app-header-border-width: 1px;
+  --app-header-text-color: var(--color-text-primary);
+  --app-header-subtitle-color: var(--color-text-secondary);
   --tint-neutral-border: rgba(167, 165, 156, 0.34);
   background: var(--color-canvas) !important;
   color: var(--dark-text);
