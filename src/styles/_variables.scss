@@ -20,6 +20,13 @@
   --color-warning: #ff8800;
   --color-danger: #cc0000;
 
+  /* Header surface defaults */
+  --app-header-bg: var(--color-accent);
+  --app-header-border-color: var(--color-accent-secondary);
+  --app-header-border-width: 6px;
+  --app-header-text-color: #ffffff;
+  --app-header-subtitle-color: rgba(255, 255, 255, 0.86);
+
   /* Shadows & shape - Ultra minimal */
   --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.05);
   --shadow-crisp: 0 2px 6px rgba(0, 0, 0, 0.08);

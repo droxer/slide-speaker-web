@@ -62,6 +62,13 @@ body.theme-light {
   --media-controls-bg-video: rgba(47, 52, 55, 0.78);
   --media-controls-bg-audio: #eeede7;
 
+  /* Header tokens */
+  --app-header-bg: var(--color-surface);
+  --app-header-border-color: var(--color-border);
+  --app-header-border-width: 1px;
+  --app-header-text-color: var(--color-heading);
+  --app-header-subtitle-color: var(--color-text-secondary);
+
   background: var(--color-canvas);
   color: var(--color-text-primary);
   color-scheme: light;
