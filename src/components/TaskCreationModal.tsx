@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { getLanguageDisplayName } from '../utils/language';
 import { useI18n } from '@/i18n/hooks';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
@@ -61,6 +62,7 @@ const TaskCreationModal = ({
   submitting,
 }: Props) => {
   const { t } = useI18n();
+  const [isMounted, setIsMounted] = useState(false);
   const [taskType, setTaskType] = useState<'video' | 'podcast'>(
     (defaults.task_type as any) || 'video'
   );
@@ -138,6 +140,11 @@ const TaskCreationModal = ({
 
   // Use focus trap for the modal
   const modalRef = useFocusTrap(open);
+
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -322,7 +329,11 @@ const TaskCreationModal = ({
     onSubmit(payload);
   };
 
-  return (
+  if (!open || !isMounted || typeof document === 'undefined') {
+    return null;
+  }
+
+  const modal = (
     <div
       className="run-task-modal"
       onClick={onClose}
@@ -555,6 +566,8 @@ const TaskCreationModal = ({
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 };
 
 export default TaskCreationModal;

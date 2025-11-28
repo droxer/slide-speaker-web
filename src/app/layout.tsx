@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { cookies, headers } from 'next/headers';
 import {
@@ -11,6 +11,7 @@ import {
 } from 'next/font/google';
 import { defaultLocale, locales, type Locale } from '@/i18n/config';
 import { PRODUCT_NAME } from '@/constants/product';
+import { withAssetRevision } from '@/constants/assetRevision';
 import './globals.scss';
 
 // Load fonts for all supported languages
@@ -50,6 +51,11 @@ const notoSansThai = Noto_Sans_Thai({
   display: 'swap',
   weight: ['300', '400', '500', '700'],
 });
+
+const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://slidespeaker.ai';
+const icon192 = withAssetRevision('/icons/icon-192.svg');
+const icon512 = withAssetRevision('/icons/icon-512.svg');
+const manifestUrl = withAssetRevision('/manifest.webmanifest');
 
 const themeInitScript = `(() => {
   try {
@@ -106,8 +112,27 @@ const deriveLocale = async (): Promise<Locale> => {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(appUrl),
+  applicationName: PRODUCT_NAME,
   title: PRODUCT_NAME,
   description: `Transform presentations into rich multimedia experiences with ${PRODUCT_NAME}.`,
+  manifest: manifestUrl,
+  appleWebApp: {
+    capable: true,
+    title: PRODUCT_NAME,
+    statusBarStyle: 'default',
+  },
+  icons: {
+    icon: [
+      { url: icon192, type: 'image/svg+xml', sizes: '192x192' },
+      { url: icon512, type: 'image/svg+xml', sizes: '512x512' },
+    ],
+    apple: [{ url: icon192, sizes: '180x180' }],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#0066cc',
 };
 
 // Helper function to get the appropriate font class for the locale
